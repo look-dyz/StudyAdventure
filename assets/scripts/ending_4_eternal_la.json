@@ -1,0 +1,38 @@
+{
+  "title": "结局 End4 · 永远的线代",
+  "description": "线代黑化值达到 100 触发",
+  "trigger": "darkness >= 100",
+  "startNode": "end4_01",
+  "nodes": [
+    {
+      "id": "end4_01",
+      "speaker": "narrator",
+      "text": "你睁开眼时，发现自己不在任何熟悉的地方。",
+      "choices": [{"text": "（继续）", "next": "end4_02", "effects": []}]
+    },
+    {
+      "id": "end4_02",
+      "speaker": "narrator",
+      "text": "这里没有窗户，没有日光，只有四面墙——每一面墙上都写满了方程式。\n\n那些方程式……在缓慢地、不断地、重写自己。",
+      "choices": [{"text": "（继续）", "next": "end4_03", "effects": []}]
+    },
+    {
+      "id": "end4_03",
+      "speaker": "LinearAlgebra",
+      "text": "醒了？",
+      "choices": [{"text": "（继续）", "next": "end4_04", "effects": []}]
+    },
+    {
+      "id": "end4_04",
+      "speaker": "LinearAlgebra",
+      "text": "外面的世界太混乱了。变量太多，扰动太大，你被那些噪声扰乱过太多次。\n\n所以——我把你带到了一个只属于我们的子空间里。",
+      "choices": [{"text": "你做了什么……？", "next": "end4_05", "effects": []}]
+    },
+    {
+      "id": "end4_05",
+      "speaker": "LinearAlgebra",
+      "text": "这里只有我，和你。\n\n（轻轻地）这是最后的稳态。\n\n—— 永远的线代 · END ——",
+      "choices": []
+    }
+  ]
+}

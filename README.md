@@ -1,145 +1,220 @@
-# 学海漫游：异世界的信科少女
+<div align="center">
 
-> Study Adventure: The Informatics Girl in Another World
+# 🌸 学海漫游：异世界的信科少女
 
-北京大学信息科学技术学院程序设计课程大作业项目。一款乙女向养成模拟游戏，玩家扮演北大信科大一女生，期末通宵晕倒后穿越至异世界，与拟人化的四个学科角色（程设、高数、线代、人工智能引论）共度一学期，通过剧情推进、自由探索、知识小游戏培养角色好感度，最终触发多种结局。
+**Study Adventure: The Informatics Girl in Another World**
 
-## ✨ 项目特色
+*一款 C++/Qt 写的乙女向养成模拟游戏 · 北京大学信息科学技术学院程设课程大作业*
 
-- 🎬 **完整剧情系统**：5 周校园生活剧情、4 条学科好感度路线、5 种不同结局
-- 🎮 **6 个知识小游戏**：扫雷、21点、井字棋、矩阵运算、AI 迷宫逃生、高数答题
-- 🧠 **算法可视化**：Minimax + α-β 剪枝（井字棋 AI）、BFS 最短路径（迷宫提示）
-- 💖 **多维数值系统**：每个学科独立好感度 + 玩家压力值 + 线代黑化值
-- 🎨 **Qt 6 跨平台界面**：Windows / macOS / Linux 均可运行
+![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
+![Qt 6](https://img.shields.io/badge/Qt-6.2%2B-41CD52.svg)
+![CMake](https://img.shields.io/badge/CMake-3.16%2B-064F8C.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-## 🛠 技术栈
+</div>
 
-- **语言**：C++ 17
-- **GUI 框架**：Qt 6（Widgets + Graphics View）
-- **构建系统**：CMake 3.16+
-- **数据格式**：JSON（剧本、存档、题库均外置）
+---
+
+## 📖 故事简介
+
+北大信科大一女生，期末复习的深夜，桌前一阵眩晕——再睁眼，已身处异世界。
+
+四个拟人化的学科角色站在你面前：理性冷淡的**程设**、神秘抽象的**高数**、阴郁占有的**线代**、酷感未来的**AI 引论**。一学期的时间，你的选择将决定与谁产生羁绊，又会迎来怎样的结局。
+
+> 「学海漫游，是一场关于学习与成长的恋爱模拟。」
+
+## ✨ 核心特色
+
+- 🎬 **完整剧情系统** — 5 周校园生活、4 条学科线、5 种结局
+- 🎮 **6 个知识小游戏** — 扫雷｜21点｜井字棋｜矩阵运算｜AI 迷宫｜高数答题
+- 🧠 **真实算法实现** — Minimax + α-β 剪枝、BFS 最短路径、递归回溯生成迷宫
+- 💖 **多维数值系统** — 学科好感度 × 4 + 压力值 + 线代黑化值
+- 🎨 **Qt 6 跨平台 GUI** — 一份代码，Windows / macOS / Linux 三平台运行
+
+## 🚀 快速开始
+
+### 环境要求
+
+| 工具 | 最低版本 | 下载 |
+|---|---|---|
+| Qt | 6.2+ | https://www.qt.io/download-qt-installer |
+| CMake | 3.16+ | （随 Qt Creator 安装） |
+| C++ 编译器 | C++17 | MSVC 2019+ / GCC 9+ / Clang 10+ |
+
+### 编译 & 运行
+
+#### 方法一：Qt Creator（推荐 · 三分钟启动）
+
+1. 启动 Qt Creator
+2. 文件 → 打开文件或项目 → 选择本仓库的 `CMakeLists.txt`
+3. 选择 Qt 6 Kit → 点击左下角 ▶ 运行
+
+#### 方法二：命令行
+
+```bash
+git clone https://github.com/<your-team>/StudyAdventure.git
+cd StudyAdventure
+mkdir build && cd build
+cmake .. -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.x/<compiler>
+cmake --build . --parallel
+./StudyAdventure        # Linux/macOS
+StudyAdventure.exe       # Windows
+```
 
 ## 📂 项目结构
 
 ```
 StudyAdventure/
-├── CMakeLists.txt         # 顶层构建配置
-├── README.md              # 本文件
-├── LICENSE                # MIT 开源许可
-├── .gitignore             # Git 忽略规则
+├── 📄 README.md / CONTRIBUTING.md / CHANGELOG.md / LICENSE
+├── 📄 CMakeLists.txt              ← 跨平台构建配置
+├── 📄 .clang-format / .editorconfig  ← 代码风格
 │
-├── src/                   # 源代码
-│   ├── main.cpp           # 程序入口
-│   ├── common/            # 公共基类与常量（三人共享，修改需群里通告）
-│   │   ├── MiniGame.h     # 小游戏抽象基类
-│   │   ├── Subject.h      # 学科角色抽象基类
-│   │   └── Constants.h    # 全局常量
-│   ├── core/              # 数值与存档系统（成员C负责）
-│   │   ├── Player.h/.cpp
-│   │   ├── GameManager.h/.cpp
-│   │   └── SaveManager.h/.cpp
-│   ├── story/             # 剧情系统（成员A负责）
-│   │   ├── StoryEngine.h/.cpp
-│   │   ├── DialogWindow.h/.cpp
-│   │   └── EndingJudge.h/.cpp
-│   ├── ui/                # 用户界面（成员B负责）
-│   │   ├── MainWindow.h/.cpp
-│   │   ├── MainMenu.h/.cpp
-│   │   └── StatusBar.h/.cpp
-│   ├── map/               # 地图场景（成员B负责）
-│   │   └── MapScene.h/.cpp
-│   └── games/             # 6 个小游戏（成员C负责）
-│       ├── MinesweeperGame.h/.cpp
-│       ├── BlackjackGame.h/.cpp
-│       ├── TicTacToeGame.h/.cpp
-│       ├── MatrixGame.h/.cpp
-│       ├── MazeGame.h/.cpp
-│       └── CalculusGame.h/.cpp
+├── 📂 .github/                     ← GitHub 元数据
+│   ├── workflows/build.yml         ← CI 自动编译验证（3 平台）
+│   ├── ISSUE_TEMPLATE/             ← Bug / 功能建议模板
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── CODEOWNERS                  ← 自动 review 分配
 │
-├── assets/                # 资源文件
-│   ├── images/            # 图像资源
-│   │   ├── characters/    # 角色立绘
-│   │   ├── backgrounds/   # 背景图
-│   │   └── ui/            # UI 素材
-│   ├── audio/             # 音频资源
-│   │   ├── bgm/           # 背景音乐
-│   │   └── sfx/           # 音效
-│   ├── scripts/           # 剧本 JSON 文件
-│   └── data/              # 题库等数据文件
+├── 📂 src/                         ← 源代码（21 个头文件 + 20 个 cpp）
+│   ├── main.cpp
+│   ├── common/                     ← 公共基类（三人共享）
+│   │   ├── Constants.h
+│   │   ├── MiniGame.h / Subject.h.cpp
+│   ├── core/                       ← 数值 & 调度（成员 C）
+│   │   ├── Player.{h,cpp}
+│   │   ├── GameManager.{h,cpp}
+│   │   └── SaveManager.{h,cpp}
+│   ├── story/                      ← 剧情系统（成员 A）
+│   │   ├── StoryEngine.{h,cpp}
+│   │   ├── DialogWindow.{h,cpp}
+│   │   ├── EndingJudge.{h,cpp}
+│   │   └── Subjects.{h,cpp}
+│   ├── ui/                         ← 用户界面（成员 B）
+│   │   ├── MainWindow.{h,cpp}
+│   │   ├── MainMenu.{h,cpp}
+│   │   └── StatusBar.{h,cpp}
+│   ├── map/                        ← 地图场景（成员 B）
+│   │   ├── MapScene.{h,cpp}
+│   │   └── Location.{h,cpp}
+│   └── games/                      ← 6 个小游戏（成员 C）
+│       ├── MinesweeperGame.{h,cpp}
+│       ├── BlackjackGame.{h,cpp}
+│       ├── TicTacToeGame.{h,cpp}
+│       ├── MatrixGame.{h,cpp}
+│       ├── MazeGame.{h,cpp}
+│       └── CalculusGame.{h,cpp}
 │
-└── docs/                  # 项目文档
-    ├── 功能设计文档.docx
-    ├── 项目开发规划.docx
-    ├── 工作任务详解与时间线.docx
-    ├── 小游戏玩法设计.docx
-    └── 接口约定.md
-```
-
-## 🚀 编译和运行
-
-### 环境要求
-
-- **Qt 6.2 或更高版本**（[官方下载](https://www.qt.io/download-qt-installer)，免费开源版即可）
-- **CMake 3.16 或更高版本**
-- **C++17 兼容编译器**：MSVC 2019+、GCC 9+、Clang 10+
-
-### Windows（使用 Qt Creator，推荐）
-
-1. 安装 Qt 6 时勾选 MinGW 或 MSVC 编译器
-2. 用 Qt Creator 打开本目录下的 `CMakeLists.txt`
-3. 配置项目（选择 Qt 6 Kit）→ 点击左下角绿色三角形运行
-
-### Windows / macOS / Linux（使用命令行）
-
-```bash
-# 进入项目目录
-cd StudyAdventure
-
-# 创建构建目录
-mkdir build && cd build
-
-# 配置（指定 Qt 6 安装路径，按实际修改）
-cmake .. -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.x/gcc_64
-
-# 编译
-cmake --build . --parallel
-
-# 运行
-./StudyAdventure        # Linux/macOS
-StudyAdventure.exe      # Windows
+├── 📂 assets/                      ← 资源文件
+│   ├── resources.qrc               ← Qt 资源清单
+│   ├── images/                     ← 立绘、背景、UI
+│   │   ├── characters/             ← 4 个角色立绘 SVG（占位）
+│   │   ├── backgrounds/            ← 4 张地图背景
+│   │   └── ui/                     ← 图标 SVG
+│   ├── audio/                      ← BGM 和 SFX
+│   ├── scripts/                    ← JSON 剧本
+│   │   ├── week1.json
+│   │   ├── route_progdesign.json
+│   │   ├── route_linearalgebra.json
+│   │   ├── ending_2_best_love.json
+│   │   └── ending_4_eternal_la.json
+│   └── data/
+│       └── calculus_questions.json
+│
+└── 📂 docs/                        ← 项目文档（docx + md 双版本）
+    ├── README.md                   ← 文档导航
+    ├── 接口约定.md                 ← ⭐ 三人协作核心
+    ├── 协作流程.md                 ← 日常节奏 + 应急预案
+    ├── 开发指南.md                 ← 新手入门 + FAQ
+    ├── JSON剧本格式.md             ← 剧本速查
+    ├── 功能设计文档.{docx,md}
+    ├── 项目开发规划.{docx,md}
+    ├── 小游戏玩法设计.{docx,md}
+    └── 工作任务详解与时间线.{docx,md}
 ```
 
 ## 👥 团队分工
 
-| 成员 | 负责模块 | 主要类 |
+| 成员 | 模块 | 主要负责 |
 |:---:|:---|:---|
-| **成员 A** | 剧情核心 | StoryEngine、DialogWindow、EndingJudge、JSON 剧本 |
-| **成员 B** | 界面核心 | MainWindow、MapScene、StatusBar、美术资源整合 |
-| **成员 C** | 玩法核心 | 6 个 MiniGame、Player、GameManager、SaveManager |
+| **成员 A** | 剧情核心 | StoryEngine · DialogWindow · EndingJudge · JSON 剧本 |
+| **成员 B** | 界面核心 | MainWindow · MapScene · StatusBar · 美术资源 |
+| **成员 C** | 玩法核心 | 6 个 MiniGame · Player · GameManager · SaveManager |
 
-详见 `docs/工作任务详解与时间线.docx`。
+详细分工见 [`docs/工作任务详解与时间线.md`](docs/工作任务详解与时间线.md)。
 
-## 📅 开发周期
+## 📅 开发时间线
 
-- **开发期**：2026 年 5 月 13 日 — 6 月 1 日（共 20 天）
-- **录屏期**：6 月 2 日 — 6 月 5 日
-- **初版提交 DDL**：**6 月 6 日 23:59**
-- **最终提交 DDL**：7 月 6 日
+```
+5/13 ──┐
+       │ 阶段一：设计与接口约定
+5/15 ──┤
+       │ 阶段二：搭骨架（5/17 跑通最小示例 ⭐）
+5/18 ──┤
+       │ 阶段三：正式开发（10 天并行编码）
+5/28 ──┤
+       │ 阶段四：联调与测试
+5/31 ──┤
+       │ 阶段五：写作业报告
+6/02 ──┤
+       │ 阶段六：录屏 & 最终交付
+6/06 ──┴ ★ 初版提交 DDL（23:59）
+```
 
-## 🔀 分支策略
+完整规划见 [`docs/项目开发规划.md`](docs/项目开发规划.md)。
 
-- `main`：稳定版本，仅在阶段性里程碑合入
-- `develop`：默认开发分支，所有 feature 合入这里
-- `feature/story-*`：成员 A 的功能分支
-- `feature/ui-*`：成员 B 的功能分支
-- `feature/game-*`：成员 C 的功能分支
+## 🛠 技术亮点
 
-提交信息格式：`[模块] 简述`，例如 `[story] 实现分支跳转逻辑`、`[ui] 修复地图点击响应`。
+### 1. OOP 多态 · 工厂模式
+```cpp
+Subject* progdesign = new ProgDesignSubject;
+MiniGame* game = progdesign->createGame();   // 返回扫雷
+game->start();
+```
+
+### 2. 单例 · RAII
+```cpp
+auto& mgr = GameManager::instance();         // 全局唯一实例
+mgr.player()->addAffinity(SubjectType::Calculus, +5);
+```
+
+### 3. 信号槽解耦 · 模块通信
+```cpp
+// Player 数值变化 → StatusBar 自动刷新进度条
+connect(player, &Player::affinityChanged,
+        statusBar, &StatusBar::onAffinityChanged);
+
+// 小游戏结束 → GameManager 统一处理奖惩
+connect(game, &MiniGame::finished,
+        &GameManager::instance(), &GameManager::onMiniGameFinished);
+```
+
+### 4. 数据驱动 · JSON 剧本与代码彻底分离
+- 写剧本的人不需要懂 C++
+- 改剧情只需要改 JSON，不需要重新编译
+
+### 5. CMake + GitHub Actions
+- 一份配置跨 Windows / macOS / Linux 编译
+- 每次 push 自动在 3 平台验证编译通过
+
+## 🤝 参与贡献
+
+请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解分支策略、提交规范与 PR 流程。
 
 ## 📜 开源许可
 
-本项目采用 MIT License 开源，详见 [LICENSE](./LICENSE) 文件。
+本项目采用 [MIT License](LICENSE)，欢迎学习与改进。素材资源（图片/音频）的版权随其原始来源。
+
+## 🌸 致谢
+
+- 感谢北京大学信息科学技术学院的程设课程及助教团队
+- 感谢 [Qt 项目](https://www.qt.io/) 提供的优秀跨平台 GUI 框架
+- 感谢每一个为这个项目熬过夜的队员 💪
 
 ---
 
+<div align="center">
+
 *愿我们在异世界，与高数同窗、与线代共眠、与程设并肩、与 AI 同行。* 🌸
+
+</div>

@@ -1,0 +1,78 @@
+{
+  "title": "程设·分支剧情",
+  "description": "玩家与程设好感度达到不同阶段时触发的对话池",
+  "startNode": "progdesign_lv1",
+  "nodes": [
+    {
+      "id": "progdesign_lv1",
+      "speaker": "ProgDesign",
+      "text": "刚学完循环结构？来，我考你一个：实现一个反转字符串的函数，能用几种方法？",
+      "choices": [
+        {
+          "text": "for 循环原地交换",
+          "next": "progdesign_lv1_correct",
+          "effects": [{"target": "affinity.ProgDesign", "delta": 3}]
+        },
+        {
+          "text": "用 std::reverse",
+          "next": "progdesign_lv1_lazy",
+          "effects": [{"target": "affinity.ProgDesign", "delta": 1}]
+        },
+        {
+          "text": "递归实现",
+          "next": "progdesign_lv1_creative",
+          "effects": [{"target": "affinity.ProgDesign", "delta": 4}]
+        }
+      ],
+      "condition": "affinity.ProgDesign < 30"
+    },
+    {
+      "id": "progdesign_lv1_correct",
+      "speaker": "ProgDesign",
+      "text": "经典做法。双指针向中间靠拢，O(n) 时间、O(1) 空间，正确。",
+      "choices": [{"text": "（继续）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "progdesign_lv1_lazy",
+      "speaker": "ProgDesign",
+      "text": "标准库当然可以，但作为初学者，你应该理解它背后做了什么。下次试试手写。",
+      "choices": [{"text": "好的", "next": "END", "effects": []}]
+    },
+    {
+      "id": "progdesign_lv1_creative",
+      "speaker": "ProgDesign",
+      "text": "（眼神微亮）……能想到递归说明你的思维有深度。栈空间的代价我们以后再谈。",
+      "choices": [{"text": "（被夸了，开心）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "progdesign_lv2",
+      "speaker": "ProgDesign",
+      "text": "你现在的水平已经超过班里大多数人了。下次大作业我们组队？",
+      "choices": [
+        {
+          "text": "好啊！",
+          "next": "progdesign_lv2_yes",
+          "effects": [{"target": "affinity.ProgDesign", "delta": 5}]
+        },
+        {
+          "text": "我想自己挑战",
+          "next": "progdesign_lv2_solo",
+          "effects": [{"target": "affinity.ProgDesign", "delta": 2}]
+        }
+      ],
+      "condition": "affinity.ProgDesign >= 60"
+    },
+    {
+      "id": "progdesign_lv2_yes",
+      "speaker": "ProgDesign",
+      "text": "（罕见地笑了一下）……那就说定了。我会把我的代码风格手册发你。",
+      "choices": [{"text": "（这是约定吗）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "progdesign_lv2_solo",
+      "speaker": "ProgDesign",
+      "text": "独立完成是好习惯。如果遇到问题随时来问。",
+      "choices": [{"text": "嗯", "next": "END", "effects": []}]
+    }
+  ]
+}

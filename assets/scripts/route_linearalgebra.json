@@ -1,0 +1,97 @@
+{
+  "title": "线代·分支剧情（含黑化倾向）",
+  "description": "线代的剧情会随着 darkness 值上升而变得越来越偏执",
+  "startNode": "la_lv1",
+  "nodes": [
+    {
+      "id": "la_lv1",
+      "speaker": "LinearAlgebra",
+      "text": "向量空间……是一种秩序。每一个基向量都不可替代。你能理解吗？",
+      "choices": [
+        {
+          "text": "理解，就像独立的坐标轴",
+          "next": "la_lv1_good",
+          "effects": [{"target": "affinity.LinearAlgebra", "delta": 4}]
+        },
+        {
+          "text": "听起来好抽象……",
+          "next": "la_lv1_meh",
+          "effects": [
+            {"target": "affinity.LinearAlgebra", "delta": -1},
+            {"target": "stress", "delta": 2}
+          ]
+        }
+      ],
+      "condition": "darkness < 30"
+    },
+    {
+      "id": "la_lv1_good",
+      "speaker": "LinearAlgebra",
+      "text": "正确。秩序是世界的本质，而你已经触摸到了它的边缘。",
+      "choices": [{"text": "（继续）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "la_lv1_meh",
+      "speaker": "LinearAlgebra",
+      "text": "……抽象正是它的力量所在。不愿理解的人，会被时代抛下。",
+      "choices": [{"text": "（有点压力）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "la_lv2_dark",
+      "speaker": "LinearAlgebra",
+      "text": "（凑得很近）你今天和程设说话的时间，比和我多了 23 分钟。我数过。",
+      "choices": [
+        {
+          "text": "你怎么知道……？",
+          "next": "la_lv2_dark_creepy",
+          "effects": [
+            {"target": "darkness", "delta": 5},
+            {"target": "stress", "delta": 5}
+          ]
+        },
+        {
+          "text": "明天我多陪陪你",
+          "next": "la_lv2_dark_appease",
+          "effects": [
+            {"target": "affinity.LinearAlgebra", "delta": 3},
+            {"target": "darkness", "delta": 3}
+          ]
+        },
+        {
+          "text": "你这样让我害怕",
+          "next": "la_lv2_dark_reject",
+          "effects": [
+            {"target": "darkness", "delta": 8},
+            {"target": "affinity.LinearAlgebra", "delta": -3}
+          ]
+        }
+      ],
+      "condition": "darkness >= 30 && darkness < 70"
+    },
+    {
+      "id": "la_lv2_dark_creepy",
+      "speaker": "LinearAlgebra",
+      "text": "（微笑）……重要的事情，当然要记下来。",
+      "choices": [{"text": "（背后发凉）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "la_lv2_dark_appease",
+      "speaker": "LinearAlgebra",
+      "text": "……好。我会记住的。",
+      "choices": [{"text": "（说错话了吗）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "la_lv2_dark_reject",
+      "speaker": "LinearAlgebra",
+      "text": "害怕？……（轻笑）……你迟早会习惯的。",
+      "choices": [{"text": "（必须离开）", "next": "END", "effects": []}]
+    },
+    {
+      "id": "la_endgame",
+      "speaker": "LinearAlgebra",
+      "text": "你已经……是我向量空间里的一个不变量了。永远不会被消去。",
+      "choices": [],
+      "condition": "darkness >= 70"
+    }
+  ]
+}

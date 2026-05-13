@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(StudyAdventure
     VERSION 0.1.0
     DESCRIPTION "Study Adventure: The Informatics Girl in Another World"
+    HOMEPAGE_URL "https://github.com/your-team/StudyAdventure"
     LANGUAGES CXX
 )
 
@@ -12,9 +13,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ===== Qt 自动化 =====
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)   # 自动处理 Q_OBJECT 宏
+set(CMAKE_AUTORCC ON)   # 自动编译 .qrc 资源
+set(CMAKE_AUTOUIC ON)   # 自动编译 .ui 文件
+
+# ===== 构建类型默认 Release =====
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
 
 # ===== 查找 Qt 6 =====
 find_package(Qt6 REQUIRED COMPONENTS
@@ -24,8 +30,15 @@ find_package(Qt6 REQUIRED COMPONENTS
     Multimedia
 )
 
-message(STATUS "Qt version: ${Qt6_VERSION}")
-message(STATUS "Qt directory: ${Qt6_DIR}")
+message(STATUS "")
+message(STATUS "════════════════════════════════════════")
+message(STATUS "  Study Adventure ${PROJECT_VERSION}")
+message(STATUS "  Qt version    : ${Qt6_VERSION}")
+message(STATUS "  Qt directory  : ${Qt6_DIR}")
+message(STATUS "  Build type    : ${CMAKE_BUILD_TYPE}")
+message(STATUS "  C++ compiler  : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "════════════════════════════════════════")
+message(STATUS "")
 
 # ===== 源文件 =====
 set(PROJECT_SOURCES
@@ -67,6 +80,8 @@ set(PROJECT_SOURCES
     # 地图（成员 B）
     src/map/MapScene.h
     src/map/MapScene.cpp
+    src/map/LocationItem.h
+    src/map/LocationItem.cpp
 
     # 小游戏（成员 C）
     src/games/MinesweeperGame.h
@@ -84,8 +99,7 @@ set(PROJECT_SOURCES
 )
 
 # ===== 资源文件 =====
-# 收集完素材后创建 resources.qrc 并取消下面这行的注释
-# set(PROJECT_RESOURCES assets/resources.qrc)
+set(PROJECT_RESOURCES assets/resources.qrc)
 
 # ===== 可执行文件 =====
 qt_add_executable(StudyAdventure
@@ -106,16 +120,24 @@ target_include_directories(StudyAdventure PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# ===== Windows 下隐藏控制台窗口（Release 模式） =====
+# ===== 平台特定配置 =====
 if(WIN32)
-    set_target_properties(StudyAdventure PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
+    # Windows 下隐藏控制台窗口（Release 模式）
+    set_target_properties(StudyAdventure PROPERTIES WIN32_EXECUTABLE TRUE)
+elseif(APPLE)
+    # macOS 下打包为 .app
+    set_target_properties(StudyAdventure PROPERTIES MACOSX_BUNDLE TRUE)
 endif()
 
 # ===== 编译警告 =====
 if(MSVC)
-    target_compile_options(StudyAdventure PRIVATE /W4)
+    target_compile_options(StudyAdventure PRIVATE /W4 /utf-8)
 else()
     target_compile_options(StudyAdventure PRIVATE -Wall -Wextra -Wpedantic)
 endif()
+
+# ===== 安装规则（可选）=====
+install(TARGETS StudyAdventure
+    BUNDLE  DESTINATION .
+    RUNTIME DESTINATION bin
+)
