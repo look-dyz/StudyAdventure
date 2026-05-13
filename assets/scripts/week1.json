@@ -1,0 +1,92 @@
+{
+  "title": "第一周·穿越异世界",
+  "startNode": "intro_01",
+  "nodes": [
+    {
+      "id": "intro_01",
+      "speaker": "narrator",
+      "text": "凌晨三点，期末复习的桌前，你的眼皮越来越重……忽然，眼前一黑。",
+      "choices": [
+        {
+          "text": "（继续）",
+          "next": "intro_02",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "intro_02",
+      "speaker": "narrator",
+      "text": "你睁开眼，发现自己躺在一片陌生的草地上。四周是从未见过的奇异建筑，远处似乎有四个身影正朝你走来……",
+      "choices": [
+        {
+          "text": "起身打量周围",
+          "next": "intro_03",
+          "effects": []
+        },
+        {
+          "text": "继续装睡，看看会发生什么",
+          "next": "intro_04",
+          "effects": [
+            {"target": "stress", "delta": 2}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intro_03",
+      "speaker": "ProgDesign",
+      "text": "终于醒了？我是程序设计——往后这一学期，你得跟我们四个好好相处。",
+      "choices": [
+        {
+          "text": "你们……到底是什么？",
+          "next": "intro_05",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "intro_04",
+      "speaker": "LinearAlgebra",
+      "text": "（凑近你的耳边）……不要假装睡觉。我能看穿一切线性变换。",
+      "choices": [
+        {
+          "text": "（猛地坐起来）",
+          "next": "intro_03",
+          "effects": [
+            {"target": "darkness", "delta": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intro_05",
+      "speaker": "Calculus",
+      "text": "我们是你课程的拟人化形态。你的学习状态决定了我们的存在。",
+      "choices": [
+        {
+          "text": "（这是什么设定）",
+          "next": "intro_06",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "intro_06",
+      "speaker": "AIIntro",
+      "text": "比起追问规则，不如先认识一下我们四个。Welcome to your new semester.",
+      "choices": [
+        {
+          "text": "好的……请多关照",
+          "next": "END",
+          "effects": [
+            {"target": "affinity.ProgDesign", "delta": 2},
+            {"target": "affinity.Calculus", "delta": 2},
+            {"target": "affinity.LinearAlgebra", "delta": 2},
+            {"target": "affinity.AIIntro", "delta": 2}
+          ]
+        }
+      ]
+    }
+  ]
+}
