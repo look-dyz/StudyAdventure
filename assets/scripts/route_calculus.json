@@ -1,0 +1,113 @@
+{
+  "title": "高数·分支剧情",
+  "description": "玩家与高数好感度达到不同阶段时触发的对话池。高数性格：神秘、抽象，喜欢哲学化的表达。",
+  "startNode": "calculus_lv1",
+  "nodes": [
+    {
+      "id": "calculus_lv1",
+      "speaker": "Calculus",
+      "text": "极限的本质，是逼近而不达到。\n你能在生活中找到这样的例子吗？",
+      "choices": [
+        {
+          "text": "永远学不完的知识",
+          "next": "calculus_lv1_relatable",
+          "effects": [{"target": "affinity.Calculus", "delta": 3}]
+        },
+        {
+          "text": "永远赶不上的截止日期",
+          "next": "calculus_lv1_humor",
+          "effects": [{"target": "affinity.Calculus", "delta": 2}]
+        },
+        {
+          "text": "想不到……",
+          "next": "calculus_lv1_blank",
+          "effects": [{"target": "affinity.Calculus", "delta": -1}]
+        }
+      ],
+      "condition": "affinity.Calculus < 30"
+    },
+    {
+      "id": "calculus_lv1_relatable",
+      "speaker": "Calculus",
+      "text": "好答案。\n但学习不是逼近——它是螺旋上升。今天的极限，可能是明天的常识。",
+      "choices": [
+        {"text": "（点头）", "next": "END", "effects": []}
+      ]
+    },
+    {
+      "id": "calculus_lv1_humor",
+      "speaker": "Calculus",
+      "text": "（罕见地笑了一下）……这倒是真实。\n截止日期是大学生的渐近线——永远靠近，永远不到，然后突然就过了。",
+      "choices": [
+        {"text": "（笑出来）", "next": "END", "effects": [{"target": "affinity.Calculus", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "calculus_lv1_blank",
+      "speaker": "Calculus",
+      "text": "没关系。\n等你学进去，就会自然而然地理解。",
+      "choices": [
+        {"text": "好的", "next": "END", "effects": []}
+      ]
+    },
+    {
+      "id": "calculus_lv2_phil",
+      "speaker": "Calculus",
+      "text": "我有一个问题想了很久——\n如果一个人的人生是一个函数，那么死亡是不连续点，还是趋于无穷的极限？",
+      "choices": [
+        {
+          "text": "应该是极限。意义不会突然消失，只是逐渐消散",
+          "next": "calculus_lv2_deep",
+          "effects": [
+            {"target": "affinity.Calculus", "delta": 5},
+            {"target": "stress", "delta": 2}
+          ]
+        },
+        {
+          "text": "我不想思考这种问题",
+          "next": "calculus_lv2_dodge",
+          "effects": [{"target": "affinity.Calculus", "delta": -1}]
+        },
+        {
+          "text": "你今天怎么这么忧郁",
+          "next": "calculus_lv2_lighten",
+          "effects": [{"target": "affinity.Calculus", "delta": 2}]
+        }
+      ],
+      "condition": "affinity.Calculus >= 50"
+    },
+    {
+      "id": "calculus_lv2_deep",
+      "speaker": "Calculus",
+      "text": "（沉默良久）……\n你的答案比我预想的温柔。\n谢谢你愿意回答这个问题。",
+      "choices": [
+        {"text": "（什么也没说，只是坐在 ta 身边）", "next": "END", "effects": []}
+      ]
+    },
+    {
+      "id": "calculus_lv2_dodge",
+      "speaker": "Calculus",
+      "text": "嗯。我也不该问的。\n忘了吧。",
+      "choices": [
+        {"text": "对不起……", "next": "END", "effects": []}
+      ]
+    },
+    {
+      "id": "calculus_lv2_lighten",
+      "speaker": "Calculus",
+      "text": "我只是偶尔会陷入这种思考。\n大多数时候，我和普通的高数老师没什么区别——\n出题、改卷、看你们头疼。",
+      "choices": [
+        {"text": "（笑）", "next": "END", "effects": []}
+      ]
+    },
+    {
+      "id": "calculus_endgame",
+      "speaker": "Calculus",
+      "text": "你已经能跟上我的思路了。\n如果可以——希望期末之后，你不会忘记这些对话。",
+      "choices": [
+        {"text": "我不会忘的", "next": "END", "effects": [{"target": "affinity.Calculus", "delta": 5}]}
+      ],
+      "condition": "affinity.Calculus >= 80"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "title": "第四周·信物",
+  "description": "好感度 50+ 的学科会赠送信物。出游剧情。",
+  "_note_for_a": "[成员 A 备注] 信物剧情用 condition 控制——好感度达到 50 才能触发。可以让玩家在这周收到 1-2 个信物。",
+  "startNode": "w4_start",
+  "nodes": [
+    {
+      "id": "w4_start",
+      "speaker": "narrator",
+      "text": "[TODO: 第四周的轻松氛围。期中过了，离期末还远]",
+      "choices": [
+        {"text": "（散步）", "next": "w4_check_gifts", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_check_gifts",
+      "speaker": "narrator",
+      "text": "[TODO: 描述玩家收到信物的可能性。引出 4 个分支节点]",
+      "choices": [
+        {"text": "去找程设", "next": "w4_gift_prog", "effects": []},
+        {"text": "去找高数", "next": "w4_gift_calc", "effects": []},
+        {"text": "去找线代", "next": "w4_gift_la", "effects": []},
+        {"text": "去找 AI", "next": "w4_gift_ai", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_gift_prog",
+      "speaker": "ProgDesign",
+      "text": "[TODO: 程设送你一支笔/一本代码手册之类的实用礼物]",
+      "choices": [
+        {"text": "（开心地收下）", "next": "w4_outing_choice", "effects": [{"target": "affinity.ProgDesign", "delta": 5}]}
+      ],
+      "condition": "affinity.ProgDesign >= 50"
+    },
+    {
+      "id": "w4_gift_calc",
+      "speaker": "Calculus",
+      "text": "[TODO: 高数送你一个有哲学意义的礼物，如一本旧书]",
+      "choices": [
+        {"text": "（仔细收好）", "next": "w4_outing_choice", "effects": [{"target": "affinity.Calculus", "delta": 5}]}
+      ],
+      "condition": "affinity.Calculus >= 50"
+    },
+    {
+      "id": "w4_gift_la",
+      "speaker": "LinearAlgebra",
+      "text": "[TODO: 线代送你一个有占有感的礼物——可以是项链/手链/带名字的东西]",
+      "choices": [
+        {"text": "（戴上）", "next": "w4_outing_choice", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 5},
+          {"target": "darkness", "delta": 5}
+        ]}
+      ],
+      "condition": "affinity.LinearAlgebra >= 50"
+    },
+    {
+      "id": "w4_gift_ai",
+      "speaker": "AIIntro",
+      "text": "[TODO: AI 送你一个有科技感/未来感的小礼物]",
+      "choices": [
+        {"text": "（道谢）", "next": "w4_outing_choice", "effects": [{"target": "affinity.AIIntro", "delta": 5}]}
+      ],
+      "condition": "affinity.AIIntro >= 50"
+    },
+    {
+      "id": "w4_outing_choice",
+      "speaker": "narrator",
+      "text": "[TODO: 周末出游剧情。可以是去远一点的地方郊游/看星星/逛街等]",
+      "choices": [
+        {"text": "去看星星", "next": "w4_stars", "effects": []},
+        {"text": "在校园里漫步", "next": "w4_walk", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_stars",
+      "speaker": "narrator",
+      "text": "[TODO: 看星星的浪漫剧情，可以加深和某个角色的羁绊]",
+      "choices": [
+        {"text": "（晚安）", "next": "END", "effects": [{"target": "stress", "delta": -5}]}
+      ]
+    },
+    {
+      "id": "w4_walk",
+      "speaker": "narrator",
+      "text": "[TODO: 校园漫步剧情，温馨日常感]",
+      "choices": [
+        {"text": "（晚安）", "next": "END", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    }
+  ]
+}

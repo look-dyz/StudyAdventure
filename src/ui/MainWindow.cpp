@@ -4,6 +4,7 @@
 #include "core/GameManager.h"
 #include "core/Player.h"
 #include "story/DialogWindow.h"
+#include "story/StoryEngine.h"
 #include "map/MapScene.h"
 #include "games/TicTacToeGame.h"
 
@@ -21,10 +22,15 @@ namespace SA {
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
-      stack_(new QStackedWidget(this))
+      stack_(new QStackedWidget(this)),
+      storyEngine_(nullptr),
+      dialogWindow_(nullptr)
 {
     setWindowTitle(tr("学海漫游：异世界的信科少女"));
     resize(1100, 800);
+
+    // 创建 StoryEngine（成员 A 的核心：连接剧本和 UI）
+    storyEngine_ = new StoryEngine(GameManager::instance().player(), this);
 
     setupUi();
     connectSignals();
@@ -43,8 +49,10 @@ void MainWindow::setupUi() {
 
     // ========== 页面 0：主菜单 ==========
     auto* mainMenu = new MainMenu;
-    connect(mainMenu, &MainMenu::startNewGameClicked, this, []() {
-        GameManager::instance().requestScene(GameScene::Map);
+    connect(mainMenu, &MainMenu::startNewGameClicked, this, [this]() {
+        // 开始游戏：重置玩家数据 + 加载第一周剧本 + 切到对话场景
+        GameManager::instance().player()->reset();
+        loadAndShowScript(":/scripts/week1.json");
     });
     connect(mainMenu, &MainMenu::loadGameClicked, this, [this]() {
         QMessageBox::information(this, tr("提示"),
@@ -59,7 +67,7 @@ void MainWindow::setupUi() {
     });
     stack_->addWidget(mainMenu);
 
-    // ========== 页面 1：地图（真实 MapScene）==========
+    // ========== 页面 1：地图 ==========
     auto* mapPage = new QWidget;
     {
         auto* layout = new QVBoxLayout(mapPage);
@@ -69,18 +77,18 @@ void MainWindow::setupUi() {
         mapView->setMinimumHeight(500);
 
         connect(mapScene, &MapScene::locationClicked, this, [this](Location loc) {
-            QString msg = tr("点击了：%1").arg(locationName(loc));
-            // 示例：到不同地点触发不同效果
             auto* player = GameManager::instance().player();
             switch (loc) {
                 case Location::Classroom:
-                    player->addAffinity(SubjectType::ProgDesign, 2);
-                    GameManager::instance().requestScene(GameScene::Dialog);
+                    // 进入教学楼 = 触发当前周的剧本
+                    // 简单实现：始终加载 week1；真实版本应根据 player->currentWeek() 选剧本
+                    loadAndShowScript(":/scripts/week1.json");
                     break;
                 case Location::Library:
                     GameManager::instance().requestScene(GameScene::MiniGame);
                     break;
                 case Location::WeimingLake:
+                    // 减压剧情（简化版）
                     player->addStress(-5);
                     QMessageBox::information(this, tr("未名湖"),
                         tr("你在湖边坐了一会儿，心情舒畅了不少。\n压力 -5"));
@@ -105,29 +113,30 @@ void MainWindow::setupUi() {
     }
     stack_->addWidget(mapPage);
 
-    // ========== 页面 2：对话 ==========
+    // ========== 页面 2：对话（接入 StoryEngine！）==========
     auto* dialogPage = new QWidget;
     {
         auto* layout = new QVBoxLayout(dialogPage);
-        auto* dialog = new DialogWindow;
-        dialog->setContent(
-            tr("程设"),
-            tr("欢迎来到异世界。我是程序设计——你接下来一学期的同伴。\n"
-               "（占位剧情，成员 A 将通过 StoryEngine 加载真实剧本）"),
-            {tr("……你好"), tr("我要回去！")}
-        );
+        dialogWindow_ = new DialogWindow;
 
-        connect(dialog, &DialogWindow::choiceMade, this, [](int idx) {
-            auto* player = GameManager::instance().player();
-            if (idx == 0) {
-                player->addAffinity(SubjectType::ProgDesign, 3);
-            } else {
-                player->addStress(5);
-            }
+        // 玩家选择选项 → 通知 StoryEngine 推进剧情
+        connect(dialogWindow_, &DialogWindow::choiceMade, this, [this](int idx) {
+            storyEngine_->onChoiceSelected(idx);
+        });
+
+        // StoryEngine 切换节点 → 刷新对话框显示
+        connect(storyEngine_, &StoryEngine::nodeChanged, this, [this]() {
+            refreshDialogFromEngine();
+        });
+
+        // StoryEngine 剧本结束 → 返回地图
+        connect(storyEngine_, &StoryEngine::scriptFinished, this, [this]() {
+            QMessageBox::information(this, tr("剧情结束"),
+                tr("本段剧情已结束。"));
             GameManager::instance().requestScene(GameScene::Map);
         });
 
-        layout->addWidget(dialog);
+        layout->addWidget(dialogWindow_);
         layout->setContentsMargins(60, 40, 60, 40);
     }
     stack_->addWidget(dialogPage);
@@ -191,6 +200,36 @@ void MainWindow::onSceneChangeRequested(GameScene scene) {
         case GameScene::MiniGame: stack_->setCurrentIndex(miniGameIndex_); break;
         case GameScene::Ending:   stack_->setCurrentIndex(endingIndex_); break;
     }
+}
+
+// ============================================================
+// 加载剧本并切到对话场景
+// ============================================================
+void MainWindow::loadAndShowScript(const QString& scriptPath) {
+    if (storyEngine_->loadScript(scriptPath)) {
+        GameManager::instance().requestScene(GameScene::Dialog);
+    } else {
+        QMessageBox::warning(this, tr("错误"),
+            tr("无法加载剧本：%1").arg(scriptPath));
+    }
+}
+
+// ============================================================
+// 从 StoryEngine 取当前节点信息，刷新到 DialogWindow
+// ============================================================
+void MainWindow::refreshDialogFromEngine() {
+    if (!storyEngine_ || !dialogWindow_) return;
+
+    QString speaker = storyEngine_->currentSpeaker();
+    QString text = storyEngine_->currentText();
+    QStringList choices = storyEngine_->currentChoices();
+
+    // 如果没有选项（如旁白或叙述节点），加一个"继续"按钮
+    if (choices.isEmpty()) {
+        choices.append(tr("（继续）"));
+    }
+
+    dialogWindow_->setContent(speaker, text, choices);
 }
 
 } // namespace SA

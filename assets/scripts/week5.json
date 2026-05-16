@@ -1,0 +1,67 @@
+{
+  "title": "第五周·期末",
+  "description": "期末考前最后一周。所有角色都来道别。玩家做最终选择：是否留在异世界",
+  "_note_for_a": "[成员 A 备注] 这是整个游戏最重要的一周——玩家的最后选择决定 End2 (留下) 还是 End3 (离开)。每个角色都要有最后一次完整对话。",
+  "startNode": "w5_start",
+  "nodes": [
+    {
+      "id": "w5_start",
+      "speaker": "narrator",
+      "text": "[TODO: 期末倒计时的氛围。时间过得越来越快]",
+      "choices": [
+        {"text": "（继续）", "next": "w5_last_chat_pd", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_last_chat_pd",
+      "speaker": "ProgDesign",
+      "text": "[TODO: 程设的最后对话。可以聊编程的本质，或者一些只有 ta 说得出口的话]",
+      "choices": [
+        {"text": "（继续）", "next": "w5_last_chat_calc", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_last_chat_calc",
+      "speaker": "Calculus",
+      "text": "[TODO: 高数的最后对话。可以再次问那个「人生是不是极限」的问题]",
+      "choices": [
+        {"text": "（继续）", "next": "w5_last_chat_la", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_last_chat_la",
+      "speaker": "LinearAlgebra",
+      "text": "[TODO: 线代的最后对话。如果黑化值高，可以暗示她「不会让你走」]",
+      "choices": [
+        {"text": "（继续）", "next": "w5_last_chat_ai", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_last_chat_ai",
+      "speaker": "AIIntro",
+      "text": "[TODO: AI 引论的最后对话。可以是最酷但也最深情的告白方式]",
+      "choices": [
+        {"text": "（继续）", "next": "w5_final_choice", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_final_choice",
+      "speaker": "narrator",
+      "text": "期末考试的最后一秒，铃声响起。\n你已经做完了所有的题。\n\n但你还有一个选择要做——\n\n回到现实，还是留在异世界？",
+      "choices": [
+        {
+          "text": "回到现实",
+          "next": "END",
+          "effects": [],
+          "_note_for_a": "[备注] 这个选择会被 GameManager 记录，作为 EndingJudge 判定 End2/End3 的依据。如果好感度<80，无论选什么都会去 End1（默认）"
+        },
+        {
+          "text": "留在异世界",
+          "next": "END",
+          "effects": [],
+          "_note_for_a": "[备注] 同上"
+        }
+      ]
+    }
+  ]
+}

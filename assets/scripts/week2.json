@@ -1,0 +1,80 @@
+{
+  "title": "第二周·适应",
+  "description": "玩家逐渐适应异世界的节奏；首次小测的压力；可选择重点培养某个学科",
+  "_note_for_a": "[成员 A 备注] 这是骨架，包含 8 个关键节点。你需要：(1) 把 [TODO] 处的台词扩写、丰富细节 (2) 在合适位置插入更多分支节点（参考 week1.json 的密度）",
+  "startNode": "w2_start",
+  "nodes": [
+    {
+      "id": "w2_start",
+      "speaker": "narrator",
+      "text": "一周过去了。异世界的节奏你已经熟悉——\n[TODO: 描述玩家适应后的心境]",
+      "choices": [
+        {"text": "（继续）", "next": "w2_morning", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_morning",
+      "speaker": "ProgDesign",
+      "text": "今天会有第一次小测。\n[TODO: 程设说明小测内容，给学生一些建议]",
+      "choices": [
+        {"text": "我准备好了", "next": "w2_quiz", "effects": [{"target": "stress", "delta": 3}]},
+        {"text": "可以推迟吗？", "next": "w2_postpone", "effects": [
+          {"target": "affinity.ProgDesign", "delta": -3},
+          {"target": "stress", "delta": 5}
+        ]}
+      ]
+    },
+    {
+      "id": "w2_quiz",
+      "speaker": "narrator",
+      "text": "[TODO: 描述小测过程。可以在这里接入小游戏作为\"小测\"]",
+      "choices": [
+        {"text": "（继续）", "next": "w2_after_quiz", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_postpone",
+      "speaker": "ProgDesign",
+      "text": "[TODO: 程设温和但坚定地拒绝；可以引出他对学习态度的看法]",
+      "choices": [
+        {"text": "好吧，我考", "next": "w2_quiz", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_after_quiz",
+      "speaker": "LinearAlgebra",
+      "text": "[TODO: 线代出现，邀请玩家午饭一起吃。这里可以体现线代对玩家的关注（如果黑化值已经偏高，可以加 condition 让她说更占有欲的话）]",
+      "choices": [
+        {"text": "好啊", "next": "w2_lunch_la", "effects": [{"target": "affinity.LinearAlgebra", "delta": 3}]},
+        {"text": "我和 AI 引论约好了", "next": "w2_lunch_ai", "effects": [
+          {"target": "affinity.AIIntro", "delta": 2},
+          {"target": "darkness", "delta": 2}
+        ]}
+      ]
+    },
+    {
+      "id": "w2_lunch_la",
+      "speaker": "LinearAlgebra",
+      "text": "[TODO: 与线代午饭的对话。可以聊她为什么对你这么关注；铺垫黑化倾向]",
+      "choices": [
+        {"text": "（继续）", "next": "w2_evening", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_lunch_ai",
+      "speaker": "AIIntro",
+      "text": "[TODO: AI 引论的对话。可以聊他对学习方法的看法；幽默轻松的氛围]",
+      "choices": [
+        {"text": "（继续）", "next": "w2_evening", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_evening",
+      "speaker": "narrator",
+      "text": "[TODO: 第二周的结尾叙述。可以让玩家对接下来的剧情走向有点期待]",
+      "choices": [
+        {"text": "（睡着）", "next": "END", "effects": []}
+      ]
+    }
+  ]
+}
