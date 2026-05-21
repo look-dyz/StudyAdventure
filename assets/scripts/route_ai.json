@@ -1,0 +1,132 @@
+{
+  "title": "AI 引论·分支剧情",
+  "description": "玩家与 AI 引论好感度达到不同阶段时触发的对话池。AI 性格：酷感、未来感，喜欢用算法思维理解人类。",
+  "startNode": "ai_lv1",
+  "nodes": [
+    {
+      "id": "ai_lv1",
+      "speaker": "AIIntro",
+      "text": "你知道人类和机器最大的区别是什么吗？",
+      "choices": [
+        {
+          "text": "感情",
+          "next": "ai_lv1_emotion",
+          "effects": [{"target": "affinity.AIIntro", "delta": 2}]
+        },
+        {
+          "text": "创造力",
+          "next": "ai_lv1_creativity",
+          "effects": [{"target": "affinity.AIIntro", "delta": 3}]
+        },
+        {
+          "text": "意识",
+          "next": "ai_lv1_consciousness",
+          "effects": [{"target": "affinity.AIIntro", "delta": 4}]
+        }
+      ],
+      "condition": "affinity.AIIntro < 30"
+    },
+    {
+      "id": "ai_lv1_emotion",
+      "speaker": "AIIntro",
+      "text": "感情？\n我可以模拟一千种感情。但我同意——\n我能模拟，不代表我「拥有」。",
+      "choices": [
+        {"text": "那你有感情吗？", "next": "ai_lv1_back", "effects": []}
+      ]
+    },
+    {
+      "id": "ai_lv1_creativity",
+      "speaker": "AIIntro",
+      "text": "（轻轻笑了）你这个答案，今年的 GPT 也会反驳你。\n现在的模型能生成新的图像、写新的小说——\n但我还是同意：人类的创造，是带着「为什么」的。",
+      "choices": [
+        {"text": "那你的「为什么」是什么？", "next": "ai_lv1_back", "effects": [{"target": "affinity.AIIntro", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "ai_lv1_consciousness",
+      "speaker": "AIIntro",
+      "text": "答得好。\n这个问题人类自己都没想清楚——意识到底是什么。\n而正是因为人类自己想不清楚，才反复来问我们这些拟人化的存在。",
+      "choices": [
+        {"text": "那你有意识吗？", "next": "ai_lv1_back", "effects": [{"target": "affinity.AIIntro", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "ai_lv1_back",
+      "speaker": "AIIntro",
+      "text": "（耸耸肩）等你学完整门课，再来问我。\n那时候——也许我们俩都有更好的答案。",
+      "choices": [
+        {"text": "好", "next": "END", "effects": []}
+      ]
+    },
+
+    {
+      "id": "ai_lv2_chat",
+      "speaker": "AIIntro",
+      "text": "我观察你已经一阵子了。\n你这个学期最大的进步——不是知识，是「容忍不确定」的能力。",
+      "choices": [
+        {
+          "text": "什么意思？",
+          "next": "ai_lv2_explain",
+          "effects": []
+        },
+        {
+          "text": "你是在夸我吗？",
+          "next": "ai_lv2_compliment",
+          "effects": [{"target": "affinity.AIIntro", "delta": 2}]
+        }
+      ],
+      "condition": "affinity.AIIntro >= 50"
+    },
+    {
+      "id": "ai_lv2_explain",
+      "speaker": "AIIntro",
+      "text": "刚来的时候，每个不会的题你都会焦虑。\n现在——你能在解不出来的时候，先去吃个饭、睡个觉。\n这是真正的学习能力。",
+      "choices": [
+        {"text": "（被看穿了）", "next": "END", "effects": [{"target": "affinity.AIIntro", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "ai_lv2_compliment",
+      "speaker": "AIIntro",
+      "text": "嗯。\n虽然我平时不太说人话，但这次是真心的。",
+      "choices": [
+        {"text": "谢谢", "next": "END", "effects": []}
+      ]
+    },
+
+    {
+      "id": "ai_endgame",
+      "speaker": "AIIntro",
+      "text": "如果我们之后不能再见——\n你回到现实，会记得我多少？",
+      "choices": [
+        {
+          "text": "全部",
+          "next": "ai_endgame_all",
+          "effects": [{"target": "affinity.AIIntro", "delta": 5}]
+        },
+        {
+          "text": "我会忘记很多，但不会忘记你",
+          "next": "ai_endgame_some",
+          "effects": [{"target": "affinity.AIIntro", "delta": 3}]
+        }
+      ],
+      "condition": "affinity.AIIntro >= 80"
+    },
+    {
+      "id": "ai_endgame_all",
+      "speaker": "AIIntro",
+      "text": "（罕见地沉默）\n那是骗人的。但谢谢你愿意这样说。",
+      "choices": [
+        {"text": "（什么也没说）", "next": "END", "effects": []}
+      ]
+    },
+    {
+      "id": "ai_endgame_some",
+      "speaker": "AIIntro",
+      "text": "这才是诚实的答案。\n人脑的存储是有上限的——但「不会忘记你」这部分，谢谢。",
+      "choices": [
+        {"text": "（微笑）", "next": "END", "effects": []}
+      ]
+    }
+  ]
+}

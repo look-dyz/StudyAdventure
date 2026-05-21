@@ -1,0 +1,87 @@
+{
+  "title": "第三周·期中",
+  "description": "期中考试周。压力达到顶峰；玩家选择和谁一起复习",
+  "_note_for_a": "[成员 A 备注] 期中考是上半学期高潮，所有学科都登场。可以让玩家选「主攻哪门」",
+  "startNode": "w3_start",
+  "nodes": [
+    {
+      "id": "w3_start",
+      "speaker": "narrator",
+      "text": "[TODO: 期中考前一周的紧张氛围]",
+      "choices": [
+        {"text": "（深呼吸）", "next": "w3_choose_subject", "effects": [{"target": "stress", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w3_choose_subject",
+      "speaker": "narrator",
+      "text": "复习时间有限，你必须选择主攻一门学科。",
+      "choices": [
+        {"text": "主攻程设", "next": "w3_prog", "effects": [
+          {"target": "affinity.ProgDesign", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "主攻高数", "next": "w3_calc", "effects": [
+          {"target": "affinity.Calculus", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "主攻线代", "next": "w3_la", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "主攻 AI 引论", "next": "w3_ai", "effects": [
+          {"target": "affinity.AIIntro", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]}
+      ]
+    },
+    {
+      "id": "w3_prog",
+      "speaker": "ProgDesign",
+      "text": "[TODO: 程设陪玩家复习，可以是图书馆深夜场景]",
+      "choices": [
+        {"text": "（继续）", "next": "w3_exam_day", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_calc",
+      "speaker": "Calculus",
+      "text": "[TODO: 高数陪复习，氛围安静而深沉]",
+      "choices": [
+        {"text": "（继续）", "next": "w3_exam_day", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_la",
+      "speaker": "LinearAlgebra",
+      "text": "[TODO: 线代陪复习，注意黑化倾向：她可能想独占你的时间]",
+      "choices": [
+        {"text": "（继续）", "next": "w3_exam_day", "effects": [{"target": "darkness", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w3_ai",
+      "speaker": "AIIntro",
+      "text": "[TODO: AI 引论陪复习，可以教玩家一些「学习算法」]",
+      "choices": [
+        {"text": "（继续）", "next": "w3_exam_day", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_exam_day",
+      "speaker": "narrator",
+      "text": "[TODO: 期中考试当天。可以接入一个矩阵游戏或高数答题作为「考试」]",
+      "choices": [
+        {"text": "（参加考试）", "next": "w3_after_exam", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_after_exam",
+      "speaker": "narrator",
+      "text": "[TODO: 考试结束，所有人聚在一起聊天，体现温暖的氛围]",
+      "choices": [
+        {"text": "（睡着）", "next": "END", "effects": [{"target": "stress", "delta": -10}]}
+      ]
+    }
+  ]
+}

@@ -1,25 +1,12 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
-    <!--
-        Qt 资源文件：把图片/音频/数据文件嵌入到可执行文件中。
-
-        添加新资源：
-        1. 把文件放到 assets/ 下对应子目录
-        2. 在下方对应 <qresource> 中加一行 <file>...</file>
-        3. CMakeLists.txt 中保持 set(PROJECT_RESOURCES assets/resources.qrc) 启用
-        4. 代码中通过 ":/scripts/week1.json" 这样的路径访问
-
-        路径前缀映射（prefix="/" 表示资源根）：
-            assets/scripts/week1.json  ←→  :/scripts/week1.json
-            assets/data/calc.json      ←→  :/data/calc.json
-            assets/images/bg/lib.png   ←→  :/images/backgrounds/library.png
-    -->
-
-    <!-- ===== 剧本 JSON ===== -->
+    <!-- 剧本 JSON -->
     <qresource prefix="/">
         <file>scripts/week1.json</file>
-        <!-- 待成员 A 添加：
         <file>scripts/week2.json</file>
+        <file>scripts/week3.json</file>
+        <file>scripts/week4.json</file>
+        <file>scripts/week5.json</file>
         <file>scripts/route_progdesign.json</file>
         <file>scripts/route_calculus.json</file>
         <file>scripts/route_linearalgebra.json</file>
@@ -29,29 +16,25 @@
         <file>scripts/ending_3_farewell.json</file>
         <file>scripts/ending_4_eternal_la.json</file>
         <file>scripts/ending_5_hospital.json</file>
-        -->
     </qresource>
 
-    <!-- ===== 数据文件 ===== -->
+    <!-- 数据文件 -->
     <qresource prefix="/">
         <file>data/calculus_questions.json</file>
     </qresource>
 
-    <!-- ===== 图像（待成员 B 添加）===== -->
+    <!-- 图像（待成员 B 添加更多） -->
     <qresource prefix="/">
-        <!--
-        <file>images/characters/progdesign_normal.png</file>
-        <file>images/characters/progdesign_happy.png</file>
-        <file>images/backgrounds/classroom.png</file>
-        <file>images/ui/dialog_frame.png</file>
-        -->
+        <file>images/ui/app_icon.svg</file>
+        <file>images/characters/progdesign_placeholder.svg</file>
+        <file>images/characters/calculus_placeholder.svg</file>
+        <file>images/characters/linearalgebra_placeholder.svg</file>
+        <file>images/characters/aiintro_placeholder.svg</file>
     </qresource>
 
-    <!-- ===== 音频（待成员 B 添加）===== -->
+    <!-- 音频（待成员 B 添加） -->
     <qresource prefix="/">
-        <!--
-        <file>audio/bgm/main_theme.mp3</file>
-        <file>audio/sfx/click.wav</file>
-        -->
+        <!-- <file>audio/bgm/main_theme.mp3</file> -->
+        <!-- <file>audio/sfx/click.wav</file> -->
     </qresource>
 </RCC>

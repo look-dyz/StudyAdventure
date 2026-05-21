@@ -1,0 +1,86 @@
+{
+  "title": "结局 End5 · 陌生的天花板",
+  "description": "压力值达到 100 触发——玩家在异世界里精神崩溃",
+  "trigger": "stress >= 100",
+  "startNode": "end5_01",
+  "nodes": [
+    {
+      "id": "end5_01",
+      "speaker": "narrator",
+      "text": "你最近经常做同一个梦——\n梦里所有的课同时上课，所有的小游戏同时倒计时，\n你的手指打字越来越快，可屏幕却总是慢半拍。",
+      "choices": [
+        {"text": "（继续）", "next": "end5_02", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_02",
+      "speaker": "narrator",
+      "text": "你已经不记得是第几次熬通宵了。\n图书馆的灯总是亮着，咖啡的味道渗进衣服里。\n小游戏一关接一关地刷——成绩在涨，但你的胸口越来越闷。",
+      "choices": [
+        {"text": "（继续）", "next": "end5_03", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_03",
+      "speaker": "AIIntro",
+      "text": "你最近的状态指标都在红区。\n停下来吧。",
+      "choices": [
+        {"text": "（继续）", "next": "end5_04", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_04",
+      "speaker": "ProgDesign",
+      "text": "学习不是这样学的。你在用消耗自己的方式换分数——\n这会出事的。",
+      "choices": [
+        {"text": "（继续）", "next": "end5_05", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_05",
+      "speaker": "narrator",
+      "text": "你想说没关系，可声音卡在喉咙里出不来。\n眼前的世界开始旋转——\n图书馆、教学楼、未名湖、宿舍——它们在你眼前同时存在，又同时崩塌。",
+      "choices": [
+        {"text": "（继续）", "next": "end5_06", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_06",
+      "speaker": "narrator",
+      "text": "「啪」\n你听见某种东西碎掉的声音。\n那是你自己。",
+      "choices": [
+        {"text": "（继续）", "next": "end5_07", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_07",
+      "speaker": "narrator",
+      "text": "—— 不知过了多久 ——\n\n你睁开眼，看到的是陌生的天花板。\n白色的、有几条细细的裂纹。\n空气里有消毒水的味道。",
+      "choices": [
+        {"text": "（继续）", "next": "end5_08", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_08",
+      "speaker": "narrator",
+      "text": "这不是宿舍。\n这是医院。\n\n你回到了现实——以这种方式。\n据说你已经昏迷了三天，期末考因病免考。",
+      "choices": [
+        {"text": "（看向窗外）", "next": "end5_09", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_09",
+      "speaker": "narrator",
+      "text": "你想起异世界里的那四个身影——\n他们的脸已经模糊了，只剩下几句话隐隐留在脑海里：\n\n「学习不是这样学的。」\n「你在用消耗自己的方式换分数——」\n「停下来吧。」",
+      "choices": [
+        {"text": "（闭上眼）", "next": "end5_10", "effects": []}
+      ]
+    },
+    {
+      "id": "end5_10",
+      "speaker": "narrator",
+      "text": "—— 陌生的天花板 · END ——\n\n这是最沉重的一个结局。\n如果你在游戏里看到了这个画面——希望你在现实中，永远不要看到。\n\n好好睡觉。好好吃饭。\n比分数重要的东西，还有很多。",
+      "choices": []
+    }
+  ]
+}
