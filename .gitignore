@@ -41,8 +41,6 @@ desktop.ini
 # ===== 调试与日志 =====
 *.log
 *.dmp
-core
-core.*
 *.stackdump
 
 # ===== CMake =====
