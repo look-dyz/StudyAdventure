@@ -1,77 +1,316 @@
 {
   "title": "第二周·适应",
-  "description": "玩家逐渐适应异世界的节奏；首次小测的压力；可选择重点培养某个学科",
-  "_note_for_a": "[成员 A 备注] 这是骨架，包含 8 个关键节点。你需要：(1) 把 [TODO] 处的台词扩写、丰富细节 (2) 在合适位置插入更多分支节点（参考 week1.json 的密度）",
+  "description": "玩家逐渐适应异世界的节奏；首次小测的压力；午饭、自习的小日常铺垫四条好感线",
   "startNode": "w2_start",
   "nodes": [
     {
       "id": "w2_start",
       "speaker": "narrator",
-      "text": "一周过去了。异世界的节奏你已经熟悉——\n[TODO: 描述玩家适应后的心境]",
+      "text": "一周过去了。\n异世界的清晨、铃声、四道熟悉的身影——它们已经不再让你惊慌。\n你开始意识到：所谓「适应」，就是不知不觉把异常当成日常。",
       "choices": [
-        {"text": "（继续）", "next": "w2_morning", "effects": []}
+        {"text": "（继续）", "next": "w2_dorm", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_dorm",
+      "speaker": "narrator",
+      "text": "宿舍的窗帘被风轻轻吹起。\n桌上摆着昨晚没合上的程设教材。",
+      "choices": [
+        {"text": "（起床）", "next": "w2_morning_choice", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_morning_choice",
+      "speaker": "narrator",
+      "text": "距离早课还有一个多小时。",
+      "choices": [
+        {"text": "早起把昨晚的代码再看一遍", "next": "w2_review", "effects": [
+          {"target": "affinity.ProgDesign", "delta": 2},
+          {"target": "stress", "delta": 2}
+        ]},
+        {"text": "再睡半小时", "next": "w2_oversleep", "effects": [
+          {"target": "stress", "delta": -2}
+        ]}
+      ]
+    },
+    {
+      "id": "w2_review",
+      "speaker": "ProgDesign",
+      "text": "（推门）……你居然这么早。\n看来今天的小测，应该不用我太担心了。",
+      "choices": [
+        {"text": "（点点头）", "next": "w2_morning", "effects": [{"target": "affinity.ProgDesign", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w2_oversleep",
+      "speaker": "narrator",
+      "text": "你重新陷进枕头里。\n再睁眼时，闹钟已经响了第三遍——糟糕，要迟到了。",
+      "choices": [
+        {"text": "（冲出门）", "next": "w2_morning", "effects": [{"target": "stress", "delta": 3}]}
       ]
     },
     {
       "id": "w2_morning",
       "speaker": "ProgDesign",
-      "text": "今天会有第一次小测。\n[TODO: 程设说明小测内容，给学生一些建议]",
+      "text": "今天会有第一次小测，三十分钟，闭卷。\n范围只有变量和控制流——别紧张，但也别大意。",
       "choices": [
-        {"text": "我准备好了", "next": "w2_quiz", "effects": [{"target": "stress", "delta": 3}]},
-        {"text": "可以推迟吗？", "next": "w2_postpone", "effects": [
+        {"text": "我准备好了", "next": "w2_quiz_ready", "effects": [{"target": "stress", "delta": 3}]},
+        {"text": "可以推迟到下周吗？", "next": "w2_postpone", "effects": [
           {"target": "affinity.ProgDesign", "delta": -3},
           {"target": "stress", "delta": 5}
         ]}
       ]
     },
     {
-      "id": "w2_quiz",
-      "speaker": "narrator",
-      "text": "[TODO: 描述小测过程。可以在这里接入小游戏作为\"小测\"]",
+      "id": "w2_postpone",
+      "speaker": "ProgDesign",
+      "text": "不行。\n推迟一次，就会有第二次、第三次——我见过太多人是这样把自己推下悬崖的。",
       "choices": [
-        {"text": "（继续）", "next": "w2_after_quiz", "effects": []}
+        {"text": "（沉默）", "next": "w2_postpone_2", "effects": []}
       ]
     },
     {
-      "id": "w2_postpone",
+      "id": "w2_postpone_2",
       "speaker": "ProgDesign",
-      "text": "[TODO: 程设温和但坚定地拒绝；可以引出他对学习态度的看法]",
+      "text": "学习不是天赋的较量，是和拖延对抗的耐力赛。\n现在去坐下，把卷子翻过来。",
       "choices": [
-        {"text": "好吧，我考", "next": "w2_quiz", "effects": []}
+        {"text": "（深呼吸）", "next": "w2_quiz_ready", "effects": [{"target": "stress", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w2_quiz_ready",
+      "speaker": "narrator",
+      "text": "试卷被发下来。\n第一题：判断下列循环的输出。\n你握紧了笔。",
+      "choices": [
+        {"text": "一题一题认真推", "next": "w2_quiz_careful", "effects": [
+          {"target": "stress", "delta": 3},
+          {"target": "affinity.ProgDesign", "delta": 3}
+        ]},
+        {"text": "凭直觉快速过一遍", "next": "w2_quiz_intuition", "effects": [
+          {"target": "stress", "delta": 1}
+        ]}
+      ]
+    },
+    {
+      "id": "w2_quiz_careful",
+      "speaker": "narrator",
+      "text": "你把每一道题的循环体在草稿纸上手动展开。\n抬头时，距离交卷只剩五分钟——你刚好填上最后一空。",
+      "choices": [
+        {"text": "（交卷）", "next": "w2_quiz_done", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_quiz_intuition",
+      "speaker": "narrator",
+      "text": "你扫题、勾选、写下答案，几乎不假思索。\n时间还剩十五分钟，你已经交卷起身——周围的同学吃惊地看着你。",
+      "choices": [
+        {"text": "（走出教室）", "next": "w2_quiz_done", "effects": [{"target": "stress", "delta": -2}]}
+      ]
+    },
+    {
+      "id": "w2_quiz_done",
+      "speaker": "ProgDesign",
+      "text": "卷子我会现场批。\n等你吃完午饭回来，分数就在桌上。",
+      "choices": [
+        {"text": "（点头）", "next": "w2_grade_announce", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_grade_announce",
+      "speaker": "ProgDesign",
+      "text": "成绩……不算糟。\n但也别松懈——这只是开胃菜。",
+      "choices": [
+        {"text": "（鞠躬告退）", "next": "w2_after_quiz", "effects": []}
       ]
     },
     {
       "id": "w2_after_quiz",
       "speaker": "LinearAlgebra",
-      "text": "[TODO: 线代出现，邀请玩家午饭一起吃。这里可以体现线代对玩家的关注（如果黑化值已经偏高，可以加 condition 让她说更占有欲的话）]",
+      "text": "（在教室门口拦住你）你的午饭，跟我吃。\n我已经替你点好了。",
       "choices": [
         {"text": "好啊", "next": "w2_lunch_la", "effects": [{"target": "affinity.LinearAlgebra", "delta": 3}]},
-        {"text": "我和 AI 引论约好了", "next": "w2_lunch_ai", "effects": [
+        {"text": "今天和 AI 引论约好了", "next": "w2_lunch_ai", "effects": [
           {"target": "affinity.AIIntro", "delta": 2},
           {"target": "darkness", "delta": 2}
-        ]}
+        ]},
+        {"text": "（她替你点好了……还是去吧）", "next": "w2_lunch_la_dark", "effects": [
+          {"target": "darkness", "delta": 3}
+        ], "condition": "darkness >= 25"}
       ]
     },
     {
       "id": "w2_lunch_la",
       "speaker": "LinearAlgebra",
-      "text": "[TODO: 与线代午饭的对话。可以聊她为什么对你这么关注；铺垫黑化倾向]",
+      "text": "餐厅二楼靠窗的位置。我每周二都坐这里。\n今天起，这是「我们」的位置。",
       "choices": [
-        {"text": "（继续）", "next": "w2_evening", "effects": []}
+        {"text": "（坐下）", "next": "w2_lunch_la_talk", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_lunch_la_dark",
+      "speaker": "LinearAlgebra",
+      "text": "（她拉开椅子，目光没离开过你）\n我数过——这一周，你看 AI 引论的次数，比看我多七次。",
+      "choices": [
+        {"text": "（不寒而栗，坐下）", "next": "w2_lunch_la_talk", "effects": [{"target": "stress", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w2_lunch_la_talk",
+      "speaker": "LinearAlgebra",
+      "text": "我对人没什么兴趣——大多数人都只是一组无聊的向量。\n但你……你的基不一样。",
+      "choices": [
+        {"text": "我也很在意你", "next": "w2_lunch_la_close", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 4},
+          {"target": "darkness", "delta": 2}
+        ]},
+        {"text": "我们只是同学吧", "next": "w2_lunch_la_distance", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": -2},
+          {"target": "darkness", "delta": 3}
+        ]}
+      ]
+    },
+    {
+      "id": "w2_lunch_la_close",
+      "speaker": "LinearAlgebra",
+      "text": "（她垂下眼，嘴角几不可察地弯起）\n那你要记得——别让我等太久。",
+      "choices": [
+        {"text": "（吃完午饭）", "next": "w2_afternoon", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_lunch_la_distance",
+      "speaker": "LinearAlgebra",
+      "text": "（停顿了很久）……同学。\n好。我会记住这个词。",
+      "choices": [
+        {"text": "（沉默地吃完）", "next": "w2_afternoon", "effects": [{"target": "stress", "delta": 3}]}
       ]
     },
     {
       "id": "w2_lunch_ai",
       "speaker": "AIIntro",
-      "text": "[TODO: AI 引论的对话。可以聊他对学习方法的看法；幽默轻松的氛围]",
+      "text": "你来啦。\n我猜你刚被线代堵在门口了吧——她的「邀请算法」最近迭代得很激进。",
       "choices": [
-        {"text": "（继续）", "next": "w2_evening", "effects": []}
+        {"text": "（笑）你怎么知道", "next": "w2_lunch_ai_talk", "effects": [{"target": "affinity.AIIntro", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w2_lunch_ai_talk",
+      "speaker": "AIIntro",
+      "text": "学习这件事，本质上是反向传播——\n你今天卡在哪一题上，比你做对了几题更重要。",
+      "choices": [
+        {"text": "听起来很有道理", "next": "w2_lunch_ai_listen", "effects": [{"target": "affinity.AIIntro", "delta": 3}]},
+        {"text": "我有自己的一套", "next": "w2_lunch_ai_own", "effects": [{"target": "affinity.AIIntro", "delta": 1}]}
+      ]
+    },
+    {
+      "id": "w2_lunch_ai_listen",
+      "speaker": "AIIntro",
+      "text": "好学生。\n下次小测前，把这周错的题做一份梯度图给我看——我帮你找最陡的下降方向。",
+      "choices": [
+        {"text": "（点头）", "next": "w2_afternoon", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_lunch_ai_own",
+      "speaker": "AIIntro",
+      "text": "也好——过早泛化是有风险的。\n你慢慢摸索，撞到墙的时候记得来找我。",
+      "choices": [
+        {"text": "（笑了笑）", "next": "w2_afternoon", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_afternoon",
+      "speaker": "narrator",
+      "text": "下午的阳光斜斜地照进高数教室。\n黑板上是一行干净的字：「极限的几何意义」。",
+      "choices": [
+        {"text": "（坐下听课）", "next": "w2_calculus_class", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_calculus_class",
+      "speaker": "Calculus",
+      "text": "趋近，但永不到达。\n你不觉得这很像爱情吗？或者——人生本身。",
+      "choices": [
+        {"text": "（追问）那「到达」意味着什么？", "next": "w2_calculus_philo", "effects": [{"target": "affinity.Calculus", "delta": 3}]},
+        {"text": "（走神望向窗外）", "next": "w2_calculus_distract", "effects": [
+          {"target": "affinity.Calculus", "delta": -2},
+          {"target": "stress", "delta": 2}
+        ]}
+      ]
+    },
+    {
+      "id": "w2_calculus_philo",
+      "speaker": "Calculus",
+      "text": "到达，就是放弃了过程。\n所以——也许「永不到达」才是温柔的事。",
+      "choices": [
+        {"text": "（若有所思）", "next": "w2_evening", "effects": [{"target": "affinity.Calculus", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w2_calculus_distract",
+      "speaker": "Calculus",
+      "text": "（轻轻敲了敲你的桌面）\n回到这里来。窗外的风景，是要你解完这道题之后才有权看的。",
+      "choices": [
+        {"text": "（脸红）", "next": "w2_evening", "effects": []}
       ]
     },
     {
       "id": "w2_evening",
       "speaker": "narrator",
-      "text": "[TODO: 第二周的结尾叙述。可以让玩家对接下来的剧情走向有点期待]",
+      "text": "傍晚，铃声从教学楼顶飘下来。\n这一天的课全部结束了。",
+      "choices": [
+        {"text": "（思考晚上去哪）", "next": "w2_library_choice", "effects": []}
+      ]
+    },
+    {
+      "id": "w2_library_choice",
+      "speaker": "narrator",
+      "text": "晚自习时间。",
+      "choices": [
+        {"text": "去图书馆", "next": "w2_library", "effects": [{"target": "stress", "delta": 2}]},
+        {"text": "回宿舍躺平", "next": "w2_dorm_rest", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+    {
+      "id": "w2_library",
+      "speaker": "narrator",
+      "text": "图书馆三楼，灯光柔和。\n你找到一个靠窗的位置，刚摊开书——",
+      "choices": [
+        {"text": "（一个熟悉的身影出现）", "next": "w2_library_ai_meet", "effects": [], "condition": "darkness < 25"},
+        {"text": "（玻璃的反光里有人）", "next": "w2_library_la_stalk", "effects": [{"target": "darkness", "delta": 3}], "condition": "darkness >= 25"}
+      ]
+    },
+    {
+      "id": "w2_library_ai_meet",
+      "speaker": "AIIntro",
+      "text": "（坐到你对面）今天午饭那番话，我又想了一下——\n其实，把错题做成梯度图这件事，我从没对别人说过。",
+      "choices": [
+        {"text": "为什么是我？", "next": "w2_end", "effects": [{"target": "affinity.AIIntro", "delta": 4}]}
+      ]
+    },
+    {
+      "id": "w2_library_la_stalk",
+      "speaker": "LinearAlgebra",
+      "text": "（书架后传来声音）三楼东侧第七排。\n这是你这周第三次坐这个位置——我都记下了。",
+      "choices": [
+        {"text": "（合上书，慢慢离开）", "next": "w2_end", "effects": [
+          {"target": "stress", "delta": 5},
+          {"target": "darkness", "delta": 2}
+        ]}
+      ]
+    },
+    {
+      "id": "w2_dorm_rest",
+      "speaker": "narrator",
+      "text": "你回到宿舍，把灯关上。\n手机屏幕亮着——线代的消息已经叠了三条，你假装没看见。",
+      "choices": [
+        {"text": "（合上手机）", "next": "w2_end", "effects": [{"target": "darkness", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w2_end",
+      "speaker": "narrator",
+      "text": "第二周结束了。\n你已经能分清四个人的脚步声——\n下一周，是期中考周。",
       "choices": [
         {"text": "（睡着）", "next": "END", "effects": []}
       ]
