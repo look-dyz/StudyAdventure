@@ -38,7 +38,7 @@ void MainWindow::setupUi() {
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     // ========== 顶部状态栏 ==========
-    auto* statusBar = new StatusBar(GameManager::instance().player(), this);
+    auto* statusBar = new StatusBar(&GameManager::instance().getPlayer(), this);
     mainLayout->addWidget(statusBar);
 
     // ========== 页面 0：主菜单 ==========
@@ -71,23 +71,23 @@ void MainWindow::setupUi() {
         connect(mapScene, &MapScene::locationClicked, this, [this](Location loc) {
             QString msg = tr("点击了：%1").arg(locationName(loc));
             // 示例：到不同地点触发不同效果
-            auto* player = GameManager::instance().player();
+            auto& player = GameManager::instance().getPlayer();
             switch (loc) {
                 case Location::Classroom:
-                    player->addAffinity(SubjectType::ProgDesign, 2);
+                    player.addAffinity(SubjectType::ProgDesign, 2);
                     GameManager::instance().requestScene(GameScene::Dialog);
                     break;
                 case Location::Library:
                     GameManager::instance().requestScene(GameScene::MiniGame);
                     break;
                 case Location::WeimingLake:
-                    player->addStress(-5);
+                    player.addStress(-5);
                     QMessageBox::information(this, tr("未名湖"),
                         tr("你在湖边坐了一会儿，心情舒畅了不少。\n压力 -5"));
                     break;
                 case Location::Dormitory:
-                    player->addStress(-10);
-                    player->advanceDay();
+                    player.addStress(-10);
+                    player.advanceDay();
                     QMessageBox::information(this, tr("宿舍"),
                         tr("回到宿舍睡了一觉。\n压力 -10，时间推进一天"));
                     break;
@@ -118,12 +118,14 @@ void MainWindow::setupUi() {
         );
 
         connect(dialog, &DialogWindow::choiceMade, this, [](int idx) {
-            auto* player = GameManager::instance().player();
+            auto& player = GameManager::instance().getPlayer();
+
             if (idx == 0) {
-                player->addAffinity(SubjectType::ProgDesign, 3);
+                player.addAffinity(SubjectType::ProgDesign, 3);
             } else {
-                player->addStress(5);
+                player.addStress(5);
             }
+
             GameManager::instance().requestScene(GameScene::Map);
         });
 

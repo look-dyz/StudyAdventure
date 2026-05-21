@@ -51,7 +51,6 @@ set(PROJECT_SOURCES
     src/common/Subject.cpp
     src/common/Constants.h
 
-    # 核心系统（成员 C）
     src/core/Player.h
     src/core/Player.cpp
     src/core/GameManager.h
