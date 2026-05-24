@@ -7,6 +7,11 @@
 #include "story/StoryEngine.h"
 #include "map/MapScene.h"
 #include "games/TicTacToeGame.h"
+#include "games/BlackjackGame.h"
+#include "games/MinesweeperGame.h"
+#include "games/CalculusGame.h"
+#include "games/MatrixGame.h"
+#include "games/MazeGame.h"
 
 #include <QStackedWidget>
 #include <QGraphicsView>
@@ -141,26 +146,370 @@ void MainWindow::setupUi() {
     }
     stack_->addWidget(dialogPage);
 
-    // ========== 页面 3：小游戏（井字棋演示）==========
-    auto* miniGamePage = new QWidget;
-    {
-        auto* layout = new QVBoxLayout(miniGamePage);
-        auto* game = new TicTacToeGame;
-        auto* backBtn = new QPushButton(tr("← 放弃返回"));
+    // ========== 页面 3：小游戏==========
+    auto* miniGameMenuPage = new QWidget;
 
-        connect(game, &MiniGame::finished, this, [](int score, bool won) {
-            GameManager::instance().onMiniGameFinished(MiniGameType::TicTacToe, score, won);
-        });
-        connect(backBtn, &QPushButton::clicked, this, []() {
-            GameManager::instance().requestScene(GameScene::Map);
-        });
+    {
+        auto* layout = new QVBoxLayout(miniGameMenuPage);
+
+        auto* title = new QLabel(tr("小游戏中心"));
+        title->setAlignment(Qt::AlignCenter);
+
+        title->setStyleSheet(
+            "font-size: 28px;"
+            "font-weight: bold;"
+            "color: #8B1A1A;"
+            );
+
+        layout->addWidget(title);
+
+                // =========================
+                // 六个小游戏按钮
+                // =========================
+
+        auto* blackjackBtn =
+            new QPushButton(tr("21点"));
+
+        auto* ticBtn =
+            new QPushButton(tr("井字棋"));
+
+        auto* mineBtn =
+            new QPushButton(tr("扫雷"));
+
+        auto* matrixBtn =
+            new QPushButton(tr("矩阵运算"));
+
+        auto* calculusBtn =
+            new QPushButton(tr("高数答题"));
+
+        auto* mazeBtn =
+            new QPushButton(tr("AI迷宫"));
+
+                // 按钮样式
+        QList<QPushButton*> btns = {
+            blackjackBtn,
+            ticBtn,
+            mineBtn,
+            matrixBtn,
+            calculusBtn,
+            mazeBtn
+        };
+
+        for(auto* b : btns) {
+
+            b->setMinimumHeight(60);
+
+            b->setStyleSheet(
+                "font-size:20px;"
+                "background:#F5E6CA;"
+                "border-radius:10px;"
+                );
+
+            layout->addWidget(b);
+        }
+
+        layout->addStretch();
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回地图"));
+
+        connect(backBtn,
+                &QPushButton::clicked,this, [](){
+                    GameManager::instance()
+                    .requestScene(GameScene::Map);
+                });
+
+        layout->addWidget(backBtn);
+
+                // =========================
+                // 按钮进入不同小游戏
+                // =========================
+
+        connect(blackjackBtn,
+                &QPushButton::clicked, this, [this]() {
+                    stack_->setCurrentIndex(blackjackIndex_);
+                });
+
+        connect(ticBtn,
+                &QPushButton::clicked, this, [this]() {
+                    stack_->setCurrentIndex(ticTacToeIndex_);
+                });
+
+        connect(mineBtn,
+                &QPushButton::clicked, this, [this]() {
+                    stack_->setCurrentIndex(minesweeperIndex_);
+                });
+
+        connect(matrixBtn,
+                &QPushButton::clicked, this, [this]() {
+                    stack_->setCurrentIndex(matrixIndex_);
+                });
+
+        connect(calculusBtn,
+                &QPushButton::clicked, this, [this]() {
+                    stack_->setCurrentIndex(calculusIndex_);
+                });
+
+        connect(mazeBtn,
+                &QPushButton::clicked, this, [this]() {
+                    stack_->setCurrentIndex(mazeIndex_);
+                });
+
+    }
+    miniGameIndex_ = stack_->addWidget(miniGameMenuPage);
+
+    //21点
+    auto* blackjackPage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(blackjackPage);
+
+        auto* game =
+            new BlackjackGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Blackjack,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(3);
+                });
 
         game->start();
+
         layout->addWidget(game);
+
         layout->addWidget(backBtn);
-        layout->setContentsMargins(60, 20, 60, 20);
     }
-    stack_->addWidget(miniGamePage);
+
+    blackjackIndex_ =stack_->addWidget(blackjackPage);
+    //井字棋
+    auto* ticPage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(ticPage);
+
+        auto* game =
+            new TicTacToeGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::TicTacToe,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+        game->start();
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    ticTacToeIndex_ =stack_->addWidget(ticPage);
+    //扫雷
+    auto* minePage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(minePage);
+
+        auto* game =
+            new MinesweeperGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Minesweeper,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+        game->start();
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    minesweeperIndex_ =stack_->addWidget(minePage);
+
+    auto* matrixPage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(matrixPage);
+
+        auto* game =
+            new MatrixGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Matrix,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+        game->start();
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    matrixIndex_ =stack_->addWidget(matrixPage);
+
+    auto* calculusPage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(calculusPage);
+
+        auto* game =
+            new CalculusGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Calculus,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+        game->start();
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    calculusIndex_ =stack_->addWidget(calculusPage);
+
+    auto* mazePage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(mazePage);
+
+        auto* game =
+            new MazeGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Maze,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+        game->start();
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    mazeIndex_ = stack_->addWidget(mazePage);
 
     // ========== 页面 4：结局 ==========
     auto* endingPage = new QWidget;

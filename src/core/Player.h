@@ -43,6 +43,8 @@ public:
     int currentWeek() const { return currentWeek_; }
     int currentDay() const { return currentDay_; }
     void advanceDay();          ///< 推进一天
+    void setCurrentWeek(int week);
+    void setCurrentDay(int day);
 
     // ========== 重置（新游戏）==========
     void reset();

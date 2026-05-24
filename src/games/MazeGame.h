@@ -13,6 +13,7 @@
 #include "common/MiniGame.h"
 #include <vector>
 #include <utility>
+#include <QStackedLayout>
 
 class QGraphicsView;
 class QGraphicsScene;
@@ -36,6 +37,11 @@ protected:
 
 private:
     enum class CellType { Wall, Empty, Trap, Knowledge, Start, End };
+
+    QWidget* introPage_ = nullptr;
+    QWidget* gamePage_ = nullptr;
+
+    QStackedLayout* stackedLayout_ = nullptr;
 
     int rows_ = 15;
     int cols_ = 15;

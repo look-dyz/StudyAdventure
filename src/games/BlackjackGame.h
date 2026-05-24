@@ -70,6 +70,7 @@ private:
     QLabel* dealerLabel_ = nullptr;
     QPushButton* hitBtn_ = nullptr;
     QPushButton* standBtn_ = nullptr;
+    QPushButton* resetBtn_;
 
     int calculateScore(const std::vector<Card>& hand) const;  ///< 含 A 灵活计数
     void updateDisplay();

@@ -47,8 +47,18 @@ void Deck::shuffle() {
 }
 
 Card Deck::draw() {
+
+    if(cards_.empty()) {
+
+        qDebug() << "[Deck] Empty deck! Reshuffling.";
+
+        *this = Deck();
+    }
+
     Card c = cards_.back();
+
     cards_.pop_back();
+
     return c;
 }
 
@@ -67,12 +77,18 @@ BlackjackGame::BlackjackGame(QWidget* parent) : MiniGame(parent) {
 
     hitBtn_ = new QPushButton(tr("要牌"), this);
     standBtn_ = new QPushButton(tr("停牌"), this);
+    resetBtn_ = new QPushButton(tr("重新开始"), this);
+    // 初始隐藏
+    resetBtn_->hide();
+
     connect(hitBtn_, &QPushButton::clicked, this, &BlackjackGame::onHitClicked);
     connect(standBtn_, &QPushButton::clicked, this, &BlackjackGame::onStandClicked);
+    connect(resetBtn_,&QPushButton::clicked,this,&BlackjackGame::reset);
 
     auto* btnRow = new QHBoxLayout;
     btnRow->addWidget(hitBtn_);
     btnRow->addWidget(standBtn_);
+    btnRow->addWidget(resetBtn_);
 
     layout->addWidget(title);
     layout->addWidget(dealerLabel_);
@@ -87,6 +103,7 @@ void BlackjackGame::start() {
 }
 
 void BlackjackGame::reset() {
+    resetBtn_->hide();
     deck_ = Deck();
     playerHand_.clear();
     dealerHand_.clear();
@@ -176,6 +193,9 @@ void BlackjackGame::endGame(bool playerWon, bool blackjack) {
     gameEnded_ = true;
     hitBtn_->setEnabled(false);
     standBtn_->setEnabled(false);
+    // 显示重新开始按钮
+    resetBtn_->show();
+
     updateDisplay();
 
     int score = 0;
