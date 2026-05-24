@@ -51,8 +51,8 @@ void MainWindow::setupUi() {
             tr("读档功能由成员 C 实现，详见 src/core/SaveManager.cpp"));
     });
     connect(mainMenu, &MainMenu::settingsClicked, this, [this]() {
-        QMessageBox::information(this, tr("提示"),
-            tr("设置面板由成员 B 实现"));
+        SettingsDialog dialog(this);
+        dialog.exec();
     });
     connect(mainMenu, &MainMenu::exitClicked, this, []() {
         QApplication::quit();
