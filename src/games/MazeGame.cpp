@@ -12,6 +12,8 @@
 
 #include <QKeyEvent>
 #include <QDebug>
+#include <QMessageBox>
+#include <QTimer>
 
 #include <queue>
 #include <random>
@@ -77,28 +79,106 @@ MazeGame::MazeGame(QWidget* parent)
             "padding:20px;"
             );
 
-        auto* startBtn =
-            new QPushButton(tr("开始游戏"));
+        auto* easyBtn =
+            new QPushButton(tr("简单"));
 
-        startBtn->setMinimumHeight(50);
+        auto* normalBtn =
+            new QPushButton(tr("普通"));
 
-        startBtn->setStyleSheet(
+        auto* hardBtn =
+            new QPushButton(tr("困难"));
+
+        easyBtn->setMinimumHeight(45);
+        normalBtn->setMinimumHeight(45);
+        hardBtn->setMinimumHeight(45);
+
+        easyBtn->setStyleSheet(
+            "font-size:18px;"
+            "background:#B8F2C8;"
+            "border-radius:10px;"
+            );
+
+        normalBtn->setStyleSheet(
             "font-size:18px;"
             "background:#F5E6CA;"
             "border-radius:10px;"
             );
 
-        connect(startBtn,
+        hardBtn->setStyleSheet(
+            "font-size:18px;"
+            "background:#FFB3B3;"
+            "border-radius:10px;"
+            );
+
+        connect(easyBtn,
                 &QPushButton::clicked,
                 this,
                 [this]() {
 
-                    stackedLayout_->setCurrentWidget(gamePage_);
+                    difficulty_ = Difficulty::Easy;
+
+                    start();
 
                     reset();
 
+                    stackedLayout_->setCurrentWidget(gamePage_);
+
                     setFocus();
                 });
+
+        connect(normalBtn,
+                &QPushButton::clicked,
+                this,
+                [this]() {
+
+                    difficulty_ = Difficulty::Normal;
+
+                    start();
+
+                    reset();
+
+                    stackedLayout_->setCurrentWidget(gamePage_);
+
+                    setFocus();
+                });
+
+        connect(hardBtn,
+                &QPushButton::clicked,
+                this,
+                [this]() {
+
+                    difficulty_ = Difficulty::Hard;
+
+                    start();
+
+                    reset();
+
+                    stackedLayout_->setCurrentWidget(gamePage_);
+
+                    setFocus();
+                });
+
+        easyBtn->setMinimumHeight(45);
+        normalBtn->setMinimumHeight(45);
+        hardBtn->setMinimumHeight(45);
+
+        easyBtn->setStyleSheet(
+            "font-size:18px;"
+            "background:#B8F2C8;"
+            "border-radius:10px;"
+            );
+
+        normalBtn->setStyleSheet(
+            "font-size:18px;"
+            "background:#F5E6CA;"
+            "border-radius:10px;"
+            );
+
+        hardBtn->setStyleSheet(
+            "font-size:18px;"
+            "background:#FFB3B3;"
+            "border-radius:10px;"
+            );
 
         layout->addStretch();
 
@@ -106,7 +186,11 @@ MazeGame::MazeGame(QWidget* parent)
 
         layout->addWidget(introText);
 
-        layout->addWidget(startBtn);
+        layout->addWidget(easyBtn);
+
+        layout->addWidget(normalBtn);
+
+        layout->addWidget(hardBtn);
 
         layout->addStretch();
     }
@@ -164,6 +248,42 @@ MazeGame::MazeGame(QWidget* parent)
 
             // 关键：MazeGame 自己接收键盘
     setFocusPolicy(Qt::StrongFocus);
+
+    timer_ = new QTimer(this);
+
+    connect(timer_,
+            &QTimer::timeout,
+            this,
+            [this]() {
+
+                if(gameEnded_)
+                    return;
+
+                timeRemaining_--;
+
+                statusLabel_->setText(
+                    tr("剩余步数 %1 | 剩余时间 %2 秒 | H键提示（%3/%4）")
+                        .arg(stepsRemaining_)
+                        .arg(timeRemaining_)
+                        .arg(maxHints_ - hintsUsed_)
+                        .arg(maxHints_)
+                    );
+
+                if(timeRemaining_ <= 0) {
+
+                    gameEnded_ = true;
+
+                    timer_->stop();
+
+                    QMessageBox::warning(
+                        this,
+                        tr("时间结束"),
+                        tr("时间耗尽，挑战失败！")
+                        );
+
+                    emit finished(10, false);
+                }
+            });
 }
 
 void MazeGame::start()
@@ -172,14 +292,17 @@ void MazeGame::start()
 
         case Difficulty::Easy:
             stepsRemaining_ = 60;
+            timeRemaining_ = 60;
             break;
 
         case Difficulty::Normal:
             stepsRemaining_ = 45;
+            timeRemaining_ = 30;
             break;
 
         case Difficulty::Hard:
             stepsRemaining_ = 30;
+            timeRemaining_ = 15;
             break;
     }
 
@@ -204,21 +327,35 @@ void MazeGame::reset()
 
     gameEnded_ = false;
 
-    generateMaze();
+    do {
 
-    placeSpecialCells();
+        maze_.assign(
+            rows_,
+            std::vector<CellType>(
+                cols_,
+                CellType::Wall
+                )
+            );
 
-    playerRow_ = 0;
-    playerCol_ = 0;
+        generateMaze();
 
-    endRow_ = rows_ - 1;
-    endCol_ = cols_ - 1;
+        placeSpecialCells();
 
-    maze_[playerRow_][playerCol_]
-        = CellType::Start;
+        playerRow_ = 0;
+        playerCol_ = 0;
 
-    maze_[endRow_][endCol_]
-        = CellType::End;
+        endRow_ = rows_ - 2;
+        endCol_ = cols_ - 2;
+
+        maze_[playerRow_][playerCol_]
+            = CellType::Start;
+
+        maze_[endRow_][endCol_]
+            = CellType::End;
+
+    } while(!isMazeSolvableWithinSteps());
+
+
 
     redraw();
 
@@ -228,6 +365,8 @@ void MazeGame::reset()
             .arg(maxHints_ - hintsUsed_)
             .arg(maxHints_)
         );
+
+    timer_->start(1000);
 
             // 核心：重新拿焦点
     setFocus();
@@ -454,6 +593,11 @@ void MazeGame::redraw() {
     scene_->addEllipse(playerCol_ * CELL_SIZE + 4, playerRow_ * CELL_SIZE + 4,
                        CELL_SIZE - 8, CELL_SIZE - 8,
                        QPen(Qt::black), QBrush(QColor("#3B5BA5")));
+
+    view_->centerOn(
+        playerCol_ * CELL_SIZE,
+        playerRow_ * CELL_SIZE
+        );
 }
 
 void MazeGame::keyPressEvent(QKeyEvent* event)
@@ -531,7 +675,13 @@ void MazeGame::movePlayer(int dr, int dc) {
     }
     if (stepsRemaining_ <= 0) {
         gameEnded_ = true;
+        timer_->stop();
         statusLabel_->setText(tr("步数耗尽，失败……"));
+        QMessageBox::warning(
+            this,
+            tr("游戏失败"),
+            tr("步数耗尽，挑战失败！")
+            );
         emit finished(20, false);
         return;
     }
@@ -575,10 +725,56 @@ void MazeGame::showHint() {
     qDebug() << "[Maze] showHint, path length =" << path.size();
 }
 
+bool MazeGame::isMazeSolvableWithinSteps()
+{
+    auto path = bfsShortestPath();
+
+    if(path.empty())
+        return false;
+
+    int cost = path.size();
+
+            // 计算路径中的陷阱额外代价
+    for(const auto& p : path) {
+
+        int r = p.first;
+        int c = p.second;
+
+        if(maze_[r][c] == CellType::Trap) {
+
+            cost += 3;
+        }
+    }
+
+    qDebug()
+        << "[Maze] shortest cost ="
+        << cost
+        << "steps ="
+        << stepsRemaining_;
+
+    return cost <= stepsRemaining_;
+}
+
 void MazeGame::onReachEnd() {
+
     gameEnded_ = true;
-    int score = 60 + (maxHints_ - hintsUsed_) * 10;  // 少用提示分数更高
-    statusLabel_->setText(tr("到达终点！分数 %1").arg(score));
+
+    timer_->stop();
+
+    int score =
+        60 + (maxHints_ - hintsUsed_) * 10;
+
+    statusLabel_->setText(
+        tr("到达终点！分数 %1").arg(score)
+        );
+
+    QMessageBox::information(
+        this,
+        tr("游戏胜利"),
+        tr("成功走出迷宫！\n最终得分：%1")
+            .arg(score)
+        );
+
     emit finished(score, true);
 }
 

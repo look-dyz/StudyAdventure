@@ -18,6 +18,7 @@
 class QGraphicsView;
 class QGraphicsScene;
 class QLabel;
+class QTimer;
 
 namespace SA {
 
@@ -36,6 +37,10 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
+    QTimer* timer_ = nullptr;
+
+    int timeRemaining_ = 0;
+
     enum class CellType { Wall, Empty, Trap, Knowledge, Start, End };
 
     QWidget* introPage_ = nullptr;
@@ -69,6 +74,8 @@ private:
     void movePlayer(int dr, int dc);
     void showHint();
     void onReachEnd();
+
+    bool isMazeSolvableWithinSteps();
 };
 
 } // namespace SA

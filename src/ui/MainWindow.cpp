@@ -147,6 +147,14 @@ void MainWindow::setupUi() {
     stack_->addWidget(dialogPage);
 
     // ========== 页面 3：小游戏==========
+
+    auto* blackjackGame = new BlackjackGame;
+    auto* ticGame = new TicTacToeGame;
+    auto* mineGame = new MinesweeperGame;
+    auto* matrixGame = new MatrixGame;
+    auto* calculusGame = new CalculusGame;
+    auto* mazeGame = new MazeGame;
+
     auto* miniGameMenuPage = new QWidget;
 
     {
@@ -226,32 +234,62 @@ void MainWindow::setupUi() {
                 // =========================
 
         connect(blackjackBtn,
-                &QPushButton::clicked, this, [this]() {
+                &QPushButton::clicked,
+                this,
+                [this, blackjackGame]() {
+
+                    blackjackGame->start();
+
                     stack_->setCurrentIndex(blackjackIndex_);
                 });
 
         connect(ticBtn,
-                &QPushButton::clicked, this, [this]() {
+                &QPushButton::clicked,
+                this,
+                [this, ticGame]() {
+
+                    ticGame->start();
+
                     stack_->setCurrentIndex(ticTacToeIndex_);
                 });
 
         connect(mineBtn,
-                &QPushButton::clicked, this, [this]() {
+                &QPushButton::clicked,
+                this,
+                [this, mineGame]() {
+
+                    mineGame->start();
+
                     stack_->setCurrentIndex(minesweeperIndex_);
                 });
 
         connect(matrixBtn,
-                &QPushButton::clicked, this, [this]() {
+                &QPushButton::clicked,
+                this,
+                [this, matrixGame]() {
+
+                    matrixGame->start();
+
                     stack_->setCurrentIndex(matrixIndex_);
                 });
 
         connect(calculusBtn,
-                &QPushButton::clicked, this, [this]() {
+                &QPushButton::clicked,
+                this,
+                [this, calculusGame]() {
+
+                    calculusGame->start();
+
                     stack_->setCurrentIndex(calculusIndex_);
                 });
 
         connect(mazeBtn,
-                &QPushButton::clicked, this, [this]() {
+                &QPushButton::clicked,
+                this,
+                [this, mazeGame]() {
+
+                    mazeGame->start();
+
                     stack_->setCurrentIndex(mazeIndex_);
                 });
 
@@ -261,17 +299,15 @@ void MainWindow::setupUi() {
     //21点
     auto* blackjackPage = new QWidget;
 
+
     {
         auto* layout =
             new QVBoxLayout(blackjackPage);
 
-        auto* game =
-            new BlackjackGame;
-
         auto* backBtn =
             new QPushButton(tr("← 返回大厅"));
 
-        connect(game,
+        connect(blackjackGame,
                 &MiniGame::finished,
                 this,
                 [](int score, bool won){
@@ -292,9 +328,9 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(3);
                 });
 
-        game->start();
 
-        layout->addWidget(game);
+
+        layout->addWidget(blackjackGame);
 
         layout->addWidget(backBtn);
     }
@@ -307,8 +343,7 @@ void MainWindow::setupUi() {
         auto* layout =
             new QVBoxLayout(ticPage);
 
-        auto* game =
-            new TicTacToeGame;
+        auto* game = ticGame;
 
         auto* backBtn =
             new QPushButton(tr("← 返回大厅"));
@@ -334,7 +369,7 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(miniGameIndex_);
                 });
 
-        game->start();
+
 
         layout->addWidget(game);
 
@@ -349,8 +384,7 @@ void MainWindow::setupUi() {
         auto* layout =
             new QVBoxLayout(minePage);
 
-        auto* game =
-            new MinesweeperGame;
+        auto* game = mineGame;
 
         auto* backBtn =
             new QPushButton(tr("← 返回大厅"));
@@ -376,7 +410,6 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(miniGameIndex_);
                 });
 
-        game->start();
 
         layout->addWidget(game);
 
@@ -391,8 +424,7 @@ void MainWindow::setupUi() {
         auto* layout =
             new QVBoxLayout(matrixPage);
 
-        auto* game =
-            new MatrixGame;
+        auto* game = matrixGame;
 
         auto* backBtn =
             new QPushButton(tr("← 返回大厅"));
@@ -418,7 +450,7 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(miniGameIndex_);
                 });
 
-        game->start();
+
 
         layout->addWidget(game);
 
@@ -433,8 +465,7 @@ void MainWindow::setupUi() {
         auto* layout =
             new QVBoxLayout(calculusPage);
 
-        auto* game =
-            new CalculusGame;
+        auto* game = calculusGame;
 
         auto* backBtn =
             new QPushButton(tr("← 返回大厅"));
@@ -460,7 +491,7 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(miniGameIndex_);
                 });
 
-        game->start();
+
 
         layout->addWidget(game);
 
@@ -475,8 +506,7 @@ void MainWindow::setupUi() {
         auto* layout =
             new QVBoxLayout(mazePage);
 
-        auto* game =
-            new MazeGame;
+        auto* game = mazeGame;
 
         auto* backBtn =
             new QPushButton(tr("← 返回大厅"));
@@ -502,7 +532,7 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(miniGameIndex_);
                 });
 
-        game->start();
+
 
         layout->addWidget(game);
 
