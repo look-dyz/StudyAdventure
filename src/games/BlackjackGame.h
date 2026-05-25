@@ -13,10 +13,13 @@
 #include "common/MiniGame.h"
 #include <QString>
 #include <vector>
+#include <QStackedLayout>
 
 class QLabel;
 class QPushButton;
 class QHBoxLayout;
+class QStackedLayout;
+class QWidget;
 
 namespace SA {
 
@@ -63,6 +66,12 @@ private:
     std::vector<Card> dealerHand_;
     bool dealerHidden_ = true;
     bool gameEnded_ = false;
+
+    QStackedLayout* stackedLayout_ = nullptr;
+
+    QWidget* introPage_ = nullptr;
+
+    QWidget* gamePage_ = nullptr;
 
     // UI 部件
     QLabel* statusLabel_ = nullptr;
