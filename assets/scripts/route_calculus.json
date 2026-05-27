@@ -1,8 +1,18 @@
 {
   "title": "高数·分支剧情",
   "description": "玩家与高数好感度达到不同阶段时触发的对话池。高数性格：神秘、抽象，喜欢哲学化的表达。",
-  "startNode": "calculus_lv1",
+  "startNode": "calculus_hub",
   "nodes": [
+    {
+      "id": "calculus_hub",
+      "speaker": "narrator",
+      "text": "（你走向高数的座位）",
+      "choices": [
+        {"text": "（继续）", "next": "calculus_lv1", "effects": [], "condition": "affinity.Calculus < 50"},
+        {"text": "（继续）", "next": "calculus_lv2_phil", "effects": [], "condition": "affinity.Calculus >= 50 && affinity.Calculus < 80"},
+        {"text": "（继续）", "next": "calculus_endgame", "effects": [], "condition": "affinity.Calculus >= 80"}
+      ]
+    },
     {
       "id": "calculus_lv1",
       "speaker": "Calculus",
@@ -23,8 +33,7 @@
           "next": "calculus_lv1_blank",
           "effects": [{"target": "affinity.Calculus", "delta": -1}]
         }
-      ],
-      "condition": "affinity.Calculus < 30"
+      ]
     },
     {
       "id": "calculus_lv1_relatable",
@@ -73,8 +82,7 @@
           "next": "calculus_lv2_lighten",
           "effects": [{"target": "affinity.Calculus", "delta": 2}]
         }
-      ],
-      "condition": "affinity.Calculus >= 50"
+      ]
     },
     {
       "id": "calculus_lv2_deep",
@@ -106,8 +114,7 @@
       "text": "你已经能跟上我的思路了。\n如果可以——希望期末之后，你不会忘记这些对话。",
       "choices": [
         {"text": "我不会忘的", "next": "END", "effects": [{"target": "affinity.Calculus", "delta": 5}]}
-      ],
-      "condition": "affinity.Calculus >= 80"
+      ]
     }
   ]
 }

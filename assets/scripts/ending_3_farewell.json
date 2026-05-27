@@ -65,7 +65,9 @@
       "id": "end3_07",
       "speaker": "narrator",
       "text": "—— 再见 · END ——\n\n这是最难选的告别。\n你拥有过爱，也选择了责任——\n这就是成长。",
-      "choices": []
+      "choices": [
+        {"text": "（回到主菜单）", "next": "END", "effects": []}
+      ]
     }
   ]
 }

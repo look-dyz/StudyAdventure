@@ -32,23 +32,47 @@
 | `ending_1_good_grade.json` | 7 个节点 | ✅ 完整版（默认结局） |
 | `ending_2_best_love.json` | 已有 | ✅ 可用 |
 | `ending_3_farewell.json` | 8 个节点 | ✅ 完整版（告别结局） |
-| `ending_4_eternal_la.json` | 已有 | ✅ 可用（黑化结局） |
-| `ending_5_hospital.json` | 11 个节点 | ✅ 完整版（崩溃结局） |
+| `ending_4_eternal_la.json` | 5 个节点 | ✅ 已修空 choices bug |
+| `ending_5_hospital.json` | 10 个节点 | ✅ 已修空 choices bug |
 
-## 🚧 还需要我做的
+## ✅ 本轮新增完成（5/23 by Claude 协助）
 
-### 优先级 P0（5/15-5/27 完成）
+### 剧本扩写
+- **week2.json** —— 8 → **34 节点**，结构：早起选择 → 程设小测 → 午饭线代/AI 二选 → 高数下午课 → 晚自习图书馆，含线代 `darkness>=25` 黑化变体
+- **week3.json** —— 8 → **30 节点**，结构：期中倒计时 → 4 学科主攻支线 × 3 节点 → 考试日（先易/硬刚）→ 考后按 affinity ≥ 25 condition 分流到不同陪同结尾
+- **week4.json** —— 9 → **36 节点**，结构：信物 4 路（`affinity.X >= 50`）+ 无信物保底 → 出游 2 目的地 × 5 陪同分支（4 角色 + 独自）
+- **week5.json** —— 6 → **30 节点**，结构：4 角色最后对话 × 3 节点 → 期末考 → 光门 → 最终选择 4 路（含 `darkness >= 60` 黑化锁定结局）
 
-1. **扩写 week2.json** - 8 个骨架节点需要扩写台词，并在合适位置增加分支。目标 30+ 节点。
-2. **扩写 week3.json** - 期中考剧情。可以让玩家选择"和谁一起复习"。目标 25+ 节点。
-3. **扩写 week4.json** - 信物剧情和出游剧情。4 个角色的 4 种信物。目标 35+ 节点。
-4. **扩写 week5.json** - 期末告别。每个角色的最后告白对话。目标 30+ 节点。
-5. **测试所有剧情线** - 走完 5 条路径（4 学科线 + 默认），确保每个结局都能正确触发。
+### 已修 bug
+- `la_endgame` 节点空 choices 导致对话死锁
+- 5 个 ending 文件的终点节点同样空 choices（统一补「（回到主菜单）」选项触发 `scriptFinished`）
+- `end2_leave_anyway` 的 TODO 注释文本改为正式旁白
 
-### 优先级 P1
+### 已重构
+- 4 个 route_*.json 全部加 hub 分流节点，把过去无引用的 `lv2`/`endgame` 节点接通；纯剧本侧解决，不动 C++
 
-6. **撰写作业报告 1-3 章** - 功能介绍 + 剧情系统设计 + 5 结局介绍（约 3-4 页）
-7. **写录屏脚本** - 4 分钟分秒级安排
+### 已建工具
+- [tests/simulate_routes.py](../tests/simulate_routes.py) —— 5 条主路径自动跑通验证
+- [tests/simulate_boosted.py](../tests/simulate_boosted.py) —— hub 分流 + 信物阈值 + 黑化结局 25 个用例自动验证
+- 全部 30 个测试用例 PASS
+
+### 已写文档
+- [作业报告_成员A_第1-3章.md](作业报告_成员A_第1-3章.md) —— 功能介绍 + 剧情系统设计 + 5 结局介绍
+- [录屏脚本.md](录屏脚本.md) —— 4 分钟分秒级演示流程
+
+### 已验证编译
+- `cmake --build build` 25/25 编译单元通过，`StudyAdventure.app` 生成成功
+- Qt 6.11.1 / qtbase + qtmultimedia + qtsvg + qtdeclarative 已确认本机可用
+
+## 🚧 还剩待办
+
+### 优先级 P0
+
+1. **联调测试**——和成员 B/C 一起跑实际 GUI，确认 dialog 渲染、effects 触发动画、地图 → 对话场景切换都正常（依赖队友进度）
+2. **跨剧本跳转机制**——`end2_leave_anyway` 设计上应导向 End3，需要和成员 C 对齐 GameManager 是否在该节点 `scriptFinished` 后改判结局
+
+### 优先级 P2（可选改进）
+3. 给 `StoryEngine::loadScript` 加可选 `startNode` 参数，让 route 池可由 GameManager 显式分发（比 hub 方案更优雅，但需改 C++ 与成员 C 协调）
 
 ## 📝 剧本写作技巧（自己用）
 

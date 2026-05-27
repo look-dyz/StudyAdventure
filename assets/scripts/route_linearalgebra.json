@@ -1,8 +1,18 @@
 {
   "title": "线代·分支剧情（含黑化倾向）",
   "description": "线代的剧情会随着 darkness 值上升而变得越来越偏执",
-  "startNode": "la_lv1",
+  "startNode": "la_hub",
   "nodes": [
+    {
+      "id": "la_hub",
+      "speaker": "narrator",
+      "text": "（你走向线代）",
+      "choices": [
+        {"text": "（继续）", "next": "la_lv1", "effects": [], "condition": "darkness < 30"},
+        {"text": "（继续）", "next": "la_lv2_dark", "effects": [], "condition": "darkness >= 30 && darkness < 70"},
+        {"text": "（继续）", "next": "la_endgame", "effects": [], "condition": "darkness >= 70"}
+      ]
+    },
     {
       "id": "la_lv1",
       "speaker": "LinearAlgebra",
@@ -21,8 +31,7 @@
             {"target": "stress", "delta": 2}
           ]
         }
-      ],
-      "condition": "darkness < 30"
+      ]
     },
     {
       "id": "la_lv1_good",
@@ -65,8 +74,7 @@
             {"target": "affinity.LinearAlgebra", "delta": -3}
           ]
         }
-      ],
-      "condition": "darkness >= 30 && darkness < 70"
+      ]
     },
     {
       "id": "la_lv2_dark_creepy",
@@ -90,8 +98,9 @@
       "id": "la_endgame",
       "speaker": "LinearAlgebra",
       "text": "你已经……是我向量空间里的一个不变量了。永远不会被消去。",
-      "choices": [],
-      "condition": "darkness >= 70"
+      "choices": [
+        {"text": "（你已经无法挣脱）", "next": "END", "effects": [{"target": "darkness", "delta": 5}]}
+      ]
     }
   ]
 }

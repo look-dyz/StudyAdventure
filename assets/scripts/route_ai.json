@@ -1,8 +1,18 @@
 {
   "title": "AI 引论·分支剧情",
   "description": "玩家与 AI 引论好感度达到不同阶段时触发的对话池。AI 性格：酷感、未来感，喜欢用算法思维理解人类。",
-  "startNode": "ai_lv1",
+  "startNode": "ai_hub",
   "nodes": [
+    {
+      "id": "ai_hub",
+      "speaker": "narrator",
+      "text": "（你走向 AI 引论）",
+      "choices": [
+        {"text": "（继续）", "next": "ai_lv1", "effects": [], "condition": "affinity.AIIntro < 50"},
+        {"text": "（继续）", "next": "ai_lv2_chat", "effects": [], "condition": "affinity.AIIntro >= 50 && affinity.AIIntro < 80"},
+        {"text": "（继续）", "next": "ai_endgame", "effects": [], "condition": "affinity.AIIntro >= 80"}
+      ]
+    },
     {
       "id": "ai_lv1",
       "speaker": "AIIntro",
@@ -23,8 +33,7 @@
           "next": "ai_lv1_consciousness",
           "effects": [{"target": "affinity.AIIntro", "delta": 4}]
         }
-      ],
-      "condition": "affinity.AIIntro < 30"
+      ]
     },
     {
       "id": "ai_lv1_emotion",
@@ -74,8 +83,7 @@
           "next": "ai_lv2_compliment",
           "effects": [{"target": "affinity.AIIntro", "delta": 2}]
         }
-      ],
-      "condition": "affinity.AIIntro >= 50"
+      ]
     },
     {
       "id": "ai_lv2_explain",
@@ -109,8 +117,7 @@
           "next": "ai_endgame_some",
           "effects": [{"target": "affinity.AIIntro", "delta": 3}]
         }
-      ],
-      "condition": "affinity.AIIntro >= 80"
+      ]
     },
     {
       "id": "ai_endgame_all",
