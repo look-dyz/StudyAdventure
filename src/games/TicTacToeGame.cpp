@@ -5,12 +5,14 @@
 #include <QVBoxLayout>
 #include <QTimer>
 #include <QDebug>
+#include <QMessageBox>
 #include <random>
 #include <climits>
 
 namespace SA {
 
 TicTacToeGame::TicTacToeGame(QWidget* parent) : MiniGame(parent) {
+    difficulty_ = Difficulty::Hard;
     buildUI();
 }
 
@@ -83,24 +85,25 @@ void TicTacToeGame::onCellClicked(int row, int col) {
     QTimer::singleShot(400, this, [this]() { aiMove(); });
 }
 
-void TicTacToeGame::aiMove() {
-    std::pair<int,int> move;
-    switch (difficulty_) {
-        case Difficulty::Easy:   move = randomMove(); break;
-        case Difficulty::Normal: move = bestMove(); break;
-        case Difficulty::Hard:   move = bestMove(); break;  // 普通和困难都用 Minimax，差别在剪枝
-    }
+void TicTacToeGame::aiMove()
+{
+    auto move = bestMove();
 
     board_[move.first][move.second] = Mark::O;
+
     updateCell(move.first, move.second);
 
     Mark winner = checkWinner(board_);
+
     if (winner != Mark::Empty || isBoardFull(board_)) {
+
         endGame(winner);
+
         return;
     }
 
     playerTurn_ = true;
+
     statusLabel_->setText(tr("你的回合（X）"));
 }
 
@@ -117,33 +120,194 @@ std::pair<int,int> TicTacToeGame::randomMove() {
 }
 
 std::pair<int,int> TicTacToeGame::bestMove() {
-    // TODO（成员 C）：完整实现 Minimax 寻找最佳走法
-    // 当前为占位实现：返回第一个空位
+    // 1. 优先直接获胜
     for (int r = 0; r < 3; ++r) {
         for (int c = 0; c < 3; ++c) {
+
             if (board_[r][c] == Mark::Empty) {
-                Board b = board_;
-                b[r][c] = Mark::O;
-                int score = minimax(b, 0, false, INT_MIN, INT_MAX);
-                qDebug() << "[TicTacToe] try" << r << c << "score=" << score;
-                // TODO：选择 score 最大的走法
-                return {r, c};
+
+                Board temp = board_;
+                temp[r][c] = Mark::O;
+
+                if (checkWinner(temp) == Mark::O) {
+                    return {r, c};
+                }
             }
         }
     }
-    return {0, 0};
+    // 2. 阻止玩家获胜
+    for (int r = 0; r < 3; ++r) {
+        for (int c = 0; c < 3; ++c) {
+
+            if (board_[r][c] == Mark::Empty) {
+
+                Board temp = board_;
+                temp[r][c] = Mark::X;
+
+                if (checkWinner(temp) == Mark::X) {
+                    return {r, c};
+                }
+            }
+        }
+    }
+    // 开局优先中心
+    if(board_[1][1] == Mark::Empty) {
+
+        bool emptyBoard = true;
+
+        for(int r = 0; r < 3; ++r) {
+            for(int c = 0; c < 3; ++c) {
+
+                if(board_[r][c] != Mark::Empty) {
+                    emptyBoard = false;
+                }
+            }
+        }
+
+        if(emptyBoard) {
+            return {1, 1};
+        }
+    }
+
+    int bestScore = INT_MIN;
+    std::pair<int,int> move = {-1, -1};
+
+    for (int r = 0; r < 3; ++r) {
+        for (int c = 0; c < 3; ++c) {
+
+            if (board_[r][c] == Mark::Empty) {
+
+                Board temp = board_;
+                temp[r][c] = Mark::O;
+
+                int score = minimax(
+                    temp,
+                    0,
+                    false,
+                    INT_MIN,
+                    INT_MAX
+                    );
+
+                qDebug() << "[AI] try"
+                         << r << c
+                         << "score =" << score;
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = {r, c};
+                }
+            }
+        }
+    }
+
+            // 理论不会发生
+    if (move.first == -1) {
+        return randomMove();
+    }
+
+    return move;
 }
 
-int TicTacToeGame::minimax(Board& b, int depth, bool isMax, int alpha, int beta) {
-    // TODO（成员 C）：完整的 Minimax + α-β 剪枝
-    // 终止条件：检查胜负或棋盘已满
-    // O 想 max，X 想 min
-    Q_UNUSED(b);
-    Q_UNUSED(depth);
-    Q_UNUSED(isMax);
-    Q_UNUSED(alpha);
-    Q_UNUSED(beta);
-    return 0;
+int TicTacToeGame::minimax(
+    Board& b,
+    int depth,
+    bool isMax,
+    int alpha,
+    int beta
+    ) {
+
+    Mark winner = checkWinner(b);
+
+            // ===== 终止状态 =====
+
+            // AI 赢
+    if (winner == Mark::O) {
+        return 10 - depth;
+    }
+
+            // 玩家赢
+    if (winner == Mark::X) {
+        return depth - 10;
+    }
+
+            // 平局
+    if (isBoardFull(b)) {
+        return 0;
+    }
+
+            // ===== AI 回合（最大化）=====
+    if (isMax) {
+
+        int best = INT_MIN;
+
+        for (int r = 0; r < 3; ++r) {
+            for (int c = 0; c < 3; ++c) {
+
+                if (b[r][c] == Mark::Empty) {
+
+                    b[r][c] = Mark::O;
+
+                    int score = minimax(
+                        b,
+                        depth + 1,
+                        false,
+                        alpha,
+                        beta
+                        );
+
+                    b[r][c] = Mark::Empty;
+
+                    best = std::max(best, score);
+
+                    alpha = std::max(alpha, best);
+
+                            // α-β 剪枝
+                    if (beta <= alpha) {
+                        return best;
+                    }
+                }
+            }
+        }
+
+        return best;
+    }
+
+            // ===== 玩家回合（最小化）=====
+    else {
+
+        int best = INT_MAX;
+
+        for (int r = 0; r < 3; ++r) {
+            for (int c = 0; c < 3; ++c) {
+
+                if (b[r][c] == Mark::Empty) {
+
+                    b[r][c] = Mark::X;
+
+                    int score = minimax(
+                        b,
+                        depth + 1,
+                        true,
+                        alpha,
+                        beta
+                        );
+
+                    b[r][c] = Mark::Empty;
+
+                    best = std::min(best, score);
+
+                    beta = std::min(beta, best);
+
+                            // α-β 剪枝
+                    if (beta <= alpha) {
+                        return best;
+                    }
+                }
+            }
+        }
+
+        return best;
+    }
 }
 
 TicTacToeGame::Mark TicTacToeGame::checkWinner(const Board& b) const {
@@ -178,26 +342,42 @@ void TicTacToeGame::updateCell(int row, int col) {
 
 void TicTacToeGame::endGame(Mark winner) {
     gameEnded_ = true;
-    for (auto& row : buttons_)
-        for (auto* btn : row)
+
+    for (auto& row : buttons_) {
+        for (auto* btn : row) {
             btn->setEnabled(false);
+        }
+    }
 
     bool playerWon = (winner == Mark::X);
     bool draw = (winner == Mark::Empty);
 
     int score;
     QString msg;
+
     if (playerWon) {
         score = 80;
         msg = tr("你赢了！");
-    } else if (draw) {
-        score = 50;
-        msg = tr("平局");
-    } else {
-        score = 10;
-        msg = tr("AI 赢了");
     }
+    else if (draw) {
+        score = 50;
+        msg = tr("平局！");
+    }
+    else {
+        score = 10;
+        msg = tr("AI 赢了！");
+    }
+
+            // 顶部状态栏文字
     statusLabel_->setText(msg);
+
+            // ===== 新增：弹窗提示 =====
+    QMessageBox::information(
+        this,
+        tr("游戏结束"),
+        msg + tr("\n最终得分：%1").arg(score)
+        );
+
     emit finished(score, playerWon || draw);
 }
 

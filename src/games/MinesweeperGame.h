@@ -12,9 +12,11 @@
 
 #include "common/MiniGame.h"
 #include <vector>
+#include <QEvent>
 
 class QGridLayout;
 class QPushButton;
+class QLabel;
 
 namespace SA {
 
@@ -28,6 +30,9 @@ public:
     void reset() override;
     MiniGameType type() const override { return MiniGameType::Minesweeper; }
     QString displayName() const override { return tr("扫雷"); }
+
+protected:
+    bool eventFilter(QObject* obj, QEvent* event) override;
 
 private slots:
     void onCellClicked(int row, int col);
@@ -51,6 +56,7 @@ private:
     std::vector<std::vector<Cell>> board_;
     std::vector<std::vector<QPushButton*>> buttons_;
     QGridLayout* grid_ = nullptr;
+    QLabel* statusLabel_ = nullptr;
 
     void buildBoard();          ///< 构建棋盘 UI
     void placeMines(int safeRow, int safeCol);  ///< 首次点击后布雷
