@@ -13,10 +13,13 @@
 #include "common/MiniGame.h"
 #include <QString>
 #include <vector>
+#include <QStackedLayout>
 
 class QLabel;
 class QPushButton;
 class QHBoxLayout;
+class QStackedLayout;
+class QWidget;
 
 namespace SA {
 
@@ -64,12 +67,19 @@ private:
     bool dealerHidden_ = true;
     bool gameEnded_ = false;
 
+    QStackedLayout* stackedLayout_ = nullptr;
+
+    QWidget* introPage_ = nullptr;
+
+    QWidget* gamePage_ = nullptr;
+
     // UI 部件
     QLabel* statusLabel_ = nullptr;
     QLabel* playerLabel_ = nullptr;
     QLabel* dealerLabel_ = nullptr;
     QPushButton* hitBtn_ = nullptr;
     QPushButton* standBtn_ = nullptr;
+    QPushButton* resetBtn_;
 
     int calculateScore(const std::vector<Card>& hand) const;  ///< 含 A 灵活计数
     void updateDisplay();

@@ -48,6 +48,12 @@ private:
     int miniGameIndex_  = 3;
     int endingIndex_    = 4;
 
+    int blackjackIndex_;
+    int ticTacToeIndex_;
+    int minesweeperIndex_;
+    int memoryIndex_;
+    int mazeIndex_;
+
     void setupUi();
     void connectSignals();
 

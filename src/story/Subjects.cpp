@@ -1,10 +1,8 @@
 #include "Subjects.h"
 #include "games/MinesweeperGame.h"
-#include "games/BlackjackGame.h"
 #include "games/TicTacToeGame.h"
-#include "games/MatrixGame.h"
-#include "games/MazeGame.h"
-#include "games/CalculusGame.h"
+#include "games/BlackjackGame.h"
+#include "games/MemoryGame.h"
 #include <QDebug>
 
 namespace SA {
@@ -43,7 +41,7 @@ void CalculusSubject::interact() {
 }
 
 MiniGame* CalculusSubject::createGame() {
-    return new CalculusGame;
+    return new BlackjackGame;
 }
 
 // ========== LinearAlgebra 线代 ==========
@@ -55,7 +53,7 @@ void LinearAlgebraSubject::interact() {
 }
 
 MiniGame* LinearAlgebraSubject::createGame() {
-    return new MatrixGame;
+    return new MemoryGame;
 }
 
 // ========== AIIntro AI引论 ==========

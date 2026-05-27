@@ -3,10 +3,15 @@
 #include "StatusBar.h"
 #include "core/GameManager.h"
 #include "core/Player.h"
+#include "core/SaveManager.h"
 #include "story/DialogWindow.h"
 #include "story/StoryEngine.h"
 #include "map/MapScene.h"
 #include "games/TicTacToeGame.h"
+#include "games/BlackjackGame.h"
+#include "games/MinesweeperGame.h"
+#include "games/MemoryGame.h"
+#include "games/MazeGame.h"
 
 #include <QStackedWidget>
 #include <QGraphicsView>
@@ -54,10 +59,37 @@ void MainWindow::setupUi() {
         GameManager::instance().player()->reset();
         loadAndShowScript(":/scripts/week1.json");
     });
-    connect(mainMenu, &MainMenu::loadGameClicked, this, [this]() {
-        QMessageBox::information(this, tr("提示"),
-            tr("读档功能由成员 C 实现，详见 src/core/SaveManager.cpp"));
-    });
+    connect(mainMenu,
+            &MainMenu::loadGameClicked,
+            this,
+            [this]() {
+
+                bool ok =
+                    SaveManager::load(
+                        GameManager::instance().player(),
+                        1
+                        );
+
+                if(ok) {
+
+                    QMessageBox::information(
+                        this,
+                        tr("读取成功"),
+                        tr("已读取存档 1")
+                        );
+
+                    GameManager::instance()
+                        .requestScene(GameScene::Map);
+
+                } else {
+
+                    QMessageBox::warning(
+                        this,
+                        tr("读取失败"),
+                        tr("未找到存档")
+                        );
+                }
+            });
     connect(mainMenu, &MainMenu::settingsClicked, this, [this]() {
         QMessageBox::information(this, tr("提示"),
             tr("设置面板由成员 B 实现"));
@@ -106,8 +138,38 @@ void MainWindow::setupUi() {
         connect(backBtn, &QPushButton::clicked, this, []() {
             GameManager::instance().requestScene(GameScene::MainMenu);
         });
+        auto* saveBtn =
+            new QPushButton(tr("保存游戏"));
+        connect(saveBtn,
+                &QPushButton::clicked,
+                this,
+                [this]() {
 
+                    bool ok =
+                        SaveManager::save(
+                            GameManager::instance().player(),
+                            1
+                            );
+
+                    if(ok) {
+
+                        QMessageBox::information(
+                            this,
+                            tr("保存成功"),
+                            tr("已保存到存档 1")
+                            );
+
+                    } else {
+
+                        QMessageBox::warning(
+                            this,
+                            tr("保存失败"),
+                            tr("无法保存游戏")
+                            );
+                    }
+                });
         layout->addWidget(mapView, 1);
+        layout->addWidget(saveBtn);
         layout->addWidget(backBtn);
         layout->setContentsMargins(20, 10, 20, 10);
     }
@@ -141,26 +203,341 @@ void MainWindow::setupUi() {
     }
     stack_->addWidget(dialogPage);
 
-    // ========== 页面 3：小游戏（井字棋演示）==========
-    auto* miniGamePage = new QWidget;
+    // ========== 页面 3：小游戏==========
+
+    auto* blackjackGame = new BlackjackGame;
+    auto* ticGame = new TicTacToeGame;
+    auto* mineGame = new MinesweeperGame;
+    auto* mazeGame = new MazeGame;
+    auto* memoryGame = new MemoryGame;
+    auto* miniGameMenuPage = new QWidget;
+
     {
-        auto* layout = new QVBoxLayout(miniGamePage);
-        auto* game = new TicTacToeGame;
-        auto* backBtn = new QPushButton(tr("← 放弃返回"));
+        auto* layout = new QVBoxLayout(miniGameMenuPage);
 
-        connect(game, &MiniGame::finished, this, [](int score, bool won) {
-            GameManager::instance().onMiniGameFinished(MiniGameType::TicTacToe, score, won);
-        });
-        connect(backBtn, &QPushButton::clicked, this, []() {
-            GameManager::instance().requestScene(GameScene::Map);
-        });
+        auto* title = new QLabel(tr("小游戏中心"));
+        title->setAlignment(Qt::AlignCenter);
 
-        game->start();
-        layout->addWidget(game);
+        title->setStyleSheet(
+            "font-size: 28px;"
+            "font-weight: bold;"
+            "color: #8B1A1A;"
+            );
+
+        layout->addWidget(title);
+
+                // =========================
+                // 六个小游戏按钮
+                // =========================
+
+        auto* blackjackBtn =
+            new QPushButton(tr("21点"));
+
+        auto* ticBtn =
+            new QPushButton(tr("井字棋"));
+
+        auto* mineBtn =
+            new QPushButton(tr("扫雷"));
+        auto* memoryBtn =
+            new QPushButton(tr("记忆翻牌"));
+
+
+        auto* mazeBtn =
+            new QPushButton(tr("AI迷宫"));
+
+                // 按钮样式
+        QList<QPushButton*> btns = {
+            blackjackBtn,
+            ticBtn,
+            mineBtn,
+            memoryBtn,
+            mazeBtn
+        };
+
+        for(auto* b : btns) {
+
+            b->setMinimumHeight(60);
+
+            b->setStyleSheet(
+                "font-size:20px;"
+                "background:#F5E6CA;"
+                "border-radius:10px;"
+                );
+
+            layout->addWidget(b);
+        }
+
+        layout->addStretch();
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回地图"));
+
+        connect(backBtn,
+                &QPushButton::clicked,this, [](){
+                    GameManager::instance()
+                    .requestScene(GameScene::Map);
+                });
+
         layout->addWidget(backBtn);
-        layout->setContentsMargins(60, 20, 60, 20);
+
+                // =========================
+                // 按钮进入不同小游戏
+                // =========================
+
+        connect(blackjackBtn,
+                &QPushButton::clicked,
+                this,
+                [this, blackjackGame]() {
+
+                    blackjackGame->start();
+
+                    stack_->setCurrentIndex(blackjackIndex_);
+                });
+
+        connect(ticBtn,
+                &QPushButton::clicked,
+                this,
+                [this, ticGame]() {
+
+                    ticGame->start();
+
+                    stack_->setCurrentIndex(ticTacToeIndex_);
+                });
+
+        connect(mineBtn,
+                &QPushButton::clicked,
+                this,
+                [this, mineGame]() {
+
+                    mineGame->start();
+
+                    stack_->setCurrentIndex(minesweeperIndex_);
+                });
+        connect(memoryBtn,
+                &QPushButton::clicked,
+                this,
+                [this, memoryGame]() {
+
+                    memoryGame->start();
+
+                    stack_->setCurrentIndex(memoryIndex_);
+                });
+
+        connect(mazeBtn,
+                &QPushButton::clicked,
+                this,
+                [this, mazeGame]() {
+
+                    mazeGame->start();
+
+                    stack_->setCurrentIndex(mazeIndex_);
+                });
+
     }
-    stack_->addWidget(miniGamePage);
+    miniGameIndex_ = stack_->addWidget(miniGameMenuPage);
+
+    //21点
+    auto* blackjackPage = new QWidget;
+
+
+    {
+        auto* layout =
+            new QVBoxLayout(blackjackPage);
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(blackjackGame,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Blackjack,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(3);
+                });
+
+
+
+        layout->addWidget(blackjackGame);
+
+        layout->addWidget(backBtn);
+    }
+
+    blackjackIndex_ =stack_->addWidget(blackjackPage);
+    //井字棋
+    auto* ticPage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(ticPage);
+
+        auto* game = ticGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::TicTacToe,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    ticTacToeIndex_ =stack_->addWidget(ticPage);
+    //扫雷
+    auto* minePage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(minePage);
+
+        auto* game = mineGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Minesweeper,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    minesweeperIndex_ =stack_->addWidget(minePage);
+
+    //记忆翻牌
+    auto* memoryPage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(memoryPage);
+
+        auto* game = memoryGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::MemoryMatch,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    memoryIndex_ = stack_->addWidget(memoryPage);
+
+    auto* mazePage = new QWidget;
+
+    {
+        auto* layout =
+            new QVBoxLayout(mazePage);
+
+        auto* game = mazeGame;
+
+        auto* backBtn =
+            new QPushButton(tr("← 返回大厅"));
+
+        connect(game,
+                &MiniGame::finished,
+                this,
+                [](int score, bool won){
+
+                    GameManager::instance()
+                    .onMiniGameFinished(
+                        MiniGameType::Maze,
+                        score,
+                        won
+                        );
+                });
+
+        connect(backBtn,
+                &QPushButton::clicked,
+                this,
+                [this](){
+
+                    stack_->setCurrentIndex(miniGameIndex_);
+                });
+
+
+
+        layout->addWidget(game);
+
+        layout->addWidget(backBtn);
+    }
+
+    mazeIndex_ = stack_->addWidget(mazePage);
 
     // ========== 页面 4：结局 ==========
     auto* endingPage = new QWidget;
