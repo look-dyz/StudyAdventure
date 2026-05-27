@@ -9,8 +9,7 @@
 #include "games/TicTacToeGame.h"
 #include "games/BlackjackGame.h"
 #include "games/MinesweeperGame.h"
-#include "games/CalculusGame.h"
-#include "games/MatrixGame.h"
+#include "games/MemoryGame.h"
 #include "games/MazeGame.h"
 
 #include <QStackedWidget>
@@ -151,10 +150,8 @@ void MainWindow::setupUi() {
     auto* blackjackGame = new BlackjackGame;
     auto* ticGame = new TicTacToeGame;
     auto* mineGame = new MinesweeperGame;
-    auto* matrixGame = new MatrixGame;
-    auto* calculusGame = new CalculusGame;
     auto* mazeGame = new MazeGame;
-
+    auto* memoryGame = new MemoryGame;
     auto* miniGameMenuPage = new QWidget;
 
     {
@@ -183,12 +180,9 @@ void MainWindow::setupUi() {
 
         auto* mineBtn =
             new QPushButton(tr("扫雷"));
+        auto* memoryBtn =
+            new QPushButton(tr("记忆翻牌"));
 
-        auto* matrixBtn =
-            new QPushButton(tr("矩阵运算"));
-
-        auto* calculusBtn =
-            new QPushButton(tr("高数答题"));
 
         auto* mazeBtn =
             new QPushButton(tr("AI迷宫"));
@@ -198,8 +192,7 @@ void MainWindow::setupUi() {
             blackjackBtn,
             ticBtn,
             mineBtn,
-            matrixBtn,
-            calculusBtn,
+            memoryBtn,
             mazeBtn
         };
 
@@ -262,25 +255,14 @@ void MainWindow::setupUi() {
 
                     stack_->setCurrentIndex(minesweeperIndex_);
                 });
-
-        connect(matrixBtn,
+        connect(memoryBtn,
                 &QPushButton::clicked,
                 this,
-                [this, matrixGame]() {
+                [this, memoryGame]() {
 
-                    matrixGame->start();
+                    memoryGame->start();
 
-                    stack_->setCurrentIndex(matrixIndex_);
-                });
-
-        connect(calculusBtn,
-                &QPushButton::clicked,
-                this,
-                [this, calculusGame]() {
-
-                    calculusGame->start();
-
-                    stack_->setCurrentIndex(calculusIndex_);
+                    stack_->setCurrentIndex(memoryIndex_);
                 });
 
         connect(mazeBtn,
@@ -418,13 +400,14 @@ void MainWindow::setupUi() {
 
     minesweeperIndex_ =stack_->addWidget(minePage);
 
-    auto* matrixPage = new QWidget;
+    //记忆翻牌
+    auto* memoryPage = new QWidget;
 
     {
         auto* layout =
-            new QVBoxLayout(matrixPage);
+            new QVBoxLayout(memoryPage);
 
-        auto* game = matrixGame;
+        auto* game = memoryGame;
 
         auto* backBtn =
             new QPushButton(tr("← 返回大厅"));
@@ -436,7 +419,7 @@ void MainWindow::setupUi() {
 
                     GameManager::instance()
                     .onMiniGameFinished(
-                        MiniGameType::Matrix,
+                        MiniGameType::MemoryMatch,
                         score,
                         won
                         );
@@ -450,55 +433,12 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(miniGameIndex_);
                 });
 
-
-
         layout->addWidget(game);
 
         layout->addWidget(backBtn);
     }
 
-    matrixIndex_ =stack_->addWidget(matrixPage);
-
-    auto* calculusPage = new QWidget;
-
-    {
-        auto* layout =
-            new QVBoxLayout(calculusPage);
-
-        auto* game = calculusGame;
-
-        auto* backBtn =
-            new QPushButton(tr("← 返回大厅"));
-
-        connect(game,
-                &MiniGame::finished,
-                this,
-                [](int score, bool won){
-
-                    GameManager::instance()
-                    .onMiniGameFinished(
-                        MiniGameType::Calculus,
-                        score,
-                        won
-                        );
-                });
-
-        connect(backBtn,
-                &QPushButton::clicked,
-                this,
-                [this](){
-
-                    stack_->setCurrentIndex(miniGameIndex_);
-                });
-
-
-
-        layout->addWidget(game);
-
-        layout->addWidget(backBtn);
-    }
-
-    calculusIndex_ =stack_->addWidget(calculusPage);
+    memoryIndex_ = stack_->addWidget(memoryPage);
 
     auto* mazePage = new QWidget;
 

@@ -51,8 +51,7 @@ private:
     int blackjackIndex_;
     int ticTacToeIndex_;
     int minesweeperIndex_;
-    int matrixIndex_;
-    int calculusIndex_;
+    int memoryIndex_;
     int mazeIndex_;
 
     void setupUi();

@@ -90,12 +90,12 @@ set(PROJECT_SOURCES
     src/games/BlackjackGame.cpp
     src/games/TicTacToeGame.h
     src/games/TicTacToeGame.cpp
-    src/games/MatrixGame.h
-    src/games/MatrixGame.cpp
+    src/games/MemoryGame.cpp
+    src/games/MemoryGame.h
     src/games/MazeGame.h
     src/games/MazeGame.cpp
-    src/games/CalculusGame.h
-    src/games/CalculusGame.cpp
+
+
 )
 
 # ===== 资源文件 =====
@@ -105,6 +105,8 @@ set(PROJECT_RESOURCES assets/resources.qrc)
 qt_add_executable(StudyAdventure
     ${PROJECT_SOURCES}
     ${PROJECT_RESOURCES}
+    src/games/MemoryGame.h
+    src/games/MemoryGame.cpp
 )
 
 # ===== 链接 Qt 库 =====

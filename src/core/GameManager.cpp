@@ -1,7 +1,7 @@
 #include "GameManager.h"
 #include "Player.h"
 #include <QDebug>
-
+#include <QMessageBox>
 namespace SA {
 
 GameManager& GameManager::instance() {
@@ -24,12 +24,12 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
              << "score=" << score
              << "won=" << won;
 
-    // TODO（成员 C）：根据 type 和结果计算好感度/压力/黑化的变化
-    // 例如：
-    //   if (type == MiniGameType::Minesweeper && won) {
-    //       player_->addAffinity(SubjectType::ProgDesign, 5);
-    //       player_->addStress(3);
-    //   }
+    int affinityDelta = 0;
+    int stressDelta = 0;
+    int darknessDelta = 0;
+
+    QString affinityName;
+
     switch(type) {
 
         // ==============================
@@ -37,104 +37,199 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
         // ==============================
         case MiniGameType::Minesweeper:
 
+            affinityName = "程序设计";
+
             if(won) {
-                player_->addAffinity(SubjectType::ProgDesign, 5);
-                player_->addStress(2);
+
+                affinityDelta = 5;
+                stressDelta = 2;
+
+                player_->addAffinity(
+                    SubjectType::ProgDesign,
+                    affinityDelta
+                    );
+
+                player_->addStress(stressDelta);
+
             } else {
-                player_->addStress(6);
+
+                stressDelta = 6;
+
+                player_->addStress(stressDelta);
             }
 
             break;
 
                     // ==============================
-                    // 高数答题（高数）
+                    // 记忆翻牌（线代）
                     // ==============================
-        case MiniGameType::Calculus:
+        case MiniGameType::MemoryMatch:
+
+            affinityName = "线性代数";
 
             if(won) {
-                player_->addAffinity(SubjectType::Calculus, 6);
-                player_->addStress(4);
-            } else {
-                player_->addStress(8);
-            }
 
-            break;
-
-                    // ==============================
-                    // 矩阵运算（线代）
-                    // ==============================
-        case MiniGameType::Matrix:
-
-            if(won) {
+                affinityDelta = 5;
+                stressDelta = 2;
 
                 player_->addAffinity(
                     SubjectType::LinearAlgebra,
-                    5
+                    affinityDelta
+                    );
+
+                player_->addStress(stressDelta);
+
+            } else {
+
+                stressDelta = 6;
+                darknessDelta = 15;
+
+                player_->addStress(stressDelta);
+
+                player_->addDarkness(darknessDelta);
+            }
+
+            break;
+
+                    // ==============================
+                    // AI迷宫（AI引论）
+                    // ==============================
+        case MiniGameType::Maze:
+
+            affinityName = "AI引论";
+
+            if(won) {
+
+                affinityDelta = 4;
+                stressDelta = 3;
+
+                player_->addAffinity(
+                    SubjectType::AIIntro,
+                    affinityDelta
+                    );
+
+                player_->addStress(stressDelta);
+
+            } else {
+
+                stressDelta = 7;
+
+                player_->addStress(stressDelta);
+            }
+
+            break;
+
+                    // ==============================
+                    // 21点（高数）
+                    // ==============================
+        case MiniGameType::Blackjack:
+
+            affinityName = "高等数学";
+
+            if(won) {
+
+                affinityDelta = 4;
+                stressDelta = 1;
+
+                player_->addAffinity(
+                    SubjectType::Calculus,
+                    affinityDelta
+                    );
+
+                player_->addStress(stressDelta);
+
+            } else {
+
+                stressDelta = 5;
+
+                player_->addStress(stressDelta);
+            }
+
+            break;
+
+                    // ==============================
+                    // 井字棋（程序设计）
+                    // ==============================
+        case MiniGameType::TicTacToe:
+
+            affinityName = "程序设计";
+
+            if(won) {
+
+                affinityDelta = 2;
+
+                player_->addAffinity(
+                    SubjectType::ProgDesign,
+                    affinityDelta
                     );
 
             } else {
 
-                player_->addStress(5);
-                player_->addDarkness(2);
-            }
+                stressDelta = 2;
 
-            break;
-
-                    // ==============================
-                    // AI迷宫（英语/AI）
-                    // ==============================
-        case MiniGameType::Maze:
-
-            if(won) {
-                player_->addAffinity(SubjectType::AIIntro, 4);
-                player_->addStress(3);
-            } else {
-                player_->addStress(7);
-            }
-
-            break;
-
-                    // ==============================
-                    // 21点
-                    // ==============================
-        case MiniGameType::Blackjack:
-
-            if(won) {
-                player_->addAffinity(SubjectType::ProgDesign, 3);
-            } else {
-                player_->addStress(4);
-            }
-
-            break;
-
-                    // ==============================
-                    // 井字棋
-                    // ==============================
-        case MiniGameType::TicTacToe:
-
-            if(won) {
-                player_->addAffinity(SubjectType::ProgDesign, 2);
-            } else {
-                player_->addStress(2);
+                player_->addStress(stressDelta);
             }
 
             break;
 
         default:
+
             qDebug() << "[GameManager] Unknown MiniGameType";
+
             break;
     }
 
-            // ==============================
-            // 通用奖励逻辑
-            // ==============================
+    // ==============================
+    // 通用奖励逻辑
+    // ==============================
 
-            // 高分额外奖励
+    // 高分额外奖励
     if(score >= 95) {
+
+        stressDelta -= 3;
+
         player_->addStress(-3);
 
         qDebug() << "[GameManager] Bonus reward for high score!";
     }
+
+    // ==============================
+    // 数值变化提示框
+    // ==============================
+
+    QString msg;
+
+    // 好感变化
+    if(affinityDelta != 0) {
+
+        msg += QString("%1好感 %+2\n")
+                   .arg(affinityName)
+                   .arg(affinityDelta);
+    }
+
+    // 压力变化
+    if(stressDelta != 0) {
+
+        msg += QString("压力 %+1\n")
+                   .arg(stressDelta);
+    }
+
+    // 黑化变化
+    if(darknessDelta != 0) {
+
+        msg += QString("线代黑化 %+1\n")
+                   .arg(darknessDelta);
+    }
+
+    // 得分显示
+    msg += QString("\n本次得分：%1")
+               .arg(score);
+
+    QMessageBox::information(
+        nullptr,
+        "数值变化",
+        msg
+        );
 
             // 压力值过高触发警告
     if(player_->stress() >= 100) {
