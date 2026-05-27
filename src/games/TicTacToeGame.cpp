@@ -12,6 +12,7 @@
 namespace SA {
 
 TicTacToeGame::TicTacToeGame(QWidget* parent) : MiniGame(parent) {
+    difficulty_ = Difficulty::Hard;
     buildUI();
 }
 
@@ -84,39 +85,25 @@ void TicTacToeGame::onCellClicked(int row, int col) {
     QTimer::singleShot(400, this, [this]() { aiMove(); });
 }
 
-void TicTacToeGame::aiMove() {
-    std::pair<int,int> move;
-    switch (difficulty_) {
-
-        case Difficulty::Easy:
-            move = randomMove();
-            break;
-
-        case Difficulty::Normal:
-
-                    // 70% 最优
-            if (rand() % 100 < 70)
-                move = bestMove();
-            else
-                move = randomMove();
-
-            break;
-
-        case Difficulty::Hard:
-            move = bestMove();
-            break;
-    }
+void TicTacToeGame::aiMove()
+{
+    auto move = bestMove();
 
     board_[move.first][move.second] = Mark::O;
+
     updateCell(move.first, move.second);
 
     Mark winner = checkWinner(board_);
+
     if (winner != Mark::Empty || isBoardFull(board_)) {
+
         endGame(winner);
+
         return;
     }
 
     playerTurn_ = true;
+
     statusLabel_->setText(tr("你的回合（X）"));
 }
 
@@ -133,6 +120,54 @@ std::pair<int,int> TicTacToeGame::randomMove() {
 }
 
 std::pair<int,int> TicTacToeGame::bestMove() {
+    // 1. 优先直接获胜
+    for (int r = 0; r < 3; ++r) {
+        for (int c = 0; c < 3; ++c) {
+
+            if (board_[r][c] == Mark::Empty) {
+
+                Board temp = board_;
+                temp[r][c] = Mark::O;
+
+                if (checkWinner(temp) == Mark::O) {
+                    return {r, c};
+                }
+            }
+        }
+    }
+    // 2. 阻止玩家获胜
+    for (int r = 0; r < 3; ++r) {
+        for (int c = 0; c < 3; ++c) {
+
+            if (board_[r][c] == Mark::Empty) {
+
+                Board temp = board_;
+                temp[r][c] = Mark::X;
+
+                if (checkWinner(temp) == Mark::X) {
+                    return {r, c};
+                }
+            }
+        }
+    }
+    // 开局优先中心
+    if(board_[1][1] == Mark::Empty) {
+
+        bool emptyBoard = true;
+
+        for(int r = 0; r < 3; ++r) {
+            for(int c = 0; c < 3; ++c) {
+
+                if(board_[r][c] != Mark::Empty) {
+                    emptyBoard = false;
+                }
+            }
+        }
+
+        if(emptyBoard) {
+            return {1, 1};
+        }
+    }
 
     int bestScore = INT_MIN;
     std::pair<int,int> move = {-1, -1};
@@ -228,7 +263,7 @@ int TicTacToeGame::minimax(
 
                             // α-β 剪枝
                     if (beta <= alpha) {
-                        break;
+                        return best;
                     }
                 }
             }
@@ -265,7 +300,7 @@ int TicTacToeGame::minimax(
 
                             // α-β 剪枝
                     if (beta <= alpha) {
-                        break;
+                        return best;
                     }
                 }
             }

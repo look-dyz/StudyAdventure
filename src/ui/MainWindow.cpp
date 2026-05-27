@@ -3,6 +3,7 @@
 #include "StatusBar.h"
 #include "core/GameManager.h"
 #include "core/Player.h"
+#include "core/SaveManager.h"
 #include "story/DialogWindow.h"
 #include "story/StoryEngine.h"
 #include "map/MapScene.h"
@@ -58,10 +59,37 @@ void MainWindow::setupUi() {
         GameManager::instance().player()->reset();
         loadAndShowScript(":/scripts/week1.json");
     });
-    connect(mainMenu, &MainMenu::loadGameClicked, this, [this]() {
-        QMessageBox::information(this, tr("提示"),
-            tr("读档功能由成员 C 实现，详见 src/core/SaveManager.cpp"));
-    });
+    connect(mainMenu,
+            &MainMenu::loadGameClicked,
+            this,
+            [this]() {
+
+                bool ok =
+                    SaveManager::load(
+                        GameManager::instance().player(),
+                        1
+                        );
+
+                if(ok) {
+
+                    QMessageBox::information(
+                        this,
+                        tr("读取成功"),
+                        tr("已读取存档 1")
+                        );
+
+                    GameManager::instance()
+                        .requestScene(GameScene::Map);
+
+                } else {
+
+                    QMessageBox::warning(
+                        this,
+                        tr("读取失败"),
+                        tr("未找到存档")
+                        );
+                }
+            });
     connect(mainMenu, &MainMenu::settingsClicked, this, [this]() {
         QMessageBox::information(this, tr("提示"),
             tr("设置面板由成员 B 实现"));
@@ -110,8 +138,38 @@ void MainWindow::setupUi() {
         connect(backBtn, &QPushButton::clicked, this, []() {
             GameManager::instance().requestScene(GameScene::MainMenu);
         });
+        auto* saveBtn =
+            new QPushButton(tr("保存游戏"));
+        connect(saveBtn,
+                &QPushButton::clicked,
+                this,
+                [this]() {
 
+                    bool ok =
+                        SaveManager::save(
+                            GameManager::instance().player(),
+                            1
+                            );
+
+                    if(ok) {
+
+                        QMessageBox::information(
+                            this,
+                            tr("保存成功"),
+                            tr("已保存到存档 1")
+                            );
+
+                    } else {
+
+                        QMessageBox::warning(
+                            this,
+                            tr("保存失败"),
+                            tr("无法保存游戏")
+                            );
+                    }
+                });
         layout->addWidget(mapView, 1);
+        layout->addWidget(saveBtn);
         layout->addWidget(backBtn);
         layout->setContentsMargins(20, 10, 20, 10);
     }

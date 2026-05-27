@@ -27,7 +27,7 @@ MemoryGame::MemoryGame(QWidget* parent)
             new QVBoxLayout(introPage_);
 
         auto* title =
-            new QLabel(tr("线代记忆训练"));
+            new QLabel(tr("记忆训练"));
 
         title->setAlignment(Qt::AlignCenter);
 
@@ -42,7 +42,6 @@ MemoryGame::MemoryGame(QWidget* parent)
                 tr(
                     "【规则说明】\n\n"
                     "在限定时间内完成所有配对。\n"
-                    "卡牌内容与线性代数知识相关。\n\n"
                     "若时间结束仍未完成，则挑战失败。\n\n"
                     "失败会大幅增加线代黑化值。"
                     )
