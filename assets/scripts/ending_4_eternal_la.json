@@ -32,7 +32,9 @@
       "id": "end4_05",
       "speaker": "LinearAlgebra",
       "text": "这里只有我，和你。\n\n（轻轻地）这是最后的稳态。\n\n—— 永远的线代 · END ——",
-      "choices": []
+      "choices": [
+        {"text": "（回到主菜单）", "next": "END", "effects": []}
+      ]
     }
   ]
 }
