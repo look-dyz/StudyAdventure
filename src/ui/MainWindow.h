@@ -16,6 +16,7 @@
 #define STUDYADVENTURE_MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
 #include "common/Constants.h"
 
 class QStackedWidget;
@@ -59,6 +60,12 @@ private:
 
     /// 从 StoryEngine 取当前节点信息，刷新到 DialogWindow
     void refreshDialogFromEngine();
+
+protected:
+    void keyPressEvent(QKeyEvent* event) override;
+
+private:
+    void showDebugMenu();
 };
 
 } // namespace SA
