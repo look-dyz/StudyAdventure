@@ -202,7 +202,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
     // 好感变化
     if(affinityDelta != 0) {
 
-        msg += QString("%1好感 %+2\n")
+        msg += QString("%1好感 +%2\n")
                    .arg(affinityName)
                    .arg(affinityDelta);
     }
@@ -210,14 +210,14 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
     // 压力变化
     if(stressDelta != 0) {
 
-        msg += QString("压力 %+1\n")
+        msg += QString("压力 +%1\n")
                    .arg(stressDelta);
     }
 
     // 黑化变化
     if(darknessDelta != 0) {
 
-        msg += QString("线代黑化 %+1\n")
+        msg += QString("线代黑化 +%1\n")
                    .arg(darknessDelta);
     }
 
