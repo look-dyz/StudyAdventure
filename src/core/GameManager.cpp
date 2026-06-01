@@ -41,8 +41,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 5;
-                stressDelta = 2;
+                affinityDelta = 10;
+                stressDelta = 5;
 
                 player_->addAffinity(
                     SubjectType::ProgDesign,
@@ -53,7 +53,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 6;
+                stressDelta = 15;
 
                 player_->addStress(stressDelta);
             }
@@ -69,8 +69,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 5;
-                stressDelta = 2;
+                affinityDelta = 10;
+                stressDelta = 5;
 
                 player_->addAffinity(
                     SubjectType::LinearAlgebra,
@@ -81,7 +81,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 6;
+                stressDelta = 12;
                 darknessDelta = 15;
 
                 player_->addStress(stressDelta);
@@ -100,8 +100,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 4;
-                stressDelta = 3;
+                affinityDelta = 10;
+                stressDelta = 5;
 
                 player_->addAffinity(
                     SubjectType::AIIntro,
@@ -112,7 +112,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 7;
+                stressDelta = 14;
 
                 player_->addStress(stressDelta);
             }
@@ -128,8 +128,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 4;
-                stressDelta = 1;
+                affinityDelta = 5;
+                stressDelta = 2;
 
                 player_->addAffinity(
                     SubjectType::Calculus,
@@ -156,7 +156,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 2;
+                affinityDelta = 10;
 
                 player_->addAffinity(
                     SubjectType::ProgDesign,
@@ -165,7 +165,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 2;
+                stressDelta = 10;
 
                 player_->addStress(stressDelta);
             }

@@ -22,6 +22,10 @@
 #include <QWidget>
 #include <QApplication>
 #include <QMessageBox>
+#include <QInputDialog>
+#include <QDialog>
+#include <QFormLayout>
+#include <QSpinBox>
 
 namespace SA {
 
@@ -609,4 +613,115 @@ void MainWindow::refreshDialogFromEngine() {
     dialogWindow_->setContent(speaker, text, choices);
 }
 
+void MainWindow::keyPressEvent(QKeyEvent* event)
+{
+    if(event->key() == Qt::Key_F12)
+    {
+        showDebugMenu();
+        return;
+    }
+
+    QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::showDebugMenu()
+{
+    auto* player =
+        GameManager::instance().player();
+
+    QDialog dialog(this);
+
+    dialog.setWindowTitle("调试菜单");
+
+    QFormLayout layout(&dialog);
+
+    QSpinBox progBox;
+    progBox.setRange(0,100);
+    progBox.setValue(
+        player->affinity(
+            SubjectType::ProgDesign
+            ));
+
+    QSpinBox calBox;
+    calBox.setRange(0,100);
+    calBox.setValue(
+        player->affinity(
+            SubjectType::Calculus
+            ));
+
+    QSpinBox linearBox;
+    linearBox.setRange(0,100);
+    linearBox.setValue(
+        player->affinity(
+            SubjectType::LinearAlgebra
+            ));
+
+    QSpinBox aiBox;
+    aiBox.setRange(0,100);
+    aiBox.setValue(
+        player->affinity(
+            SubjectType::AIIntro
+            ));
+
+    QSpinBox stressBox;
+    stressBox.setRange(0,100);
+    stressBox.setValue(
+        player->stress());
+
+    QSpinBox darkBox;
+    darkBox.setRange(0,100);
+    darkBox.setValue(
+        player->darkness());
+
+    layout.addRow("程序设计好感", &progBox);
+    layout.addRow("高数好感", &calBox);
+    layout.addRow("线代好感", &linearBox);
+    layout.addRow("AI导论好感", &aiBox);
+    layout.addRow("压力值", &stressBox);
+    layout.addRow("线代黑化值", &darkBox);
+
+    QPushButton applyBtn("应用");
+    QPushButton cancelBtn("取消");
+
+    layout.addRow(&applyBtn, &cancelBtn);
+
+    connect(
+        &cancelBtn,
+        &QPushButton::clicked,
+        &dialog,
+        &QDialog::reject
+        );
+
+    connect(
+        &applyBtn,
+        &QPushButton::clicked,
+        [&]()
+        {
+            player->setAffinity(
+                SubjectType::ProgDesign,
+                progBox.value());
+
+            player->setAffinity(
+                SubjectType::Calculus,
+                calBox.value());
+
+            player->setAffinity(
+                SubjectType::LinearAlgebra,
+                linearBox.value());
+
+            player->setAffinity(
+                SubjectType::AIIntro,
+                aiBox.value());
+
+            player->setStress(
+                stressBox.value());
+
+            player->setDarkness(
+                darkBox.value());
+
+            dialog.accept();
+        });
+
+    dialog.exec();
+}
 } // namespace SA
