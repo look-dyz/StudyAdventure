@@ -5,11 +5,9 @@
         <file>images/backgrounds/未名湖.png</file>
         <file>images/backgrounds/图书馆.png</file>
         <file>images/backgrounds/理教.png</file>
-        <file>images/backgrounds/宿舍.png</file>
         <file>images/ui/大地图.jpg</file>
-        <file>images/characters/ai引.png</file>
-        <file>images/characters/高数.png</file>
-        <file>images/characters/程设.png</file>
-        <file>images/characters/线代.png</file>
+        <file>images/backgrounds/宿舍.png</file>
+        <file>images/backgrounds/主页面背景图.jpg</file>
+        <file>images/backgrounds/剧情背景图.jpg</file>
     </qresource>
 </RCC>
