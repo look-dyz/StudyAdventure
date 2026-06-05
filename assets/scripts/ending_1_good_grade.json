@@ -57,7 +57,9 @@
       "id": "end1_07",
       "speaker": "narrator",
       "text": "—— 3.92 · END ——\n\n这是最常见的结局，也是最体面的告别。\n但如果你愿意，再来一次——也许还有别的可能。",
-      "choices": []
+      "choices": [
+        {"text": "（回到主菜单）", "next": "END", "effects": []}
+      ]
     }
   ]
 }

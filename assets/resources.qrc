@@ -1,40 +1,26 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-    <!-- 剧本 JSON -->
+<RCC>
     <qresource prefix="/">
         <file>scripts/week1.json</file>
+        <file>data/calculus_questions.json</file>
         <file>scripts/week2.json</file>
         <file>scripts/week3.json</file>
         <file>scripts/week4.json</file>
         <file>scripts/week5.json</file>
-        <file>scripts/route_progdesign.json</file>
-        <file>scripts/route_calculus.json</file>
-        <file>scripts/route_linearalgebra.json</file>
-        <file>scripts/route_ai.json</file>
         <file>scripts/ending_1_good_grade.json</file>
         <file>scripts/ending_2_best_love.json</file>
         <file>scripts/ending_3_farewell.json</file>
         <file>scripts/ending_4_eternal_la.json</file>
         <file>scripts/ending_5_hospital.json</file>
-    </qresource>
-
-    <!-- 数据文件 -->
-    <qresource prefix="/">
-        <file>data/calculus_questions.json</file>
-    </qresource>
-
-    <!-- 图像（待成员 B 添加更多） -->
-    <qresource prefix="/">
-        <file>images/ui/app_icon.svg</file>
-        <file>images/characters/progdesign_placeholder.svg</file>
-        <file>images/characters/calculus_placeholder.svg</file>
-        <file>images/characters/linearalgebra_placeholder.svg</file>
-        <file>images/characters/aiintro_placeholder.svg</file>
-    </qresource>
-
-    <!-- 音频（待成员 B 添加） -->
-    <qresource prefix="/">
-        <!-- <file>audio/bgm/main_theme.mp3</file> -->
-        <!-- <file>audio/sfx/click.wav</file> -->
+        <file>scripts/route_ai.json</file>
+        <file>scripts/route_calculus.json</file>
+        <file>scripts/route_linearalgebra.json</file>
+        <file>scripts/route_progdesign.json</file>
+        <file>images/backgrounds/classroom.png</file>
+        <file>images/backgrounds/dormitory.png</file>
+        <file>images/backgrounds/lake.png</file>
+        <file>images/backgrounds/library.png</file>
+        <file>images/backgrounds/mainbackground.jpg</file>
+        <file>images/backgrounds/plotbackground.jpg</file>
+        <file>images/ui/map.jpg</file>
     </qresource>
 </RCC>

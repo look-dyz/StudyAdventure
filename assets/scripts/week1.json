@@ -32,7 +32,7 @@
     {
       "id": "intro_04",
       "speaker": "LinearAlgebra",
-      "text": "（凑近你的耳边）……不要假装睡觉。我能看穿一切线性变换。",
+      "text": "（凑近你的耳边）……不要假装睡觉。我能看穿一切。",
       "choices": [
         {"text": "（猛地坐起来）", "next": "intro_03", "effects": [{"target": "darkness", "delta": 2}]}
       ]
@@ -118,7 +118,7 @@
     {
       "id": "intro_12",
       "speaker": "narrator",
-      "text": "AI 引论带你走过空旷的校园。\n月光把建筑染上银色——这一切美得不像真实。\n你忽然意识到：在这个世界里，时间已经开始流动。",
+      "text": "AI 引论带你走过空旷的校园。\n月光把建筑染上银色——这一切美得如梦似幻。\n你忽然意识到：在这个世界里，时间已经开始流动。",
       "choices": [
         {"text": "（看向远方）", "next": "day1_start", "effects": []}
       ]

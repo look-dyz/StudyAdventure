@@ -1,8 +1,17 @@
 {
   "title": "程设·分支剧情",
   "description": "玩家与程设好感度达到不同阶段时触发的对话池",
-  "startNode": "progdesign_lv1",
+  "startNode": "progdesign_hub",
   "nodes": [
+    {
+      "id": "progdesign_hub",
+      "speaker": "narrator",
+      "text": "（你走向程设的座位）",
+      "choices": [
+        {"text": "（继续）", "next": "progdesign_lv1", "effects": [], "condition": "affinity.ProgDesign < 60"},
+        {"text": "（继续）", "next": "progdesign_lv2", "effects": [], "condition": "affinity.ProgDesign >= 60"}
+      ]
+    },
     {
       "id": "progdesign_lv1",
       "speaker": "ProgDesign",
@@ -23,8 +32,7 @@
           "next": "progdesign_lv1_creative",
           "effects": [{"target": "affinity.ProgDesign", "delta": 4}]
         }
-      ],
-      "condition": "affinity.ProgDesign < 30"
+      ]
     },
     {
       "id": "progdesign_lv1_correct",
@@ -59,8 +67,7 @@
           "next": "progdesign_lv2_solo",
           "effects": [{"target": "affinity.ProgDesign", "delta": 2}]
         }
-      ],
-      "condition": "affinity.ProgDesign >= 60"
+      ]
     },
     {
       "id": "progdesign_lv2_yes",

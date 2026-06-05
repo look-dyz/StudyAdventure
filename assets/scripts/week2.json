@@ -141,7 +141,7 @@
     {
       "id": "w2_lunch_la",
       "speaker": "LinearAlgebra",
-      "text": "餐厅二楼靠窗的位置。我每周二都坐这里。\n今天起，这是「我们」的位置。",
+      "text": "餐厅二楼靠窗的位置——这一周开始，每周二中午十二点零五分，你坐这里。\n我不喜欢例外。",
       "choices": [
         {"text": "（坐下）", "next": "w2_lunch_la_talk", "effects": []}
       ]
@@ -157,32 +157,35 @@
     {
       "id": "w2_lunch_la_talk",
       "speaker": "LinearAlgebra",
-      "text": "我对人没什么兴趣——大多数人都只是一组无聊的向量。\n但你……你的基不一样。",
+      "text": "（她从口袋里掏出一个小本子，翻开一页推到你面前）\n这是你这两周吃过的所有东西。周一面、周二米饭、周四饺子——你比你以为的有规律。",
       "choices": [
-        {"text": "我也很在意你", "next": "w2_lunch_la_close", "effects": [
-          {"target": "affinity.LinearAlgebra", "delta": 4},
-          {"target": "darkness", "delta": 2}
-        ]},
-        {"text": "我们只是同学吧", "next": "w2_lunch_la_distance", "effects": [
-          {"target": "affinity.LinearAlgebra", "delta": -2},
+        {"text": "你为什么记这些？", "next": "w2_lunch_la_close", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 2},
           {"target": "darkness", "delta": 3}
+        ]},
+        {"text": "（合上本子，不接话）", "next": "w2_lunch_la_distance", "effects": [
+          {"target": "stress", "delta": 3},
+          {"target": "darkness", "delta": 2}
         ]}
       ]
     },
     {
       "id": "w2_lunch_la_close",
       "speaker": "LinearAlgebra",
-      "text": "（她垂下眼，嘴角几不可察地弯起）\n那你要记得——别让我等太久。",
+      "text": "（她收回本子）规律有了基线——\n之后任何偏移，都会被自动标出来。",
       "choices": [
-        {"text": "（吃完午饭）", "next": "w2_afternoon", "effects": []}
+        {"text": "（背脊发凉，沉默吃完）", "next": "w2_afternoon", "effects": [{"target": "stress", "delta": 3}]}
       ]
     },
     {
       "id": "w2_lunch_la_distance",
       "speaker": "LinearAlgebra",
-      "text": "（停顿了很久）……同学。\n好。我会记住这个词。",
+      "text": "（重新把本子翻开，继续写）你不问——我就继续记。\n你今天的米饭，到现在为止吃了二十三口。",
       "choices": [
-        {"text": "（沉默地吃完）", "next": "w2_afternoon", "effects": [{"target": "stress", "delta": 3}]}
+        {"text": "（放下筷子，强迫自己吃完）", "next": "w2_afternoon", "effects": [
+          {"target": "stress", "delta": 5},
+          {"target": "darkness", "delta": 2}
+        ]}
       ]
     },
     {
@@ -205,7 +208,7 @@
     {
       "id": "w2_lunch_ai_listen",
       "speaker": "AIIntro",
-      "text": "好学生。\n下次小测前，把这周错的题做一份梯度图给我看——我帮你找最陡的下降方向。",
+      "text": "好学生。\n下次小测前，把这周错的题挑几道发我——我帮你看看卡在哪。",
       "choices": [
         {"text": "（点头）", "next": "w2_afternoon", "effects": []}
       ]
@@ -283,7 +286,7 @@
     {
       "id": "w2_library_ai_meet",
       "speaker": "AIIntro",
-      "text": "（坐到你对面）今天午饭那番话，我又想了一下——\n其实，把错题做成梯度图这件事，我从没对别人说过。",
+      "text": "（坐到你对面）今天午饭那番话，我又想了一下——\n其实，这种思路我从没对别人讲过。",
       "choices": [
         {"text": "为什么是我？", "next": "w2_end", "effects": [{"target": "affinity.AIIntro", "delta": 4}]}
       ]
