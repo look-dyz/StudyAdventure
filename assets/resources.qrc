@@ -9,5 +9,18 @@
         <file>images/backgrounds/宿舍.png</file>
         <file>images/backgrounds/主页面背景图.jpg</file>
         <file>images/backgrounds/剧情背景图.jpg</file>
+        <file>scripts/week2.json</file>
+        <file>scripts/week3.json</file>
+        <file>scripts/week4.json</file>
+        <file>scripts/week5.json</file>
+        <file>scripts/ending_1_good_grade.json</file>
+        <file>scripts/ending_2_best_love.json</file>
+        <file>scripts/ending_3_farewell.json</file>
+        <file>scripts/ending_4_eternal_la.json</file>
+        <file>scripts/ending_5_hospital.json</file>
+        <file>scripts/route_ai.json</file>
+        <file>scripts/route_calculus.json</file>
+        <file>scripts/route_linearalgebra.json</file>
+        <file>scripts/route_progdesign.json</file>
     </qresource>
 </RCC>

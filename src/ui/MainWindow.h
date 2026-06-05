@@ -2,6 +2,7 @@
 #define STUDYADVENTURE_MAINWINDOW_H
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QLabel>
 #include "common/Constants.h"
 
 class QStackedWidget;
@@ -23,12 +24,16 @@ private:
     StoryEngine*    storyEngine_;
     DialogWindow*   dialogWindow_;
 
+            // 地图页天数显示标签
+    QLabel* mapDateLabel_    = nullptr;
+    QLabel* mapFreeDayLabel_ = nullptr;
+
     int mainMenuIndex_   = 0;
     int mapIndex_        = 1;
     int dialogIndex_     = 2;
     int miniGameIndex_   = 3;
-    int endingIndex_     = 4;
-    int settingsIndex_   = -1;   // ← 新增
+    int endingIndex_     = -1;
+    int settingsIndex_   = -1;
     int blackjackIndex_;
     int ticTacToeIndex_;
     int minesweeperIndex_;
@@ -38,6 +43,7 @@ private:
     void setupUi();
     void connectSignals();
     void refreshDialogFromEngine();
+    void updateMapDateDisplay();   // 新增：刷新地图天数显示
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
