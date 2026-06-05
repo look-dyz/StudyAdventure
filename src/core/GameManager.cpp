@@ -231,6 +231,9 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
         msg
         );
 
+    // ← 新增：完成一局游戏消耗一次自由天数
+    player_->consumeFreeDay();
+
             // 压力值过高触发警告
     if(player_->stress() >= 100) {
 
