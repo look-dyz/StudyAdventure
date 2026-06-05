@@ -234,18 +234,18 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
     // ← 新增：完成一局游戏消耗一次自由天数
     player_->consumeFreeDay();
 
-            // 压力值过高触发警告
-    if(player_->stress() >= 100) {
-
+    // 压力值过高触发警告
+    if (player_->stress() >= 100) {
         qDebug() << "[GameManager] Stress reached maximum!";
+        requestScene(GameScene::Ending);
+        return;  // 直接返回，不再回到地图
+    }
 
-                // TODO：
-                // 后续可以：
-                // 1. 触发 Bad Ending
-                // 2. 强制休息
-                // 3. Game Over
-
-                // emit endingTriggered(...);
+            // 黑化值过高触发结局
+    if (player_->darkness() >= 100) {
+        qDebug() << "[GameManager] Darkness=" << player_->darkness() << "triggering ending";
+        requestScene(GameScene::Ending);
+        return;
     }
     // 玩完小游戏后默认回到地图场景
     requestScene(GameScene::Map);

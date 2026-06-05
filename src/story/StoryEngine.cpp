@@ -16,6 +16,7 @@ StoryEngine::StoryEngine(Player* player, QObject* parent)
 // 加载剧本
 // ============================================================
 bool StoryEngine::loadScript(const QString& scriptPath) {
+    currentScriptPath_ = scriptPath;   // ← 新增
     QFile file(scriptPath);
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "[StoryEngine] Cannot open script:" << scriptPath;
@@ -193,6 +194,10 @@ void StoryEngine::applyEffects(const QJsonObject& obj) {
             player_->addDarkness(delta);
             qDebug() << "  [effect] darkness +=" << delta;
         }
+        else if (target == "choseToStay") {
+            player_->setChoseToStay(eff.value("value").toBool());
+            qDebug() << "  [effect] choseToStay =" << eff.value("value").toBool();
+        }
         else {
             qWarning() << "[StoryEngine] Unknown effect target:" << target;
         }
@@ -200,6 +205,12 @@ void StoryEngine::applyEffects(const QJsonObject& obj) {
 
     // 发出 effects 触发信号（UI 可监听后做闪烁动画提示）
     emit effectsApplied();
+
+    // 数值超限时立即触发结局
+    if (player_->stress() >= 100 || player_->darkness() >= 100) {
+        qDebug() << "[StoryEngine] Threshold reached, triggering ending";
+        emit thresholdEndingTriggered();
+    }
 }
 
 // ============================================================

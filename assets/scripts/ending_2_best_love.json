@@ -7,13 +7,13 @@
     {
       "id": "end2_01",
       "speaker": "narrator",
-      "text": "学期结束的那一天，期末考试的最后一题答完时，你听见铃声。",
+      "text": "异世界的边界开始变得透明。",
       "choices": [{"text": "（继续）", "next": "end2_02", "effects": []}]
     },
     {
       "id": "end2_02",
       "speaker": "narrator",
-      "text": "异世界的边界开始变得透明。回到现实的通道——出现在了你面前。",
+      "text": "回到现实的通道——出现在了你面前。",
       "choices": [{"text": "（继续）", "next": "end2_03", "effects": []}]
     },
     {

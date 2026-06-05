@@ -54,7 +54,8 @@ void Player::advanceDay() {
     }
     emit dateChanged(currentWeek_, currentDay_);
 }
-void Player::setCurrentWeek(int week) { currentWeek_ = qMax(1, week); }
+void Player::setCurrentWeek(int week) { currentWeek_ = qMax(1, week);
+    emit dateChanged(currentWeek_, currentDay_);  }
 void Player::setCurrentDay(int day)   { currentDay_ = qBound(1, day, 7); }
 
 // ========== 剧本完成记录 ==========

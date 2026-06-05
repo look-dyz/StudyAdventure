@@ -12,6 +12,7 @@
 #include "games/MemoryGame.h"
 #include "games/MazeGame.h"
 #include "common/Subject.h"
+#include "story/EndingJudge.h"
 
 #include <QStackedWidget>
 #include <QGraphicsView>
@@ -333,11 +334,64 @@ void MainWindow::setupUi() {
                 });
         connect(storyEngine_, &StoryEngine::scriptFinished,
                 this, [this]() {
-                    QString scriptPath =
-                        QString(":/scripts/week%1.json")
-                            .arg(GameManager::instance().player()->currentWeek());
-                    GameManager::instance().player()->markScriptFinished(scriptPath);
+                    auto* p = GameManager::instance().player();
+                    QString path = storyEngine_->currentScriptPath();
+
+                            // 结局剧本播完 → 回主菜单
+                    if (path.contains("ending")) {
+                        GameManager::instance().requestScene(GameScene::MainMenu);
+                        return;
+                    }
+
+                            // 周剧本播完，标记已完成
+                    p->markScriptFinished(path);
+
+                            // week5 剧本结束 → 进入结局
+                    if (path == ":/scripts/week5.json") {
+                        EndingType ending =
+                            EndingJudge::judge(p, p->choseToStay());
+
+                        static const QMap<EndingType, QString> endingScripts {
+                            { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
+                            { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
+                            { EndingType::End3_Farewell,  ":/scripts/ending_3_farewell.json"   },
+                            { EndingType::End4_EternalLA, ":/scripts/ending_4_eternal_la.json" },
+                            { EndingType::End5_Hospital,  ":/scripts/ending_5_hospital.json"   },
+                                                                             };
+
+                        QString endingPath = endingScripts.value(ending);
+                        if (!endingPath.isEmpty()
+                            && storyEngine_->loadScript(endingPath)) {
+                            stack_->setCurrentIndex(dialogIndex_);
+                        } else {
+                            GameManager::instance().requestScene(GameScene::MainMenu);
+                        }
+                        return;
+                    }
+
+                            // 其他周剧本结束 → 回地图
                     GameManager::instance().requestScene(GameScene::Map);
+                });
+        connect(storyEngine_, &StoryEngine::thresholdEndingTriggered,
+                this, [this]() {
+                    auto* p = GameManager::instance().player();
+                    EndingType ending = EndingJudge::judge(p, p->choseToStay());
+
+                    static const QMap<EndingType, QString> endingScripts {
+                        { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
+                        { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
+                        { EndingType::End3_Farewell,  ":/scripts/ending_3_farewell.json"   },
+                        { EndingType::End4_EternalLA, ":/scripts/ending_4_eternal_la.json" },
+                        { EndingType::End5_Hospital,  ":/scripts/ending_5_hospital.json"   },
+                                                                         };
+
+                    QString endingPath = endingScripts.value(ending);
+                    if (!endingPath.isEmpty()
+                        && storyEngine_->loadScript(endingPath)) {
+                        stack_->setCurrentIndex(dialogIndex_);
+                    } else {
+                        GameManager::instance().requestScene(GameScene::MainMenu);
+                    }
                 });
     }
     dialogIndex_ = stack_->addWidget(dialogPage);     // ★ 动态记录
@@ -637,7 +691,27 @@ void MainWindow::onSceneChangeRequested(GameScene scene) {
             break;
         case GameScene::Dialog:   stack_->setCurrentIndex(dialogIndex_);    break;
         case GameScene::MiniGame: stack_->setCurrentIndex(miniGameIndex_);  break;
-        case GameScene::Ending:   stack_->setCurrentIndex(endingIndex_);    break;
+        case GameScene::Ending: {
+            qDebug() << "[MainWindow] Ending case reached";
+            auto* p = GameManager::instance().player();
+            qDebug() << "[MainWindow] stress=" << p->stress() << "darkness=" << p->darkness();
+            EndingType ending = EndingJudge::judge(p, p->choseToStay());
+
+            static const QMap<EndingType, QString> endingScripts {
+                                                                 { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
+                                                                 { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
+                                                                 { EndingType::End3_Farewell,  ":/scripts/ending_3_farewell.json"   },
+                                                                 { EndingType::End4_EternalLA, ":/scripts/ending_4_eternal_la.json" },
+                                                                 { EndingType::End5_Hospital,  ":/scripts/ending_5_hospital.json"   },
+                                                                 };
+            QString endingPath = endingScripts.value(ending);
+            if (!endingPath.isEmpty() && storyEngine_->loadScript(endingPath)) {
+                stack_->setCurrentIndex(dialogIndex_);
+            } else {
+                stack_->setCurrentIndex(endingIndex_);  // 兜底
+            }
+            break;
+        }
     }
 }
 
@@ -694,9 +768,12 @@ void MainWindow::showDebugMenu() {
     dialog.setWindowTitle("调试菜单");
     QFormLayout layout(&dialog);
 
-    QSpinBox progBox, calBox, linearBox, aiBox, stressBox, darkBox;
+    QSpinBox progBox, calBox, linearBox, aiBox, stressBox, darkBox, weekBox; // ← 加 weekBox
     for (auto* b : {&progBox,&calBox,&linearBox,&aiBox,&stressBox,&darkBox})
         b->setRange(0, 100);
+    weekBox.setRange(1, 5);                          // ← 新增
+    weekBox.setValue(player->currentWeek());         // ← 新增
+
     progBox.setValue(player->affinity(SubjectType::ProgDesign));
     calBox.setValue(player->affinity(SubjectType::Calculus));
     linearBox.setValue(player->affinity(SubjectType::LinearAlgebra));
@@ -704,6 +781,7 @@ void MainWindow::showDebugMenu() {
     stressBox.setValue(player->stress());
     darkBox.setValue(player->darkness());
 
+    layout.addRow("当前周数",     &weekBox);         // ← 新增，放第一行方便找
     layout.addRow("程序设计好感", &progBox);
     layout.addRow("高数好感",     &calBox);
     layout.addRow("线代好感",     &linearBox);
@@ -714,14 +792,26 @@ void MainWindow::showDebugMenu() {
     QPushButton applyBtn("应用"), cancelBtn("取消");
     layout.addRow(&applyBtn, &cancelBtn);
     connect(&cancelBtn, &QPushButton::clicked, &dialog, &QDialog::reject);
-    connect(&applyBtn,  &QPushButton::clicked, [&]() {
+    connect(&applyBtn, &QPushButton::clicked, [&]() {
         player->setAffinity(SubjectType::ProgDesign,    progBox.value());
         player->setAffinity(SubjectType::Calculus,      calBox.value());
         player->setAffinity(SubjectType::LinearAlgebra, linearBox.value());
         player->setAffinity(SubjectType::AIIntro,       aiBox.value());
         player->setStress(stressBox.value());
         player->setDarkness(darkBox.value());
-        dialog.accept();
+
+        int newWeek = weekBox.value();
+        if (newWeek != player->currentWeek()) {
+            for (int w = 1; w < newWeek; ++w)
+                player->markScriptFinished(
+                    QString(":/scripts/week%1.json").arg(w));
+            player->setCurrentWeek(newWeek);
+            dialog.accept();                      // 先关闭对话框
+            loadAndShowScript(
+                QString(":/scripts/week%1.json").arg(newWeek));
+        } else {
+            dialog.accept();
+        }
     });
     dialog.exec();
 }

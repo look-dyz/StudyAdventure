@@ -48,6 +48,12 @@ public:
             // ========== 重置 ==========
     void reset();
 
+public:
+    bool choseToStay() const { return choseToStay_; }
+    void setChoseToStay(bool v) { choseToStay_ = v; }
+private:
+    bool choseToStay_ = false;
+
 signals:
     void affinityChanged(SubjectType s, int newValue);
     void stressChanged(int newValue);
