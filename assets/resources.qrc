@@ -2,13 +2,6 @@
     <qresource prefix="/">
         <file>scripts/week1.json</file>
         <file>data/calculus_questions.json</file>
-        <file>images/backgrounds/未名湖.png</file>
-        <file>images/backgrounds/图书馆.png</file>
-        <file>images/backgrounds/理教.png</file>
-        <file>images/ui/大地图.jpg</file>
-        <file>images/backgrounds/宿舍.png</file>
-        <file>images/backgrounds/主页面背景图.jpg</file>
-        <file>images/backgrounds/剧情背景图.jpg</file>
         <file>scripts/week2.json</file>
         <file>scripts/week3.json</file>
         <file>scripts/week4.json</file>
@@ -22,5 +15,12 @@
         <file>scripts/route_calculus.json</file>
         <file>scripts/route_linearalgebra.json</file>
         <file>scripts/route_progdesign.json</file>
+        <file>images/backgrounds/classroom.png</file>
+        <file>images/backgrounds/dormitory.png</file>
+        <file>images/backgrounds/lake.png</file>
+        <file>images/backgrounds/library.png</file>
+        <file>images/backgrounds/mainbackground.jpg</file>
+        <file>images/backgrounds/plotbackground.jpg</file>
+        <file>images/ui/map.jpg</file>
     </qresource>
 </RCC>

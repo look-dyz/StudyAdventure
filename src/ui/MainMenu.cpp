@@ -13,7 +13,7 @@ MainMenu::MainMenu(QWidget* parent) : QWidget(parent) {
     auto* bgLabel = new QLabel(this);
     bgLabel->setObjectName("bgLabel");
     bgLabel->setScaledContents(true);
-    QPixmap bg(":/images/backgrounds/主页面背景图.jpg");
+    QPixmap bg(":/images/backgrounds/mainbackground.jpg");
     bgLabel->setPixmap(bg);
     bgLabel->lower();
 

@@ -17,7 +17,7 @@ DialogWindow::DialogWindow(QWidget* parent)
     // ── 背景图 ──
     bgLabel_->setObjectName("bgLabel");
     bgLabel_->setScaledContents(true);
-    bgLabel_->setPixmap(QPixmap(":/images/backgrounds/剧情背景图.jpg"));
+    bgLabel_->setPixmap(QPixmap(":/images/backgrounds/plotbackground.jpg"));
     bgLabel_->lower();
 
     // ── 对话框底板（半透明白框）──
