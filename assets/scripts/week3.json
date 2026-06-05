@@ -1,0 +1,301 @@
+{
+  "title": "第三周·期中",
+  "description": "期中考试周。压力达到顶峰；玩家选择主攻学科与复习搭档；考后按好感度分流到不同夜晚",
+  "startNode": "w3_start",
+  "nodes": [
+    {
+      "id": "w3_start",
+      "speaker": "narrator",
+      "text": "周一清晨，教学楼前的公告栏被围得水泄不通。\n红字写着：「期中考试，本周五，全科。」",
+      "choices": [
+        {"text": "（深呼吸）", "next": "w3_pressure", "effects": [{"target": "stress", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w3_pressure",
+      "speaker": "narrator",
+      "text": "宿舍灯一夜没熄。\n咖啡因和教科书的纸味混在一起——这一周，整个校园都泡在这种气味里。",
+      "choices": [
+        {"text": "（前往教室）", "next": "w3_morning_announce", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_morning_announce",
+      "speaker": "ProgDesign",
+      "text": "四门一起考，时间不够。\n你必须选一门主攻——剩下三门保不挂就行。",
+      "choices": [
+        {"text": "（点头）", "next": "w3_choose_subject", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_choose_subject",
+      "speaker": "narrator",
+      "text": "你必须选择一门主攻——也就是说，今晚谁来陪你复习。",
+      "choices": [
+        {"text": "主攻程设", "next": "w3_prog", "effects": [
+          {"target": "affinity.ProgDesign", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "主攻高数", "next": "w3_calc", "effects": [
+          {"target": "affinity.Calculus", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "主攻线代", "next": "w3_la", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "主攻 AI 引论", "next": "w3_ai", "effects": [
+          {"target": "affinity.AIIntro", "delta": 5},
+          {"target": "stress", "delta": 3}
+        ]}
+      ]
+    },
+
+    {
+      "id": "w3_prog",
+      "speaker": "ProgDesign",
+      "text": "图书馆三楼，今晚到打烊。\n带上你的笔记，别带手机。",
+      "choices": [
+        {"text": "（跟上去）", "next": "w3_prog_2", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_prog_2",
+      "speaker": "ProgDesign",
+      "text": "（在你身边坐下，把一杯黑咖啡推过来）\n你昨晚只睡了四小时。我看了你的代码——错的不是语法，是疲劳。",
+      "choices": [
+        {"text": "你怎么知道我睡了几小时", "next": "w3_prog_3", "effects": [{"target": "affinity.ProgDesign", "delta": 3}]},
+        {"text": "（喝下咖啡）", "next": "w3_prog_3", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+    {
+      "id": "w3_prog_3",
+      "speaker": "ProgDesign",
+      "text": "我做的事——是让你以最少的代价通过期中。\n剩下的，等你考完再问我。",
+      "choices": [
+        {"text": "（点头，继续刷题）", "next": "w3_exam_eve", "effects": [{"target": "affinity.ProgDesign", "delta": 2}]}
+      ]
+    },
+
+    {
+      "id": "w3_calc",
+      "speaker": "Calculus",
+      "text": "我们去湖边复习吧。\n夜风、台灯、一支笔——其实比图书馆更适合思考。",
+      "choices": [
+        {"text": "（跟上）", "next": "w3_calc_2", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_calc_2",
+      "speaker": "Calculus",
+      "text": "积分的本质——是把无穷个微小的瞬间，重新连成一段人生。\n你看，复习也一样。",
+      "choices": [
+        {"text": "这听起来像诗", "next": "w3_calc_3", "effects": [{"target": "affinity.Calculus", "delta": 4}]},
+        {"text": "我现在没有心情听哲学", "next": "w3_calc_3", "effects": [
+          {"target": "affinity.Calculus", "delta": -1},
+          {"target": "stress", "delta": 2}
+        ]}
+      ]
+    },
+    {
+      "id": "w3_calc_3",
+      "speaker": "Calculus",
+      "text": "好。\n那把你的难题给我——我用最朴素的方式讲，一题一题来。",
+      "choices": [
+        {"text": "（深呼吸，开始）", "next": "w3_exam_eve", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+
+    {
+      "id": "w3_la",
+      "speaker": "LinearAlgebra",
+      "text": "我自习室的门已经反锁了。\n钥匙只在我手里——所以这一晚，没有人会来打扰我们。",
+      "choices": [
+        {"text": "（跟上去）", "next": "w3_la_2", "effects": [{"target": "darkness", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w3_la_2",
+      "speaker": "LinearAlgebra",
+      "text": "（她把你最难的那本练习册推到桌中央）\n你不用懂全部——你只要懂我教的那部分。剩下的，考试时我会让你想起来。",
+      "choices": [
+        {"text": "你怎么能让我「想起来」？", "next": "w3_la_3", "effects": [{"target": "affinity.LinearAlgebra", "delta": 3}]},
+        {"text": "（不敢追问，低头做题）", "next": "w3_la_3", "effects": [{"target": "stress", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w3_la_3",
+      "speaker": "LinearAlgebra",
+      "text": "（凑近你的耳边）一个线性变换，可以把任何空间映射到我想要的形状。\n你的脑子——也是一个空间。",
+      "choices": [
+        {"text": "（背脊发凉）", "next": "w3_exam_eve", "effects": [
+          {"target": "stress", "delta": 3},
+          {"target": "darkness", "delta": 3}
+        ], "condition": "darkness < 30"},
+        {"text": "（你居然觉得这句话有点动人）", "next": "w3_exam_eve", "effects": [
+          {"target": "darkness", "delta": 6},
+          {"target": "affinity.LinearAlgebra", "delta": 3}
+        ], "condition": "darkness >= 30"}
+      ]
+    },
+
+    {
+      "id": "w3_ai",
+      "speaker": "AIIntro",
+      "text": "复习不是把书重看一遍——是找出真正卡你的那几道。\n来，我教你。",
+      "choices": [
+        {"text": "（坐下）", "next": "w3_ai_2", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_ai_2",
+      "speaker": "AIIntro",
+      "text": "三步——把错题分类，按频率排序，从最常错的开始打。\n时间不够，不能贪。",
+      "choices": [
+        {"text": "你怎么把学习讲得像调参", "next": "w3_ai_3", "effects": [{"target": "affinity.AIIntro", "delta": 4}]},
+        {"text": "（默默照做）", "next": "w3_ai_3", "effects": [{"target": "affinity.AIIntro", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w3_ai_3",
+      "speaker": "AIIntro",
+      "text": "因为学习就是调参。\n而你——是我见过最适合训练的样本。",
+      "choices": [
+        {"text": "（笑出声，专心刷题）", "next": "w3_exam_eve", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+
+    {
+      "id": "w3_exam_eve",
+      "speaker": "narrator",
+      "text": "考前夜。\n你躺在床上，脑子里像被填满的硬盘——但奇怪地，不再害怕。",
+      "choices": [
+        {"text": "（睡着）", "next": "w3_exam_day", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_exam_day",
+      "speaker": "narrator",
+      "text": "周五清晨。\n考场门口，监考老师按学号点名。你的笔在手里——出乎意料地稳。",
+      "choices": [
+        {"text": "（坐下）", "next": "w3_exam_paper", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_exam_paper",
+      "speaker": "narrator",
+      "text": "卷子翻面，第一题——\n你的呼吸停了半秒。",
+      "choices": [
+        {"text": "从最熟的题开始", "next": "w3_exam_careful", "effects": [
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "按顺序硬刚", "next": "w3_exam_intuition", "effects": [
+          {"target": "stress", "delta": 5}
+        ]}
+      ]
+    },
+    {
+      "id": "w3_exam_careful",
+      "speaker": "narrator",
+      "text": "你跳过难题，先把会做的全部锁死。\n再回头时，那些卡壳的题——竟然也开始松动。",
+      "choices": [
+        {"text": "（继续）", "next": "w3_exam_done", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_exam_intuition",
+      "speaker": "narrator",
+      "text": "你强行从第一题硬磕，每一道都没放过。\n时间在指缝里溜走——交卷铃响时，最后两题空着。",
+      "choices": [
+        {"text": "（叹气）", "next": "w3_exam_done", "effects": [{"target": "stress", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w3_exam_done",
+      "speaker": "narrator",
+      "text": "走出考场，五月的风扑面而来。\n阳光好得让人发愣——好像这一周的紧张，都从来没存在过。",
+      "choices": [
+        {"text": "（走向广场）", "next": "w3_after_exam", "effects": [{"target": "stress", "delta": -8}]}
+      ]
+    },
+
+    {
+      "id": "w3_after_exam",
+      "speaker": "narrator",
+      "text": "广场中央，四个熟悉的身影都在。\n程设在拍肩膀、高数在递柠檬水、AI 引论举着手机录像、线代——只是远远地看着你。",
+      "choices": [
+        {"text": "（走过去）", "next": "w3_after_choose", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_after_choose",
+      "speaker": "narrator",
+      "text": "考完了。这一晚，你想和谁一起过？",
+      "choices": [
+        {"text": "和程设吃顿好的", "next": "w3_with_prog", "effects": [
+          {"target": "affinity.ProgDesign", "delta": 4}
+        ], "condition": "affinity.ProgDesign >= 25"},
+        {"text": "和高数去湖边走走", "next": "w3_with_calc", "effects": [
+          {"target": "affinity.Calculus", "delta": 4}
+        ], "condition": "affinity.Calculus >= 25"},
+        {"text": "回应线代的目光", "next": "w3_with_la", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 4},
+          {"target": "darkness", "delta": 3}
+        ], "condition": "affinity.LinearAlgebra >= 25"},
+        {"text": "去 AI 引论那里听他吐槽", "next": "w3_with_ai", "effects": [
+          {"target": "affinity.AIIntro", "delta": 4}
+        ], "condition": "affinity.AIIntro >= 25"},
+        {"text": "一个人走走", "next": "w3_alone", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+    {
+      "id": "w3_with_prog",
+      "speaker": "ProgDesign",
+      "text": "（罕见地笑了一下）食堂二楼，今晚加两个菜。\n你这一周——表现得比我预想的好。",
+      "choices": [
+        {"text": "（也笑了）", "next": "w3_end", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_with_calc",
+      "speaker": "Calculus",
+      "text": "夜风、湖面、月光——三样东西凑齐了，就构成了一段完美的微分元。\n这一晚，就让它无限延长吧。",
+      "choices": [
+        {"text": "（在她身边坐下）", "next": "w3_end", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_with_la",
+      "speaker": "LinearAlgebra",
+      "text": "（她按住你的肩膀，让你坐下）这一晚——我要完整的视野。\n手机，先放我这里。",
+      "choices": [
+        {"text": "（默默点头）", "next": "w3_end", "effects": [{"target": "darkness", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w3_with_ai",
+      "speaker": "AIIntro",
+      "text": "走，烧烤摊。\n今天我请——奖励你这一周的学习率没有崩。",
+      "choices": [
+        {"text": "（跟上）", "next": "w3_end", "effects": []}
+      ]
+    },
+    {
+      "id": "w3_alone",
+      "speaker": "narrator",
+      "text": "你绕过广场，沿着湖一个人走。\n四个身影在身后远远地——既没追上来，也没真的离开。",
+      "choices": [
+        {"text": "（继续走）", "next": "w3_end", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w3_end",
+      "speaker": "narrator",
+      "text": "回到宿舍时已经很晚。\n你倒在床上——上半学期结束了。\n下周，是第四周。",
+      "choices": [
+        {"text": "（睡着）", "next": "END", "effects": [{"target": "stress", "delta": -5}]}
+      ]
+    }
+  ]
+}

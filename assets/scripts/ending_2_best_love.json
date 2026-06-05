@@ -1,0 +1,57 @@
+{
+  "title": "结局 End2 · Best Love",
+  "description": "好感度达标且玩家选择「留在异世界」",
+  "trigger": "max(affinity) >= 80 && choseToStay == true",
+  "startNode": "end2_01",
+  "nodes": [
+    {
+      "id": "end2_01",
+      "speaker": "narrator",
+      "text": "学期结束的那一天，期末考试的最后一题答完时，你听见铃声。",
+      "choices": [{"text": "（继续）", "next": "end2_02", "effects": []}]
+    },
+    {
+      "id": "end2_02",
+      "speaker": "narrator",
+      "text": "异世界的边界开始变得透明。回到现实的通道——出现在了你面前。",
+      "choices": [{"text": "（继续）", "next": "end2_03", "effects": []}]
+    },
+    {
+      "id": "end2_03",
+      "speaker": "narrator",
+      "text": "可你回头，看到了 ta 站在身后，欲言又止的样子。",
+      "choices": [
+        {"text": "走向 ta", "next": "end2_stay", "effects": []},
+        {"text": "走向通道", "next": "end2_leave_anyway", "effects": []}
+      ]
+    },
+    {
+      "id": "end2_stay",
+      "speaker": "player",
+      "text": "我决定留下来。这一学期，是我生命里最珍贵的时光。",
+      "choices": [{"text": "（继续）", "next": "end2_partner_reply", "effects": []}]
+    },
+    {
+      "id": "end2_partner_reply",
+      "speaker": "narrator",
+      "text": "ta 怔了一下，然后笑了——那是这个异世界第一次让你看到这样温柔的笑容。",
+      "choices": [{"text": "（继续）", "next": "end2_final", "effects": []}]
+    },
+    {
+      "id": "end2_final",
+      "speaker": "narrator",
+      "text": "通道在背后悄然合上。\n\n你的现实身份会消失么？或许吧。但此刻——你已经做出了选择。\n\n—— Best Love · END ——",
+      "choices": [
+        {"text": "（回到主菜单）", "next": "END", "effects": []}
+      ]
+    },
+    {
+      "id": "end2_leave_anyway",
+      "speaker": "narrator",
+      "text": "你转身走向通道。\n身后那个人没有挽留——也没有跟来。\n光把你温柔地吞没。",
+      "choices": [
+        {"text": "（穿过通道）", "next": "END", "effects": []}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "title": "结局 End3 · 再见",
+  "description": "好感度达 80 但选择回到现实——遗憾但温柔的结局",
+  "trigger": "max(affinity) >= 80 && choseToStay == false",
+  "startNode": "end3_01",
+  "nodes": [
+    {
+      "id": "end3_01",
+      "speaker": "narrator",
+      "text": "期末考试结束的那天，异世界的边界开始变得透明。\n回到现实的通道——出现在了你面前。",
+      "choices": [
+        {"text": "（继续）", "next": "end3_02", "effects": []}
+      ]
+    },
+    {
+      "id": "end3_02",
+      "speaker": "narrator",
+      "text": "你回头，看到 ta 站在你身后。\n这一学期相处的所有片段，在脑海里飞速闪过——\n上课、自习、玩游戏、未名湖边的散步、宿舍门口的告别……",
+      "choices": [
+        {"text": "走向 ta", "next": "end3_03_goodbye", "effects": []},
+        {"text": "走向通道", "next": "end3_03_leave_silent", "effects": []}
+      ]
+    },
+    {
+      "id": "end3_03_goodbye",
+      "speaker": "player",
+      "text": "我……我要回去了。",
+      "choices": [
+        {"text": "（继续）", "next": "end3_04", "effects": []}
+      ]
+    },
+    {
+      "id": "end3_03_leave_silent",
+      "speaker": "narrator",
+      "text": "你没有说话，只是回头看了 ta 最后一眼。\nta 也看着你，没有挽留。",
+      "choices": [
+        {"text": "（继续）", "next": "end3_05", "effects": []}
+      ]
+    },
+    {
+      "id": "end3_04",
+      "speaker": "narrator",
+      "text": "ta 笑了一下，那个笑容里有理解，也有不舍。\n\n「我知道。」\n「现实里也有你的责任、你的家人、你的人生。」\n「不要为这件事内疚——你已经给了我足够多的回忆。」",
+      "choices": [
+        {"text": "（继续）", "next": "end3_05", "effects": []}
+      ]
+    },
+    {
+      "id": "end3_05",
+      "speaker": "narrator",
+      "text": "通道在你身后缓缓闭合。\n那个异世界，那个一学期的同窗，都被光吞没。\n\n你回到了现实的桌前。\n窗外天已亮——期末复习的笔记还摊开着。",
+      "choices": [
+        {"text": "（深呼吸）", "next": "end3_06", "effects": []}
+      ]
+    },
+    {
+      "id": "end3_06",
+      "speaker": "narrator",
+      "text": "你翻开笔记的最后一页，看到自己写下的字：\n\n「程序的本质是表达。」\n「极限的本质是逼近。」\n「线性的本质是叠加。」\n「智能的本质是连接。」\n\n……这些不是你的字迹。但它们陪着你，走过了那段时间。",
+      "choices": [
+        {"text": "（轻轻合上笔记）", "next": "end3_07", "effects": []}
+      ]
+    },
+    {
+      "id": "end3_07",
+      "speaker": "narrator",
+      "text": "—— 再见 · END ——\n\n这是最难选的告别。\n你拥有过爱，也选择了责任——\n这就是成长。",
+      "choices": [
+        {"text": "（回到主菜单）", "next": "END", "effects": []}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250">
+  <!-- 线代：阴郁、占有欲，深红黑色调（黑化倾向角色） -->
+  <defs>
+    <radialGradient id="face3" cx="0.5" cy="0.4">
+      <stop offset="0%" stop-color="#F5DDC9"/>
+      <stop offset="100%" stop-color="#D9A88F"/>
+    </radialGradient>
+  </defs>
+  <rect width="200" height="250" fill="#FBE9E9"/>
+  <!-- 身体 -->
+  <rect x="50" y="160" width="100" height="90" fill="#5C0A0A"/>
+  <!-- 头 -->
+  <circle cx="100" cy="100" r="50" fill="url(#face3)"/>
+  <!-- 黑色长发，遮住一只眼 -->
+  <path d="M48 90 Q55 35 100 35 Q145 35 152 90 L155 165 Q145 110 130 95 Q120 90 95 95 L60 110 Q55 130 48 165 Z"
+        fill="#1A1A1A"/>
+  <!-- 露出的眼睛（红） -->
+  <ellipse cx="115" cy="105" rx="6" ry="8" fill="#C53030"/>
+  <circle cx="115" cy="105" r="3" fill="#1A1A1A"/>
+  <!-- 嘴（微笑但诡异） -->
+  <path d="M90 130 Q100 138 110 130" stroke="#5C0A0A" stroke-width="2" fill="none"/>
+  <!-- 矩阵装饰 -->
+  <text x="25" y="50" font-family="serif" font-size="14" fill="#5C0A0A" opacity="0.5">[ ]</text>
+  <text x="165" y="60" font-family="serif" font-size="14" fill="#5C0A0A" opacity="0.5">det</text>
+  <!-- 名字标签 -->
+  <text x="100" y="240" text-anchor="middle"
+        font-family="sans-serif" font-size="14" fill="#FFF" font-weight="bold">线代</text>
+</svg>
