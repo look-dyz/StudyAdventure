@@ -44,13 +44,18 @@ void Player::addDarkness(int delta) { setDarkness(darkness_ + delta); }
 
 // ========== 日期 ==========
 void Player::advanceDay() {
+    if (freeDaysLeft_ > 0) {
+        freeDaysLeft_--;
+        emit freeDaysChanged(freeDaysLeft_);
+    }
+
     currentDay_++;
     if (currentDay_ > 7) {
         currentDay_ = 1;
         currentWeek_++;
-        freeDaysLeft_ = 6;
+        freeDaysLeft_ = 7;
         emit freeDaysChanged(freeDaysLeft_);
-        emit weekAdvanced(currentWeek_);   // ← 新增
+        emit weekAdvanced(currentWeek_);
     }
     emit dateChanged(currentWeek_, currentDay_);
 }
@@ -75,16 +80,7 @@ void Player::setFreeDaysLeft(int days) {
     }
 }
 void Player::consumeFreeDay() {
-    int newVal = qMax(0, freeDaysLeft_ - 1);
-    if (freeDaysLeft_ != newVal) {
-        freeDaysLeft_ = newVal;
-        emit freeDaysChanged(freeDaysLeft_);
-    }
-    // 自由天数用完时，自动推进到下一周（触发 weekAdvanced）
-    if (freeDaysLeft_ == 0) {
-        currentDay_ = 7;
-        advanceDay();
-    }
+    advanceDay();
 }
 
 // ========== 重置 ==========
@@ -97,7 +93,7 @@ void Player::reset() {
     darkness_     = 0;
     currentWeek_  = 1;
     currentDay_   = 1;
-    freeDaysLeft_ = 6;
+    freeDaysLeft_ = 7;
     finishedScripts_.clear();
 }
 
