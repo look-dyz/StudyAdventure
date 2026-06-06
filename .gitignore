@@ -1,0 +1,76 @@
+# ===== 构建产物 =====
+build/
+build-*/
+out/
+cmake-build-*/
+
+# ===== Qt 生成文件 =====
+*.pro.user
+*.pro.user.*
+moc_*.cpp
+moc_*.h
+ui_*.h
+qrc_*.cpp
+Makefile
+*.qmake.stash
+
+# ===== 编译产物 =====
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.lo
+*.slo
+*.la
+
+# ===== 编辑器 / IDE =====
+.vscode/
+.vs/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 调试与日志 =====
+*.log
+*.dmp
+/core
+core.*
+*.stackdump
+
+# ===== CMake =====
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_deps/
+
+# ===== 临时文件 =====
+*.tmp
+*.bak
+*.orig
+*~
+
+# ===== 个人调试存档（不要提交！）=====
+saves/
+*.save
+debug_save.json
+
+# ===== 大文件（音频视频走 LFS 或外链）=====
+# *.mp4
+# *.mov
+# *.wav
+
+# ===== 系统 =====
+.fseventsd/
+.Spotlight-V100
+.Trashes

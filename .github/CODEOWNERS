@@ -1,0 +1,33 @@
+# CODEOWNERS
+# 当 PR 修改对应目录时，GitHub 会自动 @ 相应负责人 review
+#
+# 用法：把 @username 替换成各成员的 GitHub 账号
+# 修改本文件后：在 GitHub 仓库 Settings → Branches → 启用 "Require review from Code Owners" 才生效
+
+# ===== 默认：所有未匹配文件 =====
+*                       @leader-username
+
+# ===== 成员 A（剧情）=====
+/src/story/             @member-a-username
+/assets/scripts/        @member-a-username
+/docs/JSON剧本格式.md   @member-a-username
+
+# ===== 成员 B（界面）=====
+/src/ui/                @member-b-username
+/src/map/               @member-b-username
+/assets/images/         @member-b-username
+/assets/audio/          @member-b-username
+
+# ===== 成员 C（玩法）=====
+/src/core/              @member-c-username
+/src/games/             @member-c-username
+/assets/data/           @member-c-username
+
+# ===== 公共代码：需要所有人 review =====
+/src/common/            @member-a-username @member-b-username @member-c-username
+/src/main.cpp           @member-a-username @member-b-username @member-c-username
+/CMakeLists.txt         @member-a-username @member-b-username @member-c-username
+/docs/接口约定.md       @member-a-username @member-b-username @member-c-username
+
+# ===== CI 配置 =====
+/.github/               @leader-username

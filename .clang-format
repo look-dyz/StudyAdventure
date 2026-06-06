@@ -1,0 +1,43 @@
+# clang-format 配置
+# 用法：clang-format -i src/**/*.{h,cpp}
+# Qt Creator 中：工具 → 选项 → C++ → 代码风格 → ClangFormat
+
+BasedOnStyle: Google
+Language: Cpp
+Standard: c++17
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+
+# 大括号风格
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+# 指针对齐：T* ptr 而非 T *ptr
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# 访问修饰符不加额外缩进（public:/private:）
+AccessModifierOffset: -4
+
+# include 排序：保留分组，组内排序
+SortIncludes: CaseSensitive
+IncludeBlocks: Preserve
+
+# 命名空间内不缩进
+NamespaceIndentation: None
+FixNamespaceComments: true
+
+# 模板尖括号后换行（多行模板）
+AlwaysBreakTemplateDeclarations: Yes
+
+# 连续赋值/声明不对齐（保持简洁）
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+
+# 空行不超过 1 行
+MaxEmptyLinesToKeep: 1

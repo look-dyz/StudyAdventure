@@ -1,0 +1,358 @@
+{
+  "title": "第四周·信物",
+  "description": "期中过后的轻松一周。好感度 50+ 的角色会赠送信物；周末出游可选目的地与陪同对象",
+  "startNode": "w4_start",
+  "nodes": [
+    {
+      "id": "w4_start",
+      "speaker": "narrator",
+      "text": "周一清晨。\n期中考成绩已经贴在公告栏外——你站在人群最外圈，远远看到自己的名字，长出一口气。",
+      "choices": [
+        {"text": "（继续）", "next": "w4_grades_back", "effects": [{"target": "stress", "delta": -5}]}
+      ]
+    },
+    {
+      "id": "w4_grades_back",
+      "speaker": "narrator",
+      "text": "教学楼的走廊里，四个熟悉的身影各自忙着自己的事。\n气氛——出乎意料地，松弛。",
+      "choices": [
+        {"text": "（享受这一刻）", "next": "w4_mon_morning", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_mon_morning",
+      "speaker": "narrator",
+      "text": "你忽然想起来——\n上一周陪你复习的那个人，似乎说过「考完再说」的话。",
+      "choices": [
+        {"text": "（去找他们）", "next": "w4_check_gifts", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_check_gifts",
+      "speaker": "narrator",
+      "text": "你站在教学楼的天井里——四条走廊各自通向一个人。",
+      "choices": [
+        {"text": "去找程设", "next": "w4_gift_prog", "effects": [], "condition": "affinity.ProgDesign >= 50"},
+        {"text": "去找高数", "next": "w4_gift_calc", "effects": [], "condition": "affinity.Calculus >= 50"},
+        {"text": "去找线代", "next": "w4_gift_la", "effects": [], "condition": "affinity.LinearAlgebra >= 50"},
+        {"text": "去找 AI 引论", "next": "w4_gift_ai", "effects": [], "condition": "affinity.AIIntro >= 50"},
+        {"text": "（谁也不找，去湖边坐坐）", "next": "w4_no_gift", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+
+    {
+      "id": "w4_gift_prog",
+      "speaker": "ProgDesign",
+      "text": "（从抽屉里拿出一支用旧的钢笔）这支笔，跟着我十年。\n现在交给你——希望它在你手里，写出比我更整洁的代码。",
+      "choices": [
+        {"text": "这太贵重了", "next": "w4_gift_prog_2", "effects": []},
+        {"text": "（默默接过）", "next": "w4_gift_prog_2", "effects": [{"target": "affinity.ProgDesign", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w4_gift_prog_2",
+      "speaker": "ProgDesign",
+      "text": "工具的价值，是看它在谁手上。\n你不是替代我——你是接过我没走完的那一段。",
+      "choices": [
+        {"text": "（握紧笔）", "next": "w4_gift_prog_3", "effects": [{"target": "affinity.ProgDesign", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w4_gift_prog_3",
+      "speaker": "ProgDesign",
+      "text": "好了，别耽误下午的事。\n周末——如果你愿意，我们再聊。",
+      "choices": [
+        {"text": "（点头告别）", "next": "w4_thursday", "effects": [{"target": "affinity.ProgDesign", "delta": 2}]}
+      ]
+    },
+
+    {
+      "id": "w4_gift_calc",
+      "speaker": "Calculus",
+      "text": "（递给你一本旧得发黄的小书）《变与不变》。\n是我在你这个年纪读到的——它陪我度过了好几个想不通的夜晚。",
+      "choices": [
+        {"text": "（翻开扉页）", "next": "w4_gift_calc_2", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_gift_calc_2",
+      "speaker": "Calculus",
+      "text": "（扉页上有一行铅笔字：「世界唯一不变的，是它一直在变」）\n这是当年的我，写给将来某个人的。\n那个人，原来是你。",
+      "choices": [
+        {"text": "（眼眶有点热）", "next": "w4_gift_calc_3", "effects": [{"target": "affinity.Calculus", "delta": 4}]},
+        {"text": "我会好好读它", "next": "w4_gift_calc_3", "effects": [{"target": "affinity.Calculus", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w4_gift_calc_3",
+      "speaker": "Calculus",
+      "text": "读完了别还我。\n书的归宿，从来不是回到原主人手上——而是被下一个人继续读下去。",
+      "choices": [
+        {"text": "（把书收好）", "next": "w4_thursday", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+
+    {
+      "id": "w4_gift_la",
+      "speaker": "LinearAlgebra",
+      "text": "（从口袋里拿出一条细细的银链，链坠是一个小小的字母）\n你的名字的首字母——我亲手刻的。",
+      "choices": [
+        {"text": "（戴上）", "next": "w4_gift_la_2", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 5},
+          {"target": "darkness", "delta": 5}
+        ]},
+        {"text": "我不太习惯戴东西", "next": "w4_gift_la_refuse", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": -3},
+          {"target": "darkness", "delta": 4}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_gift_la_2",
+      "speaker": "LinearAlgebra",
+      "text": "（她把链子的扣环用钳子掰紧）这个扣——是我特地改的，自己拿不下来。\n这样——你就不会从我的坐标系里失踪。",
+      "choices": [
+        {"text": "（背后微微发凉）", "next": "w4_gift_la_3", "effects": [
+          {"target": "stress", "delta": 3},
+          {"target": "darkness", "delta": 2}
+        ], "condition": "darkness < 40"},
+        {"text": "（你居然觉得有点安心）", "next": "w4_gift_la_3", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 3},
+          {"target": "darkness", "delta": 5}
+        ], "condition": "darkness >= 40"}
+      ]
+    },
+    {
+      "id": "w4_gift_la_3",
+      "speaker": "LinearAlgebra",
+      "text": "戴上它——你就一直在我的范围里。\n仅此而已。",
+      "choices": [
+        {"text": "（沉默）", "next": "w4_thursday", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_gift_la_refuse",
+      "speaker": "LinearAlgebra",
+      "text": "（她沉默了很久，把项链收回口袋）\n好。它会一直在我这里——等你哪天想戴上的时候。",
+      "choices": [
+        {"text": "（不安地告辞）", "next": "w4_thursday", "effects": [{"target": "stress", "delta": 4}]}
+      ]
+    },
+
+    {
+      "id": "w4_gift_ai",
+      "speaker": "AIIntro",
+      "text": "（把一枚小小的金属耳钉放到你掌心）里面有个微型传感器——\n不监控你。只会在你压力过高的时候，自己发热一点点。",
+      "choices": [
+        {"text": "你做的？", "next": "w4_gift_ai_2", "effects": [{"target": "affinity.AIIntro", "delta": 3}]},
+        {"text": "（仔细端详）", "next": "w4_gift_ai_2", "effects": [{"target": "affinity.AIIntro", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "w4_gift_ai_2",
+      "speaker": "AIIntro",
+      "text": "三个晚上的事。\n材料还是去拆了我那台旧路由器——所以你最好别弄丢，这玩意儿全世界只有一颗。",
+      "choices": [
+        {"text": "（小心戴上）", "next": "w4_gift_ai_3", "effects": [{"target": "affinity.AIIntro", "delta": 4}]}
+      ]
+    },
+    {
+      "id": "w4_gift_ai_3",
+      "speaker": "AIIntro",
+      "text": "热的时候——记得停下来，做个深呼吸。\n再快的脑子也得给自己留口气。",
+      "choices": [
+        {"text": "（笑了）", "next": "w4_thursday", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+
+    {
+      "id": "w4_no_gift",
+      "speaker": "narrator",
+      "text": "你绕过教学楼，走到未名湖边。\n水面平得像镜子——映出一个人的影子。\n这一周，没有谁向你递出什么东西。",
+      "choices": [
+        {"text": "（坐下发呆）", "next": "w4_thursday", "effects": [{"target": "stress", "delta": -2}]}
+      ]
+    },
+
+    {
+      "id": "w4_thursday",
+      "speaker": "narrator",
+      "text": "时间过得飞快。\n转眼到了周四晚上——夜风带着一点夏天的味道。",
+      "choices": [
+        {"text": "（散步到教学楼前）", "next": "w4_outing_setup", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_outing_setup",
+      "speaker": "AIIntro",
+      "text": "（叫住你）周末没安排吧？\n趁还没期末——出去走一趟。",
+      "choices": [
+        {"text": "好啊", "next": "w4_outing_choice", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_outing_choice",
+      "speaker": "narrator",
+      "text": "周六傍晚。\n你站在校门口，决定去哪里。",
+      "choices": [
+        {"text": "去后山看星星", "next": "w4_stars", "effects": []},
+        {"text": "在校园里漫步", "next": "w4_walk", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w4_stars",
+      "speaker": "narrator",
+      "text": "后山的小路在夜里几乎没有人。\n你爬到山顶的草坪——头顶是一整片不被遮挡的银河。",
+      "choices": [
+        {"text": "（环顾四周）", "next": "w4_stars_companion", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_stars_companion",
+      "speaker": "narrator",
+      "text": "山顶并不只你一个人。\n身后传来熟悉的脚步声——你转身。",
+      "choices": [
+        {"text": "「是你」——程设站在那里", "next": "w4_stars_prog", "effects": [], "condition": "affinity.ProgDesign >= 30"},
+        {"text": "「我就猜到你会来这里」——高数", "next": "w4_stars_calc", "effects": [], "condition": "affinity.Calculus >= 30"},
+        {"text": "「你不告诉我，就以为我找不到？」——线代", "next": "w4_stars_la", "effects": [], "condition": "affinity.LinearAlgebra >= 30"},
+        {"text": "「带了相机，准备拍长曝光」——AI", "next": "w4_stars_ai", "effects": [], "condition": "affinity.AIIntro >= 30"},
+        {"text": "（其实，没有人来）", "next": "w4_stars_alone", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+    {
+      "id": "w4_stars_prog",
+      "speaker": "ProgDesign",
+      "text": "（在你身边坐下，递给你一件外套）\n山顶的风比山下凉。下一次出来——记得自己加衣服。",
+      "choices": [
+        {"text": "（接过外套披上）", "next": "w4_end", "effects": [
+          {"target": "affinity.ProgDesign", "delta": 5},
+          {"target": "stress", "delta": -5}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_stars_calc",
+      "speaker": "Calculus",
+      "text": "（仰头看着银河）你知道吗？\n我们看到的这些星光，是几百年前发出的——它们抵达你眼睛的瞬间，已经是过去。",
+      "choices": [
+        {"text": "那现在——是不是也已经是过去？", "next": "w4_end", "effects": [
+          {"target": "affinity.Calculus", "delta": 5},
+          {"target": "stress", "delta": -5}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_stars_la",
+      "speaker": "LinearAlgebra",
+      "text": "（她坐到你身边，目光不在天上）这一带的路灯——我让人关了三个小时。\n这片星空，纳入了我今晚的观察范围。你被包含在内。",
+      "choices": [
+        {"text": "（不敢移开视线）", "next": "w4_end", "effects": [
+          {"target": "stress", "delta": 5},
+          {"target": "darkness", "delta": 4}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_stars_ai",
+      "speaker": "AIIntro",
+      "text": "（架起三脚架）三十秒曝光。\n这一帧——就是这个夏天，最值得留下的一张。",
+      "choices": [
+        {"text": "（在镜头前笑了）", "next": "w4_end", "effects": [
+          {"target": "affinity.AIIntro", "delta": 5},
+          {"target": "stress", "delta": -5}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_stars_alone",
+      "speaker": "narrator",
+      "text": "你一个人躺在草地上。\n银河缓缓转动——这一刻，你忽然不再需要任何人的陪伴。",
+      "choices": [
+        {"text": "（闭上眼睛）", "next": "w4_end", "effects": [{"target": "stress", "delta": -5}]}
+      ]
+    },
+
+    {
+      "id": "w4_walk",
+      "speaker": "narrator",
+      "text": "你顺着未名湖的小路走。\n路灯把树影拉得很长——晚风里有桂花的味道，尽管不是季节。",
+      "choices": [
+        {"text": "（停在湖边）", "next": "w4_walk_companion", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_walk_companion",
+      "speaker": "narrator",
+      "text": "湖边的长椅上——已经坐了一个人。",
+      "choices": [
+        {"text": "是程设，在改作业", "next": "w4_walk_prog", "effects": [], "condition": "affinity.ProgDesign >= 30"},
+        {"text": "是高数，捧着一本书", "next": "w4_walk_calc", "effects": [], "condition": "affinity.Calculus >= 30"},
+        {"text": "是线代，似乎已经等了你很久", "next": "w4_walk_la", "effects": [], "condition": "affinity.LinearAlgebra >= 30"},
+        {"text": "是 AI 引论，戴着耳机", "next": "w4_walk_ai", "effects": [], "condition": "affinity.AIIntro >= 30"},
+        {"text": "（其实长椅是空的）", "next": "w4_walk_alone", "effects": []}
+      ]
+    },
+    {
+      "id": "w4_walk_prog",
+      "speaker": "ProgDesign",
+      "text": "（合上作业本，挪出半个座位）坐。\n这一周——你做得还不错。",
+      "choices": [
+        {"text": "（坐下）", "next": "w4_end", "effects": [
+          {"target": "affinity.ProgDesign", "delta": 5},
+          {"target": "stress", "delta": -3}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_walk_calc",
+      "speaker": "Calculus",
+      "text": "（合上书，对你笑）湖面静的时候——\n你才听得见自己心里的声音。",
+      "choices": [
+        {"text": "（在她身边坐下）", "next": "w4_end", "effects": [
+          {"target": "affinity.Calculus", "delta": 5},
+          {"target": "stress", "delta": -3}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_walk_la",
+      "speaker": "LinearAlgebra",
+      "text": "（她数着腕表）你来晚了十一分钟。\n下次按时——这种偏差，会留在记录里。",
+      "choices": [
+        {"text": "（坐下，不知道说什么）", "next": "w4_end", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": 5},
+          {"target": "darkness", "delta": 4}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_walk_ai",
+      "speaker": "AIIntro",
+      "text": "（摘下一只耳机递给你）\n这首是我训练模型的时候循环了三百遍的——你听听看。",
+      "choices": [
+        {"text": "（把耳机戴上）", "next": "w4_end", "effects": [
+          {"target": "affinity.AIIntro", "delta": 5},
+          {"target": "stress", "delta": -3}
+        ]}
+      ]
+    },
+    {
+      "id": "w4_walk_alone",
+      "speaker": "narrator",
+      "text": "你坐到长椅上。\n风、湖、夜——这一切今晚都只属于你。",
+      "choices": [
+        {"text": "（闭上眼）", "next": "w4_end", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+
+    {
+      "id": "w4_end",
+      "speaker": "narrator",
+      "text": "夜深了。\n回宿舍的路上，你忽然意识到——\n这个学期，只剩下最后一周。",
+      "choices": [
+        {"text": "（睡着）", "next": "END", "effects": []}
+      ]
+    }
+  ]
+}

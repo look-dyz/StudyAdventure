@@ -1,0 +1,65 @@
+{
+  "title": "结局 End1 · 3.92",
+  "description": "好感度未达 80、压力未崩溃、未黑化时的默认结局——优秀但平凡",
+  "trigger": "默认（所有结局条件都不满足时触发）",
+  "startNode": "end1_01",
+  "nodes": [
+    {
+      "id": "end1_01",
+      "speaker": "narrator",
+      "text": "成绩出来了。",
+      "choices": [
+        {"text": "（继续）", "next": "end1_02", "effects": []}
+      ]
+    },
+    {
+      "id": "end1_02",
+      "speaker": "ProgDesign",
+      "text": "你的 GPA：3.92。",
+      "choices": [
+        {"text": "（笑出来）", "next": "end1_03", "effects": []},
+        {"text": "（百感交集）", "next": "end1_03", "effects": []}
+      ]
+    },
+    {
+      "id": "end1_03",
+      "speaker": "Calculus",
+      "text": "回家的通道开了。\n你这一学期，是个优秀的学生。",
+      "choices": [
+        {"text": "谢谢你们", "next": "end1_04", "effects": []}
+      ]
+    },
+    {
+      "id": "end1_04",
+      "speaker": "AIIntro",
+      "text": "嗯。也许将来某天，你会想起这个异世界。\n但不会有遗憾——你做得很好。",
+      "choices": [
+        {"text": "（看向他们四个）", "next": "end1_05", "effects": []}
+      ]
+    },
+    {
+      "id": "end1_05",
+      "speaker": "LinearAlgebra",
+      "text": "走吧。\n现实在等你。",
+      "choices": [
+        {"text": "（走向通道）", "next": "end1_06", "effects": []}
+      ]
+    },
+    {
+      "id": "end1_06",
+      "speaker": "narrator",
+      "text": "你回到了现实。\n醒来时，桌上的笔记本还摊开着——那道未做完的期末题，你忽然知道答案了。\n\n这一切是梦吗？\n也许是。但你的笔记里，写满了陌生的、却清晰得不像梦的知识。",
+      "choices": [
+        {"text": "（合上笔记）", "next": "end1_07", "effects": []}
+      ]
+    },
+    {
+      "id": "end1_07",
+      "speaker": "narrator",
+      "text": "—— 3.92 · END ——\n\n这是最常见的结局，也是最体面的告别。\n但如果你愿意，再来一次——也许还有别的可能。",
+      "choices": [
+        {"text": "（回到主菜单）", "next": "END", "effects": []}
+      ]
+    }
+  ]
+}

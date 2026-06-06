@@ -1,0 +1,287 @@
+{
+  "title": "第一周·穿越异世界",
+  "description": "开场剧情：玩家从现实穿越异世界，认识 4 个学科角色，进入校园生活",
+  "startNode": "intro_01",
+  "nodes": [
+    {
+      "id": "intro_01",
+      "speaker": "narrator",
+      "text": "凌晨三点，期末复习的桌前，你的眼皮越来越重……\n忽然，眼前一黑。",
+      "choices": [
+        {"text": "（继续）", "next": "intro_02", "effects": []}
+      ]
+    },
+    {
+      "id": "intro_02",
+      "speaker": "narrator",
+      "text": "你睁开眼，发现自己躺在一片陌生的草地上。\n四周是从未见过的奇异建筑，远处似乎有四个身影正朝你走来……",
+      "choices": [
+        {"text": "起身打量周围", "next": "intro_03", "effects": []},
+        {"text": "继续装睡，看看会发生什么", "next": "intro_04", "effects": [{"target": "stress", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "intro_03",
+      "speaker": "ProgDesign",
+      "text": "终于醒了？我是程序设计——往后这一学期，你得跟我们四个好好相处。",
+      "choices": [
+        {"text": "你们……到底是什么？", "next": "intro_05", "effects": []},
+        {"text": "（沉默观察）", "next": "intro_05_silent", "effects": [{"target": "stress", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "intro_04",
+      "speaker": "LinearAlgebra",
+      "text": "（凑近你的耳边）……不要假装睡觉。我能看穿一切。",
+      "choices": [
+        {"text": "（猛地坐起来）", "next": "intro_03", "effects": [{"target": "darkness", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "intro_05",
+      "speaker": "Calculus",
+      "text": "我们是你课程的拟人化形态。你的学习状态决定了我们的存在。",
+      "choices": [
+        {"text": "（这是什么设定）", "next": "intro_06", "effects": []}
+      ]
+    },
+    {
+      "id": "intro_05_silent",
+      "speaker": "Calculus",
+      "text": "她不说话呢……不要紧。我们是你课程的拟人化形态。",
+      "choices": [
+        {"text": "（点点头）", "next": "intro_06", "effects": []}
+      ]
+    },
+    {
+      "id": "intro_06",
+      "speaker": "AIIntro",
+      "text": "比起追问规则，不如先认识一下我们四个。\nWelcome to your new semester.",
+      "choices": [
+        {"text": "请多关照", "next": "intro_07_intro_all", "effects": [
+          {"target": "affinity.ProgDesign", "delta": 2},
+          {"target": "affinity.Calculus", "delta": 2},
+          {"target": "affinity.LinearAlgebra", "delta": 2},
+          {"target": "affinity.AIIntro", "delta": 2}
+        ]},
+        {"text": "我能回家吗？", "next": "intro_07_homesick", "effects": [{"target": "stress", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "intro_07_intro_all",
+      "speaker": "ProgDesign",
+      "text": "好。我先简单说明规则：这里的一周等于现实的一周，五周后你会有期末考——通过了，就能回去。",
+      "choices": [
+        {"text": "（继续）", "next": "intro_08", "effects": []}
+      ]
+    },
+    {
+      "id": "intro_07_homesick",
+      "speaker": "AIIntro",
+      "text": "想回家是正常反应。但出口只在期末考之后。在那之前，先适应这里。",
+      "choices": [
+        {"text": "（深呼吸）", "next": "intro_08", "effects": []}
+      ]
+    },
+    {
+      "id": "intro_08",
+      "speaker": "Calculus",
+      "text": "失败的话……你会永远留在这里。所以请认真对待每一天。",
+      "choices": [
+        {"text": "（点头）", "next": "intro_09", "effects": [{"target": "stress", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "intro_09",
+      "speaker": "LinearAlgebra",
+      "text": "我们四个会陪着你。\n以不同的方式。",
+      "choices": [
+        {"text": "（隐约不安）", "next": "intro_10", "effects": [{"target": "darkness", "delta": 1}]}
+      ]
+    },
+    {
+      "id": "intro_10",
+      "speaker": "ProgDesign",
+      "text": "好了，介绍到此为止。明天就是开学第一天，你最好早点休息。",
+      "choices": [
+        {"text": "（环顾四周）我要睡哪？", "next": "intro_11", "effects": []}
+      ]
+    },
+    {
+      "id": "intro_11",
+      "speaker": "AIIntro",
+      "text": "宿舍已经为你准备好了。跟我来。",
+      "choices": [
+        {"text": "好的", "next": "intro_12", "effects": [{"target": "affinity.AIIntro", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "intro_12",
+      "speaker": "narrator",
+      "text": "AI 引论带你走过空旷的校园。\n月光把建筑染上银色——这一切美得如梦似幻。\n你忽然意识到：在这个世界里，时间已经开始流动。",
+      "choices": [
+        {"text": "（看向远方）", "next": "day1_start", "effects": []}
+      ]
+    },
+
+    {
+      "id": "day1_start",
+      "speaker": "narrator",
+      "text": "—— 第一天 ——\n清晨，宿舍外传来鸟鸣。你睁开眼。\n这是你在异世界的第一个早晨。",
+      "choices": [
+        {"text": "（起床）", "next": "day1_choice", "effects": []}
+      ]
+    },
+    {
+      "id": "day1_choice",
+      "speaker": "narrator",
+      "text": "今天的课程表：\n上午 程设课、下午 高数课。\n你可以选择认真上课，也可以翘课去校园里逛逛。",
+      "choices": [
+        {"text": "认真上课", "next": "day1_class_pd", "effects": [
+          {"target": "stress", "delta": 3},
+          {"target": "affinity.ProgDesign", "delta": 3},
+          {"target": "affinity.Calculus", "delta": 3}
+        ]},
+        {"text": "上午翘课", "next": "day1_skip_morning", "effects": [
+          {"target": "affinity.ProgDesign", "delta": -3},
+          {"target": "stress", "delta": -2}
+        ]},
+        {"text": "下午翘课", "next": "day1_skip_afternoon", "effects": [
+          {"target": "affinity.Calculus", "delta": -3},
+          {"target": "stress", "delta": -2}
+        ]}
+      ]
+    },
+    {
+      "id": "day1_class_pd",
+      "speaker": "ProgDesign",
+      "text": "今天讲变量、表达式、控制流。\n这是后面所有内容的地基——听不懂可以问我，但请认真听。",
+      "choices": [
+        {"text": "（专心做笔记）", "next": "day1_class_pd_end", "effects": [{"target": "affinity.ProgDesign", "delta": 2}]},
+        {"text": "（偷偷玩手机）", "next": "day1_class_pd_phone", "effects": [{"target": "affinity.ProgDesign", "delta": -2}]}
+      ]
+    },
+    {
+      "id": "day1_class_pd_end",
+      "speaker": "ProgDesign",
+      "text": "（看了你一眼）……记得不错。\n下次课会用今天的内容做一个小练习。",
+      "choices": [
+        {"text": "（点头）", "next": "day1_class_calc", "effects": []}
+      ]
+    },
+    {
+      "id": "day1_class_pd_phone",
+      "speaker": "ProgDesign",
+      "text": "（轻轻把你的手机按下）……\n第一节课就这样，可不像优秀学生该有的样子。",
+      "choices": [
+        {"text": "（不好意思）", "next": "day1_class_calc", "effects": [{"target": "stress", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "day1_class_calc",
+      "speaker": "Calculus",
+      "text": "下午这节是高数。我们从最简单的极限开始——\n你听过 ε-δ 语言吗？",
+      "choices": [
+        {"text": "听过，但不太懂", "next": "day1_class_calc_honest", "effects": [{"target": "affinity.Calculus", "delta": 1}]},
+        {"text": "完全没听过", "next": "day1_class_calc_humble", "effects": []}
+      ]
+    },
+    {
+      "id": "day1_class_calc_honest",
+      "speaker": "Calculus",
+      "text": "诚实是好品质。\n那我从最直观的几何意义讲起。",
+      "choices": [
+        {"text": "（用心听）", "next": "day1_end", "effects": [{"target": "affinity.Calculus", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "day1_class_calc_humble",
+      "speaker": "Calculus",
+      "text": "没关系。我们从图像开始建立直觉。",
+      "choices": [
+        {"text": "（用心听）", "next": "day1_end", "effects": [{"target": "affinity.Calculus", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "day1_skip_morning",
+      "speaker": "narrator",
+      "text": "你避开教学楼，在校园里漫无目的地走着。\n阳光透过梧桐叶斑驳地落在身上——\n忽然，前面长椅上有一个熟悉的身影。",
+      "choices": [
+        {"text": "走近看看", "next": "day1_skip_meet_ai", "effects": []}
+      ]
+    },
+    {
+      "id": "day1_skip_meet_ai",
+      "speaker": "AIIntro",
+      "text": "翘课啊？我能猜到——\n你的状态空间里，「逃避」节点的转移概率本来就很高。",
+      "choices": [
+        {"text": "你也翘课？", "next": "day1_skip_ai_chat", "effects": [{"target": "affinity.AIIntro", "delta": 2}]},
+        {"text": "请别告诉程设……", "next": "day1_skip_beg", "effects": [{"target": "stress", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "day1_skip_ai_chat",
+      "speaker": "AIIntro",
+      "text": "我没课的时候喜欢观察人。比如现在——\n观察一个第一天就开始翘课的同学，是怎么消遣时间的。",
+      "choices": [
+        {"text": "（笑了出来）", "next": "day1_end", "effects": [{"target": "affinity.AIIntro", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "day1_skip_beg",
+      "speaker": "AIIntro",
+      "text": "（耸耸肩）我又没在告状机里。\n不过你心里有点慌也好——说明还在乎。",
+      "choices": [
+        {"text": "（深呼吸）", "next": "day1_end", "effects": [{"target": "affinity.AIIntro", "delta": 1}]}
+      ]
+    },
+    {
+      "id": "day1_skip_afternoon",
+      "speaker": "narrator",
+      "text": "上午的程设课你听得云里雾里。\n下午原本是高数，你在未名湖边的长椅上坐了下来。\n水面平静得像一面镜子。",
+      "choices": [
+        {"text": "（发呆）", "next": "day1_skip_meet_la", "effects": []}
+      ]
+    },
+    {
+      "id": "day1_skip_meet_la",
+      "speaker": "LinearAlgebra",
+      "text": "你不在教室。\n我数过了，这是你今天少出现的第三十七分钟。",
+      "choices": [
+        {"text": "你怎么知道？", "next": "day1_skip_la_creep", "effects": [
+          {"target": "darkness", "delta": 3},
+          {"target": "stress", "delta": 3}
+        ]},
+        {"text": "高数又不是你的课", "next": "day1_skip_la_jealous", "effects": [
+          {"target": "affinity.LinearAlgebra", "delta": -2},
+          {"target": "darkness", "delta": 2}
+        ]}
+      ]
+    },
+    {
+      "id": "day1_skip_la_creep",
+      "speaker": "LinearAlgebra",
+      "text": "我能感知到你的位置。\n我们之间……有连续的映射。",
+      "choices": [
+        {"text": "（不寒而栗）", "next": "day1_end", "effects": [{"target": "stress", "delta": 2}]}
+      ]
+    },
+    {
+      "id": "day1_skip_la_jealous",
+      "speaker": "LinearAlgebra",
+      "text": "（沉默地坐下来）\n下学期就是我的课了。\n到时候——你不能这样对我。",
+      "choices": [
+        {"text": "（无言以对）", "next": "day1_end", "effects": [{"target": "darkness", "delta": 1}]}
+      ]
+    },
+
+    {
+      "id": "day1_end",
+      "speaker": "narrator",
+      "text": "天色渐暗。\n你回到宿舍，躺在床上。\n第一天结束了——这一周还有六天。",
+      "choices": [
+        {"text": "（睡着）", "next": "END", "effects": []}
+      ]
+    }
+  ]
+}
