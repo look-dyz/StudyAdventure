@@ -1,17 +1,21 @@
 #ifndef STUDYADVENTURE_MAINWINDOW_H
 #define STUDYADVENTURE_MAINWINDOW_H
+
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QLabel>
 #include "common/Constants.h"
 
 class QStackedWidget;
+
 namespace SA {
+
 class StoryEngine;
 class DialogWindow;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
+
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     void loadAndShowScript(const QString& scriptPath);
@@ -50,6 +54,7 @@ private:
     void refreshDialogFromEngine();
     void updateMapDateDisplay();
     void handleLocationAction(Location loc);
+    void afterLoad();   // 读档后统一跳转逻辑
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
@@ -58,5 +63,6 @@ protected:
 private:
     void showDebugMenu();
 };
+
 } // namespace SA
-#endif
+#endif // STUDYADVENTURE_MAINWINDOW_H

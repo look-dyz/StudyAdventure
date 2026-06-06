@@ -73,7 +73,7 @@ void MainWindow::setupUi() {
         bool ok = SaveManager::load(GameManager::instance().player(), 1);
         if (ok) {
             QMessageBox::information(this, tr("读取成功"), tr("已读取存档 1"));
-            GameManager::instance().requestScene(GameScene::Map);
+            afterLoad();
         } else {
             QMessageBox::warning(this, tr("读取失败"), tr("未找到存档"));
         }
@@ -84,9 +84,9 @@ void MainWindow::setupUi() {
     connect(mainMenu, &MainMenu::exitClicked, this, []() {
         QApplication::quit();
     });
-    mainMenuIndex_ = stack_->addWidget(mainMenu);      // ★ 动态记录
+    mainMenuIndex_ = stack_->addWidget(mainMenu);
 
-    // ── 页面：地图 ────────────────────────────────────────
+            // ── 页面：地图 ────────────────────────────────────────
     auto* mapPage = new QWidget;
     {
         auto* layout   = new QVBoxLayout(mapPage);
@@ -117,35 +117,29 @@ void MainWindow::setupUi() {
                              const QString& description) {
                     pendingLocation_ = loc;
 
-                            // 背景图
                     QPixmap px(imagePath);
                     if (!px.isNull()) {
-                        locationBgLabel_->setPixmap(px);  // scaleContents=true 自动拉伸
+                        locationBgLabel_->setPixmap(px);
                     } else {
                         locationBgLabel_->clear();
                     }
 
-                            // 从 description 里拆出第一行作为标题，其余作为正文
-                            // description 格式：第一行是地点名，空行后是正文
                     QStringList lines = description.split('\n');
                     QString title;
                     QString body;
                     if (!lines.isEmpty()) {
-                        title = lines.first();           // 第一行：地点名
+                        title = lines.first();
                         lines.removeFirst();
-                        // 去掉开头的空行
                         while (!lines.isEmpty() && lines.first().trimmed().isEmpty())
                             lines.removeFirst();
                         body = lines.join('\n');
                     }
 
-                            // 找到标题 label 并设置
                     if (auto* tl = locationBgLabel_->parentWidget()
                                        ->findChild<QLabel*>("locationTitleLabel")) {
                         tl->setText(title);
                     }
                     locationDescLabel_->setText(body);
-
                     stack_->setCurrentIndex(locationPageIndex_);
                 });
 
@@ -165,7 +159,11 @@ void MainWindow::setupUi() {
             GameManager::instance().requestScene(GameScene::MainMenu);
         });
         connect(saveBtn, &QPushButton::clicked, this, [this]() {
-            bool ok = SaveManager::save(GameManager::instance().player(), 1);
+            // 地图存档：清空剧情存档点
+            auto* p = GameManager::instance().player();
+            p->setSavedScriptPath(QString());
+            p->setSavedNodeId(QString());
+            bool ok = SaveManager::save(p, 1);
             QMessageBox::information(this,
                                      ok ? tr("保存成功") : tr("保存失败"),
                                      ok ? tr("已保存到存档 1") : tr("无法保存游戏"));
@@ -183,9 +181,9 @@ void MainWindow::setupUi() {
         layout->addLayout(btnRow);
         layout->setContentsMargins(20, 10, 20, 10);
     }
-    mapIndex_ = stack_->addWidget(mapPage);            // ★ 动态记录
+    mapIndex_ = stack_->addWidget(mapPage);
 
-    // ── 页面：地点详情 ────────────────────────────────────────
+            // ── 页面：地点详情 ────────────────────────────────────────
     auto* locationPage = new QWidget;
     locationPage->setStyleSheet("background:black;");
     {
@@ -193,14 +191,11 @@ void MainWindow::setupUi() {
         layout->setContentsMargins(0, 0, 0, 0);
         layout->setSpacing(0);
 
-                // 背景图
-        // 背景图
         locationBgLabel_ = new QLabel(locationPage);
         locationBgLabel_->setScaledContents(true);
         locationBgLabel_->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
         locationBgLabel_->setStyleSheet("background:#111;");
 
-                // 底部剧情框容器
         auto* descPanel = new QWidget(locationPage);
         descPanel->setMinimumHeight(200);
         descPanel->setStyleSheet(
@@ -211,7 +206,6 @@ void MainWindow::setupUi() {
         descLayout->setContentsMargins(60, 20, 60, 20);
         descLayout->setSpacing(16);
 
-                // 地点名称（大标题）
         auto* locationTitleLabel = new QLabel(descPanel);
         locationTitleLabel->setObjectName("locationTitleLabel");
         locationTitleLabel->setStyleSheet(
@@ -220,7 +214,6 @@ void MainWindow::setupUi() {
             "color: #FFD580;"
             "background: transparent;");
 
-                // 描述文字
         locationDescLabel_ = new QLabel(descPanel);
         locationDescLabel_->setWordWrap(true);
         locationDescLabel_->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -231,7 +224,6 @@ void MainWindow::setupUi() {
             "background: transparent;"
             "line-height: 180%;");
 
-                // 按钮行
         auto* btnRow     = new QHBoxLayout;
         auto* confirmBtn = new QPushButton(tr("▶  进入"), descPanel);
         auto* cancelBtn  = new QPushButton(tr("✕  返回地图"), descPanel);
@@ -273,21 +265,16 @@ void MainWindow::setupUi() {
     locationPageIndex_ = stack_->addWidget(locationPage);
 
             // ── 页面：对话 ────────────────────────────────────────
-            // ★ 关键修复：dialogWindow_ 直接填满 dialogPage，背景图才能铺满
     auto* dialogPage = new QWidget;
     {
-        // dialogPage 本身用黑色背景兜底
         dialogPage->setStyleSheet("background:black;");
-
-                // dialogWindow_ 直接作为 dialogPage 的唯一子控件，填满整页
         dialogWindow_ = new DialogWindow(dialogPage);
 
-                // 用 QVBoxLayout 让 dialogWindow_ 填满
         auto* layout = new QVBoxLayout(dialogPage);
         layout->setContentsMargins(0, 0, 0, 0);
         layout->setSpacing(0);
 
-                // ---- 顶部工具栏（悬浮在最上方）----
+                // ---- 顶部工具栏 ----
         auto* topBar = new QWidget(dialogPage);
         topBar->setStyleSheet("background:rgba(0,0,0,140);");
         topBar->setFixedHeight(40);
@@ -306,6 +293,23 @@ void MainWindow::setupUi() {
                         tr("第 %1 周·第 %2 天").arg(w).arg(d));
                 });
 
+                // 剧情存档按钮
+        auto* dialogSaveBtn = new QPushButton(tr("💾 存档"), topBar);
+        dialogSaveBtn->setStyleSheet(
+            "QPushButton{font-size:13px;background:rgba(255,255,255,60);"
+            "color:white;border-radius:4px;padding:2px 12px;}"
+            "QPushButton:hover{background:rgba(255,255,255,100);}");
+        connect(dialogSaveBtn, &QPushButton::clicked, this, [this]() {
+            auto* p = GameManager::instance().player();
+            // 记录当前剧情节点
+            p->setSavedScriptPath(storyEngine_->currentScriptPath());
+            p->setSavedNodeId(storyEngine_->currentNodeId());
+            bool ok = SaveManager::save(p, 1);
+            QMessageBox::information(this,
+                                     ok ? tr("保存成功") : tr("保存失败"),
+                                     ok ? tr("已保存到存档 1") : tr("无法保存游戏"));
+        });
+
         auto* dialogSetBtn = new QPushButton(tr("⚙ 设置"), topBar);
         dialogSetBtn->setStyleSheet(
             "QPushButton{font-size:13px;background:rgba(255,255,255,60);"
@@ -317,9 +321,10 @@ void MainWindow::setupUi() {
 
         topLayout->addWidget(dialogDateLabel);
         topLayout->addStretch();
+        topLayout->addWidget(dialogSaveBtn);
+        topLayout->addSpacing(8);
         topLayout->addWidget(dialogSetBtn);
 
-                // 布局：顶栏 + dialogWindow_ 填满剩余空间
         layout->addWidget(topBar);
         layout->addWidget(dialogWindow_, 1);
 
@@ -343,25 +348,23 @@ void MainWindow::setupUi() {
                         return;
                     }
 
-                            // 周剧本播完，标记已完成
+                            // 周剧本播完，标记已完成，清除剧情存档点
                     p->markScriptFinished(path);
+                    p->setSavedScriptPath(QString());
+                    p->setSavedNodeId(QString());
 
                             // week5 剧本结束 → 进入结局
                     if (path == ":/scripts/week5.json") {
-                        EndingType ending =
-                            EndingJudge::judge(p, p->choseToStay());
-
+                        EndingType ending = EndingJudge::judge(p, p->choseToStay());
                         static const QMap<EndingType, QString> endingScripts {
-                            { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
-                            { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
-                            { EndingType::End3_Farewell,  ":/scripts/ending_3_farewell.json"   },
-                            { EndingType::End4_EternalLA, ":/scripts/ending_4_eternal_la.json" },
-                            { EndingType::End5_Hospital,  ":/scripts/ending_5_hospital.json"   },
+                                                                             { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
+                                                                             { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
+                                                                             { EndingType::End3_Farewell,  ":/scripts/ending_3_farewell.json"   },
+                                                                             { EndingType::End4_EternalLA, ":/scripts/ending_4_eternal_la.json" },
+                                                                             { EndingType::End5_Hospital,  ":/scripts/ending_5_hospital.json"   },
                                                                              };
-
                         QString endingPath = endingScripts.value(ending);
-                        if (!endingPath.isEmpty()
-                            && storyEngine_->loadScript(endingPath)) {
+                        if (!endingPath.isEmpty() && storyEngine_->loadScript(endingPath)) {
                             stack_->setCurrentIndex(dialogIndex_);
                         } else {
                             GameManager::instance().requestScene(GameScene::MainMenu);
@@ -376,25 +379,22 @@ void MainWindow::setupUi() {
                 this, [this]() {
                     auto* p = GameManager::instance().player();
                     EndingType ending = EndingJudge::judge(p, p->choseToStay());
-
                     static const QMap<EndingType, QString> endingScripts {
-                        { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
-                        { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
-                        { EndingType::End3_Farewell,  ":/scripts/ending_3_farewell.json"   },
-                        { EndingType::End4_EternalLA, ":/scripts/ending_4_eternal_la.json" },
-                        { EndingType::End5_Hospital,  ":/scripts/ending_5_hospital.json"   },
+                                                                         { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
+                                                                         { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
+                                                                         { EndingType::End3_Farewell,  ":/scripts/ending_3_farewell.json"   },
+                                                                         { EndingType::End4_EternalLA, ":/scripts/ending_4_eternal_la.json" },
+                                                                         { EndingType::End5_Hospital,  ":/scripts/ending_5_hospital.json"   },
                                                                          };
-
                     QString endingPath = endingScripts.value(ending);
-                    if (!endingPath.isEmpty()
-                        && storyEngine_->loadScript(endingPath)) {
+                    if (!endingPath.isEmpty() && storyEngine_->loadScript(endingPath)) {
                         stack_->setCurrentIndex(dialogIndex_);
                     } else {
                         GameManager::instance().requestScene(GameScene::MainMenu);
                     }
                 });
     }
-    dialogIndex_ = stack_->addWidget(dialogPage);     // ★ 动态记录
+    dialogIndex_ = stack_->addWidget(dialogPage);
 
             // ── 页面：小游戏大厅 ──────────────────────────────────
     auto* blackjackGame    = new BlackjackGame;
@@ -459,7 +459,7 @@ void MainWindow::setupUi() {
                     stack_->setCurrentIndex(mazeIndex_);
                 });
     }
-    miniGameIndex_ = stack_->addWidget(miniGameMenuPage); // ★ 动态记录
+    miniGameIndex_ = stack_->addWidget(miniGameMenuPage);
 
             // ── 小游戏各页 ────────────────────────────────────────
     auto makeMiniPage = [&](QWidget* game, MiniGameType type, int& outIndex) {
@@ -473,8 +473,7 @@ void MainWindow::setupUi() {
         if (auto* mg = qobject_cast<SA::MiniGame*>(game)) {
             connect(mg, &SA::MiniGame::finished,
                     this, [type](int score, bool won) {
-                        GameManager::instance().onMiniGameFinished(
-                            type, score, won);
+                        GameManager::instance().onMiniGameFinished(type, score, won);
                     });
         }
         connect(back, &QPushButton::clicked, this, [this]() {
@@ -482,7 +481,7 @@ void MainWindow::setupUi() {
         });
         layout->addWidget(game);
         layout->addWidget(back);
-        outIndex = stack_->addWidget(page);            // ★ 动态记录
+        outIndex = stack_->addWidget(page);
     };
     makeMiniPage(blackjackGame, MiniGameType::Blackjack,   blackjackIndex_);
     makeMiniPage(ticGame,       MiniGameType::TicTacToe,   ticTacToeIndex_);
@@ -511,7 +510,7 @@ void MainWindow::setupUi() {
         layout->addWidget(backBtn);
         layout->setContentsMargins(60, 60, 60, 60);
     }
-    endingIndex_ = stack_->addWidget(endingPage);     // ★ 动态记录
+    endingIndex_ = stack_->addWidget(endingPage);
 
             // ── 页面：设置 ────────────────────────────────────────
     auto* settingsPage = new QWidget;
@@ -523,8 +522,7 @@ void MainWindow::setupUi() {
 
         auto* titleLabel = new QLabel(tr("设  置"));
         titleLabel->setAlignment(Qt::AlignCenter);
-        titleLabel->setStyleSheet(
-            "font-size:28px;font-weight:bold;color:#8B1A1A;");
+        titleLabel->setStyleSheet("font-size:28px;font-weight:bold;color:#8B1A1A;");
         outer->addWidget(titleLabel);
 
         auto* attrGroup = new QGroupBox(tr("角色属性"));
@@ -532,7 +530,7 @@ void MainWindow::setupUi() {
             "QGroupBox{font-size:16px;font-weight:bold;color:#4A0000;"
             "border:2px solid #C8A070;border-radius:8px;margin-top:8px;}"
             "QGroupBox::title{subcontrol-origin:margin;padding:0 6px;}");
-        auto* attrGrid  = new QGridLayout(attrGroup);
+        auto* attrGrid = new QGridLayout(attrGroup);
         attrGrid->setSpacing(10);
 
         auto* player2 = GameManager::instance().player();
@@ -615,7 +613,11 @@ void MainWindow::setupUi() {
         saveBtn->setMinimumHeight(50);
         loadBtn->setMinimumHeight(50);
         connect(saveBtn, &QPushButton::clicked, this, [this]() {
-            bool ok = SaveManager::save(GameManager::instance().player(), 1);
+            // 设置页保存：清除剧情存档点（在地图/设置页时保存）
+            auto* p = GameManager::instance().player();
+            p->setSavedScriptPath(QString());
+            p->setSavedNodeId(QString());
+            bool ok = SaveManager::save(p, 1);
             QMessageBox::information(this,
                                      ok ? tr("保存成功") : tr("保存失败"),
                                      ok ? tr("已保存到存档 1") : tr("无法保存游戏"));
@@ -624,7 +626,7 @@ void MainWindow::setupUi() {
             bool ok = SaveManager::load(GameManager::instance().player(), 1);
             if (ok) {
                 QMessageBox::information(this, tr("读取成功"), tr("已读取存档 1"));
-                GameManager::instance().requestScene(GameScene::Map);
+                afterLoad();
             } else {
                 QMessageBox::warning(this, tr("读取失败"), tr("未找到存档"));
             }
@@ -653,11 +655,10 @@ void MainWindow::setupUi() {
         });
         outer->addWidget(backBtn);
     }
-    settingsIndex_ = stack_->addWidget(settingsPage); // ★ 动态记录
+    settingsIndex_ = stack_->addWidget(settingsPage);
 }
 
 // ════════════════════════════════════════════════════════════
-
 void MainWindow::connectSignals() {
     connect(&GameManager::instance(), &GameManager::sceneChangeRequested,
             this, &MainWindow::onSceneChangeRequested);
@@ -667,21 +668,43 @@ void MainWindow::connectSignals() {
     connect(GameManager::instance().player(), &Player::freeDaysChanged,
             this, [this](int) { updateMapDateDisplay(); });
 
-            // ★ 新增：进入新一周时自动触发对应剧本
     connect(GameManager::instance().player(), &Player::weekAdvanced,
             this, [this](int newWeek) {
-                // 第 6 周以后没有剧本，触发结局判定
                 if (newWeek > 5) {
                     GameManager::instance().requestScene(GameScene::Ending);
                     return;
                 }
                 QString scriptPath =
                     QString(":/scripts/week%1.json").arg(newWeek);
-                // 新周剧本一定未完成，直接加载
                 loadAndShowScript(scriptPath);
             });
 }
 
+// ════════════════════════════════════════════════════════════
+void MainWindow::afterLoad() {
+    auto* p = GameManager::instance().player();
+    QString savedScript = p->savedScriptPath();
+    QString savedNode   = p->savedNodeId();
+
+            // 有剧情存档点 → 直接跳到对应节点
+    if (!savedScript.isEmpty() && !savedNode.isEmpty()) {
+        if (storyEngine_->loadScript(savedScript)) {
+            storyEngine_->jumpToNode(savedNode);
+            stack_->setCurrentIndex(dialogIndex_);
+            return;
+        }
+    }
+
+            // 无剧情存档点 → 判断本周剧本是否完成
+    QString weekScript = QString(":/scripts/week%1.json").arg(p->currentWeek());
+    if (!p->isScriptFinished(weekScript)) {
+        loadAndShowScript(weekScript);
+    } else {
+        GameManager::instance().requestScene(GameScene::Map);
+    }
+}
+
+// ════════════════════════════════════════════════════════════
 void MainWindow::onSceneChangeRequested(GameScene scene) {
     switch (scene) {
         case GameScene::MainMenu: stack_->setCurrentIndex(mainMenuIndex_);  break;
@@ -694,9 +717,7 @@ void MainWindow::onSceneChangeRequested(GameScene scene) {
         case GameScene::Ending: {
             qDebug() << "[MainWindow] Ending case reached";
             auto* p = GameManager::instance().player();
-            qDebug() << "[MainWindow] stress=" << p->stress() << "darkness=" << p->darkness();
             EndingType ending = EndingJudge::judge(p, p->choseToStay());
-
             static const QMap<EndingType, QString> endingScripts {
                                                                  { EndingType::End1_GoodGrade, ":/scripts/ending_1_good_grade.json" },
                                                                  { EndingType::End2_BestLove,  ":/scripts/ending_2_best_love.json"  },
@@ -708,13 +729,14 @@ void MainWindow::onSceneChangeRequested(GameScene scene) {
             if (!endingPath.isEmpty() && storyEngine_->loadScript(endingPath)) {
                 stack_->setCurrentIndex(dialogIndex_);
             } else {
-                stack_->setCurrentIndex(endingIndex_);  // 兜底
+                stack_->setCurrentIndex(endingIndex_);
             }
             break;
         }
     }
 }
 
+// ════════════════════════════════════════════════════════════
 void MainWindow::updateMapDateDisplay() {
     auto* player = GameManager::instance().player();
     if (mapDateLabel_) {
@@ -738,6 +760,7 @@ void MainWindow::updateMapDateDisplay() {
     }
 }
 
+// ════════════════════════════════════════════════════════════
 void MainWindow::loadAndShowScript(const QString& scriptPath) {
     if (storyEngine_->loadScript(scriptPath)) {
         GameManager::instance().requestScene(GameScene::Dialog);
@@ -747,33 +770,35 @@ void MainWindow::loadAndShowScript(const QString& scriptPath) {
     }
 }
 
+// ════════════════════════════════════════════════════════════
 void MainWindow::refreshDialogFromEngine() {
-    QString  speaker  = storyEngine_->currentSpeaker();
-    QString  text     = storyEngine_->currentText();
-    QStringList choices  = storyEngine_->currentChoices();
-    QString  sprite   = storyEngine_->currentSprite(); // ── 新增：从引擎拿到立绘标识 ──
+    QString     speaker = storyEngine_->currentSpeaker();
+    QString     text    = storyEngine_->currentText();
+    QStringList choices = storyEngine_->currentChoices();
+    QString     sprite  = storyEngine_->currentSprite();
 
-            // 对话场景页
     dialogWindow_->setContent(speaker, text, choices);
-    dialogWindow_->setSprite(sprite);                  // ── 新增：把立绘推入对话框渲染 ──
+    dialogWindow_->setSprite(sprite);
 }
 
+// ════════════════════════════════════════════════════════════
 void MainWindow::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_F12) { showDebugMenu(); return; }
     QMainWindow::keyPressEvent(event);
 }
 
+// ════════════════════════════════════════════════════════════
 void MainWindow::showDebugMenu() {
     auto* player = GameManager::instance().player();
     QDialog dialog(this);
     dialog.setWindowTitle("调试菜单");
     QFormLayout layout(&dialog);
 
-    QSpinBox progBox, calBox, linearBox, aiBox, stressBox, darkBox, weekBox; // ← 加 weekBox
-    for (auto* b : {&progBox,&calBox,&linearBox,&aiBox,&stressBox,&darkBox})
+    QSpinBox progBox, calBox, linearBox, aiBox, stressBox, darkBox, weekBox;
+    for (auto* b : {&progBox, &calBox, &linearBox, &aiBox, &stressBox, &darkBox})
         b->setRange(0, 100);
-    weekBox.setRange(1, 5);                          // ← 新增
-    weekBox.setValue(player->currentWeek());         // ← 新增
+    weekBox.setRange(1, 5);
+    weekBox.setValue(player->currentWeek());
 
     progBox.setValue(player->affinity(SubjectType::ProgDesign));
     calBox.setValue(player->affinity(SubjectType::Calculus));
@@ -782,7 +807,7 @@ void MainWindow::showDebugMenu() {
     stressBox.setValue(player->stress());
     darkBox.setValue(player->darkness());
 
-    layout.addRow("当前周数",     &weekBox);         // ← 新增，放第一行方便找
+    layout.addRow("当前周数",     &weekBox);
     layout.addRow("程序设计好感", &progBox);
     layout.addRow("高数好感",     &calBox);
     layout.addRow("线代好感",     &linearBox);
@@ -807,7 +832,7 @@ void MainWindow::showDebugMenu() {
                 player->markScriptFinished(
                     QString(":/scripts/week%1.json").arg(w));
             player->setCurrentWeek(newWeek);
-            dialog.accept();                      // 先关闭对话框
+            dialog.accept();
             loadAndShowScript(
                 QString(":/scripts/week%1.json").arg(newWeek));
         } else {
@@ -817,6 +842,7 @@ void MainWindow::showDebugMenu() {
     dialog.exec();
 }
 
+// ════════════════════════════════════════════════════════════
 void MainWindow::handleLocationAction(Location loc) {
     auto* player = GameManager::instance().player();
     switch (loc) {
@@ -827,6 +853,7 @@ void MainWindow::handleLocationAction(Location loc) {
                 QMessageBox::information(this, tr("教学楼"),
                                          tr("本周课程剧情已完成。\n可以去图书馆、未名湖或宿舍自由活动。"));
             } else {
+                player->consumeFreeDay();
                 loadAndShowScript(scriptPath);
             }
             break;
@@ -847,12 +874,12 @@ void MainWindow::handleLocationAction(Location loc) {
     }
 }
 
+// ════════════════════════════════════════════════════════════
 void MainWindow::resizeEvent(QResizeEvent* event) {
     QMainWindow::resizeEvent(event);
     if (locationBgLabel_ && !locationBgLabel_->pixmap().isNull()) {
         locationBgLabel_->setScaledContents(true);
     }
 }
-
 
 } // namespace SA

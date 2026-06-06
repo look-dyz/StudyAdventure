@@ -1,13 +1,16 @@
 #ifndef STUDYADVENTURE_PLAYER_H
 #define STUDYADVENTURE_PLAYER_H
+
 #include <QObject>
 #include <QMap>
 #include <QSet>
 #include "common/Constants.h"
 
 namespace SA {
+
 class Player : public QObject {
     Q_OBJECT
+
 public:
     explicit Player(QObject* parent = nullptr);
 
@@ -34,16 +37,20 @@ public:
     void setCurrentDay(int day);
 
             // ========== 剧本完成记录 ==========
-            /// 标记某个剧本路径已完成
     void markScriptFinished(const QString& scriptPath);
-    /// 查询某个剧本是否已完成
     bool isScriptFinished(const QString& scriptPath) const;
+    QSet<QString> finishedScripts() const { return finishedScripts_; }
 
             // ========== 自由活动天数 ==========
-            /// 本周剩余自由活动天数（每周7天，上课/剧情消耗）
     int freeDaysLeft() const { return freeDaysLeft_; }
     void setFreeDaysLeft(int days);
-    void consumeFreeDay();   ///< 消耗一天自由活动
+    void consumeFreeDay();
+
+            // ========== 存档剧情位置 ==========
+    QString savedScriptPath() const { return savedScriptPath_; }
+    QString savedNodeId()     const { return savedNodeId_; }
+    void setSavedScriptPath(const QString& p) { savedScriptPath_ = p; }
+    void setSavedNodeId(const QString& id)    { savedNodeId_ = id; }
 
             // ========== 重置 ==========
     void reset();
@@ -51,6 +58,7 @@ public:
 public:
     bool choseToStay() const { return choseToStay_; }
     void setChoseToStay(bool v) { choseToStay_ = v; }
+
 private:
     bool choseToStay_ = false;
 
@@ -68,8 +76,11 @@ private:
     int darkness_     = 0;
     int currentWeek_  = 1;
     int currentDay_   = 1;
-    int freeDaysLeft_ = 6;   // 每周开始时重置（第1天固定触发剧情）
-    QSet<QString> finishedScripts_;  // 已完成的剧本路径集合
+    int freeDaysLeft_ = 7;
+    QSet<QString> finishedScripts_;
+    QString savedScriptPath_;
+    QString savedNodeId_;
 };
+
 } // namespace SA
-#endif
+#endif // STUDYADVENTURE_PLAYER_H
