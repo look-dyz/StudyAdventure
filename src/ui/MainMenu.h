@@ -13,6 +13,7 @@ signals:
     void loadGameClicked();
     void settingsClicked();
     void exitClicked();
+    int previousIndex_ = 0;
 protected:
     void resizeEvent(QResizeEvent* event) override;
 };

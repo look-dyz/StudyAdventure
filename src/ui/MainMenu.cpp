@@ -13,7 +13,7 @@ MainMenu::MainMenu(QWidget* parent) : QWidget(parent) {
     auto* bgLabel = new QLabel(this);
     bgLabel->setObjectName("bgLabel");
     bgLabel->setScaledContents(true);
-    QPixmap bg(":/images/backgrounds/mainbackground.jpg");
+    QPixmap bg(":/images/backgrounds/mainbackground.png");
     bgLabel->setPixmap(bg);
     bgLabel->lower();
 
@@ -48,15 +48,15 @@ MainMenu::MainMenu(QWidget* parent) : QWidget(parent) {
         btn->setStyleSheet(btnStyle);
     }
 
-    layout->addStretch();
+    layout->addStretch(10);         // 上方占绝大部分空间
     layout->addWidget(title);
-    layout->addSpacing(40);
+    layout->addSpacing(24);
     layout->addWidget(startBtn);
     layout->addWidget(loadBtn);
     layout->addWidget(settingsBtn);
     layout->addWidget(exitBtn);
-    layout->addStretch();
-    layout->setContentsMargins(200, 80, 200, 80);
+    layout->addStretch(1);          // 下方只留很小空间
+    layout->setContentsMargins(200, 0, 200, 60);
 
     connect(startBtn,    &QPushButton::clicked, this, &MainMenu::startNewGameClicked);
     connect(loadBtn,     &QPushButton::clicked, this, &MainMenu::loadGameClicked);

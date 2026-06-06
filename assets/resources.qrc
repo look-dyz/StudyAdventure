@@ -19,12 +19,12 @@
         <file>images/backgrounds/dormitory.png</file>
         <file>images/backgrounds/lake.png</file>
         <file>images/backgrounds/library.png</file>
-        <file>images/backgrounds/mainbackground.jpg</file>
         <file>images/backgrounds/plotbackground.jpg</file>
         <file>images/ui/map.jpg</file>
         <file>images/characters/AIIntro.png</file>
         <file>images/characters/Calculus.png</file>
         <file>images/characters/LinearAlgebra.png</file>
         <file>images/characters/ProgDesign.png</file>
+        <file>images/backgrounds/mainbackground.png</file>
     </qresource>
 </RCC>
