@@ -1,3 +1,11 @@
+/**
+ * @file MemoryGame.h
+ * @brief 记忆翻牌小游戏（对应 程设学科）
+ *
+ * 玩法：点击翻牌，匹配相同数字
+ *
+ * 负责人：成员 C   预计完成：5/24
+ */
 #ifndef MEMORYGAME_H
 #define MEMORYGAME_H
 
