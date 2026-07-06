@@ -20,6 +20,7 @@
 #include <QString>
 #include <QJsonObject>
 #include "common/Constants.h"
+#include <QMetaObject>
 
 namespace SA {
 
@@ -43,9 +44,13 @@ public:
     QString currentSpeaker() const;
     QString currentText() const;
     QStringList currentChoices() const;
+    QString currentSprite() const; // ← 新增这一行：获取当前立绘的 key 或路径
+
 
     /// 当前节点 ID
     QString currentNodeId() const { return currentNodeId_; }
+
+    QString currentScriptPath() const { return currentScriptPath_; }
 
 signals:
     /// 节点切换信号（UI 监听后刷新对话框）
@@ -56,11 +61,13 @@ signals:
 
     /// effects 已应用（UI 可监听做动画提示）
     void effectsApplied();
+    void thresholdEndingTriggered();   // ← 新增
 
 private:
     Player* player_;            ///< 玩家对象指针（不持有，外部生命周期管理）
     QJsonObject scriptRoot_;    ///< 当前加载的剧本根对象
     QString currentNodeId_;     ///< 当前节点 ID
+    QString currentScriptPath_;
 
     /// 应用节点或选项的 effects（数值变更指令）
     void applyEffects(const QJsonObject& objWithEffects);

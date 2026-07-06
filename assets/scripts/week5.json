@@ -217,50 +217,26 @@
       ]
     },
     {
-      "id": "w5_final_choice",
-      "speaker": "narrator",
-      "text": "回到现实——还是留在异世界？\n这是这个学期，最后一道题。",
-      "choices": [
-        {"text": "回到现实", "next": "w5_ending_return", "effects": []},
-        {"text": "留下，和我想守护的人一起", "next": "w5_ending_stay", "effects": [], "condition": "darkness < 60"},
-        {"text": "（脚步动不了——她不允许你走）", "next": "w5_ending_la_eternal", "effects": [
-          {"target": "darkness", "delta": 5}
-        ], "condition": "darkness >= 60"},
-        {"text": "独自留下", "next": "w5_ending_alone", "effects": []}
-      ]
-    },
+          "id": "w5_final_choice",
+          "speaker": "narrator",
+          "text": "回到现实——还是留在异世界？\n这是这个学期，最后一道题。",
+          "choices": [
+            {"text": "回到现实", "next": "END",
+             "effects": [{"target": "choseToStay", "value": false},
+                         {"target": "stress", "delta": -10}]},
 
-    {
-      "id": "w5_ending_return",
-      "speaker": "narrator",
-      "text": "你深呼吸，朝光门走去。\n回头时——四个人都在远远地挥手。\n他们的样子，会留在你以后所有的代码里、所有的极限里、所有的银河里、所有的夜里。",
-      "choices": [
-        {"text": "（穿过光门）", "next": "END", "effects": [{"target": "stress", "delta": -10}]}
-      ]
-    },
-    {
-      "id": "w5_ending_stay",
-      "speaker": "narrator",
-      "text": "你背对光门，朝那个等你最久的人走去。\n身后——光门缓缓关上。\n这个世界，从此把你也写进了它的方程里。",
-      "choices": [
-        {"text": "（拥抱）", "next": "END", "effects": []}
-      ]
-    },
-    {
-      "id": "w5_ending_la_eternal",
-      "speaker": "LinearAlgebra",
-      "text": "（出现在你身后，把链子的另一端攥在手心里）\n我说过——你不会从我的坐标系里出去。\n这一次——是永远。",
-      "choices": [
-        {"text": "（你已经无法选择）", "next": "END", "effects": [{"target": "darkness", "delta": 10}]}
-      ]
-    },
-    {
-      "id": "w5_ending_alone",
-      "speaker": "narrator",
-      "text": "你绕过光门，朝校园深处走去。\n四个人远远地看着你——没有挽留，也没有送行。\n这个世界，从今往后只属于你一个人。",
-      "choices": [
-        {"text": "（继续走）", "next": "END", "effects": []}
+            {"text": "留下，和我想守护的人一起", "next": "END",
+             "effects": [{"target": "choseToStay", "value": true}],
+             "condition": "darkness < 60"},
+
+            {"text": "（脚步动不了——她不允许你走）", "next": "END",
+             "effects": [{"target": "darkness", "delta": 15},
+                         {"target": "choseToStay", "value": true}],
+             "condition": "darkness >= 60"},
+
+            {"text": "独自留下", "next": "END",
+             "effects": [{"target": "choseToStay", "value": false}]}
+          ]
+        }
       ]
     }
-  ]
-}

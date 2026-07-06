@@ -2,6 +2,7 @@
 #include "Player.h"
 #include <QDebug>
 #include <QMessageBox>
+#include "story/EndingJudge.h"
 namespace SA {
 
 GameManager& GameManager::instance() {
@@ -41,8 +42,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 5;
-                stressDelta = 2;
+                affinityDelta = 10;
+                stressDelta = 5;
 
                 player_->addAffinity(
                     SubjectType::ProgDesign,
@@ -53,7 +54,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 6;
+                stressDelta = 15;
 
                 player_->addStress(stressDelta);
             }
@@ -69,8 +70,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 5;
-                stressDelta = 2;
+                affinityDelta = 10;
+                stressDelta = 5;
 
                 player_->addAffinity(
                     SubjectType::LinearAlgebra,
@@ -81,7 +82,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 6;
+                stressDelta = 12;
                 darknessDelta = 15;
 
                 player_->addStress(stressDelta);
@@ -100,8 +101,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 4;
-                stressDelta = 3;
+                affinityDelta = 10;
+                stressDelta = 5;
 
                 player_->addAffinity(
                     SubjectType::AIIntro,
@@ -112,7 +113,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 7;
+                stressDelta = 14;
 
                 player_->addStress(stressDelta);
             }
@@ -128,8 +129,8 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 4;
-                stressDelta = 1;
+                affinityDelta = 5;
+                stressDelta = 2;
 
                 player_->addAffinity(
                     SubjectType::Calculus,
@@ -156,7 +157,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             if(won) {
 
-                affinityDelta = 2;
+                affinityDelta = 10;
 
                 player_->addAffinity(
                     SubjectType::ProgDesign,
@@ -165,7 +166,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
 
             } else {
 
-                stressDelta = 2;
+                stressDelta = 10;
 
                 player_->addStress(stressDelta);
             }
@@ -202,7 +203,7 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
     // 好感变化
     if(affinityDelta != 0) {
 
-        msg += QString("%1好感 %+2\n")
+        msg += QString("%1好感 +%2\n")
                    .arg(affinityName)
                    .arg(affinityDelta);
     }
@@ -210,14 +211,14 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
     // 压力变化
     if(stressDelta != 0) {
 
-        msg += QString("压力 %+1\n")
+        msg += QString("压力 +%1\n")
                    .arg(stressDelta);
     }
 
     // 黑化变化
     if(darknessDelta != 0) {
 
-        msg += QString("线代黑化 %+1\n")
+        msg += QString("线代黑化 +%1\n")
                    .arg(darknessDelta);
     }
 
@@ -231,21 +232,33 @@ void GameManager::onMiniGameFinished(MiniGameType type, int score, bool won) {
         msg
         );
 
-            // 压力值过高触发警告
-    if(player_->stress() >= 100) {
+    // ← 新增：完成一局游戏消耗一次自由天数
+    player_->consumeFreeDay();
 
+    // 压力值过高触发警告
+    // 原来的两段触发代码，改成：
+    if (player_->stress() >= 100) {
         qDebug() << "[GameManager] Stress reached maximum!";
+        currentEnding_ = EndingJudge::judge(player_, player_->choseToStay());
+        // stress >= 100 时 judge() 优先级1会返回 End5，无需手动指定
+        requestScene(GameScene::Ending);
+        return;
+    }
 
-                // TODO：
-                // 后续可以：
-                // 1. 触发 Bad Ending
-                // 2. 强制休息
-                // 3. Game Over
-
-                // emit endingTriggered(...);
+    if (player_->darkness() >= 100) {
+        qDebug() << "[GameManager] Darkness triggered ending";
+        currentEnding_ = EndingJudge::judge(player_, player_->choseToStay());
+        // darkness >= 100 且 stress < 100 时，judge() 优先级2返回 End4
+        requestScene(GameScene::Ending);
+        return;
     }
     // 玩完小游戏后默认回到地图场景
     requestScene(GameScene::Map);
+}
+
+void GameManager::onStoryFinished() {
+    currentEnding_ = EndingJudge::judge(player_, player_->choseToStay());
+    requestScene(GameScene::Ending);
 }
 
 } // namespace SA

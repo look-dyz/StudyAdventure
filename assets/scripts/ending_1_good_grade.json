@@ -7,7 +7,7 @@
     {
       "id": "end1_01",
       "speaker": "narrator",
-      "text": "期末考试的最后一题答完时，你听见铃声。\n监考的程设把试卷收走，对你点了点头。",
+      "text": "成绩出来了。",
       "choices": [
         {"text": "（继续）", "next": "end1_02", "effects": []}
       ]
@@ -15,7 +15,7 @@
     {
       "id": "end1_02",
       "speaker": "ProgDesign",
-      "text": "成绩出来了。\n你的 GPA：3.92。",
+      "text": "你的 GPA：3.92。",
       "choices": [
         {"text": "（笑出来）", "next": "end1_03", "effects": []},
         {"text": "（百感交集）", "next": "end1_03", "effects": []}

@@ -16,6 +16,7 @@ StoryEngine::StoryEngine(Player* player, QObject* parent)
 // 加载剧本
 // ============================================================
 bool StoryEngine::loadScript(const QString& scriptPath) {
+    currentScriptPath_ = scriptPath;
     QFile file(scriptPath);
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "[StoryEngine] Cannot open script:" << scriptPath;
@@ -58,7 +59,6 @@ static QJsonObject findNode(const QJsonObject& root, const QString& id) {
 // 跳转到指定节点
 // ============================================================
 void StoryEngine::jumpToNode(const QString& nodeId) {
-    // 结束标记
     if (nodeId == "END" || nodeId.isEmpty()) {
         qDebug() << "[StoryEngine] Script finished";
         currentNodeId_.clear();
@@ -73,16 +73,14 @@ void StoryEngine::jumpToNode(const QString& nodeId) {
         return;
     }
 
-    // 检查 condition（节点级条件，不满足则跳过）
+    // 检查 condition
     QString cond = node.value("condition").toString();
     if (!cond.isEmpty() && !evaluateCondition(cond)) {
         qDebug() << "[StoryEngine] Node" << nodeId << "condition failed, skipping";
-        // 简单处理：直接结束剧本（实际项目里可改为跳到下一个节点）
         emit scriptFinished();
         return;
     }
 
-    // 应用节点级 effects（即"进入这个节点时"自动触发的效果）
     applyEffects(node);
 
     currentNodeId_ = nodeId;
@@ -108,29 +106,26 @@ void StoryEngine::onChoiceSelected(int choiceIndex) {
     qDebug() << "[StoryEngine] Choice selected:" << choiceIndex
              << " text:" << choice.value("text").toString();
 
-    // 应用选项的 effects
     applyEffects(choice);
 
-    // 跳转到 next 节点
     QString next = choice.value("next").toString();
     jumpToNode(next);
 }
 
 // ============================================================
-// 取当前节点信息（供 UI 显示）
+// 获取当前节点信息
 // ============================================================
 QString StoryEngine::currentSpeaker() const {
     QJsonObject node = findNode(scriptRoot_, currentNodeId_);
     QString speakerKey = node.value("speaker").toString();
 
-    // 把内部 key 转成显示名（如 "ProgDesign" → "程设"）
     if (speakerKey == "narrator") return QString();  // 旁白不显示名字
     if (speakerKey == "player")   return QStringLiteral("我");
-    if (speakerKey == "ProgDesign")     return subjectName(SubjectType::ProgDesign);
+    if (speakerKey == "ProgDesign")      return subjectName(SubjectType::ProgDesign);
     if (speakerKey == "Calculus")        return subjectName(SubjectType::Calculus);
     if (speakerKey == "LinearAlgebra")   return subjectName(SubjectType::LinearAlgebra);
     if (speakerKey == "AIIntro")         return subjectName(SubjectType::AIIntro);
-    return speakerKey;  // 兜底
+    return speakerKey;
 }
 
 QString StoryEngine::currentText() const {
@@ -145,7 +140,6 @@ QStringList StoryEngine::currentChoices() const {
     QStringList result;
     for (const auto& v : choices) {
         QJsonObject c = v.toObject();
-        // 检查选项级 condition（不满足则不显示该选项）
         QString cond = c.value("condition").toString();
         if (!cond.isEmpty() && !evaluateCondition(cond)) {
             continue;
@@ -156,7 +150,27 @@ QStringList StoryEngine::currentChoices() const {
 }
 
 // ============================================================
-// 应用 effects 数组：修改玩家数值
+// 获取当前立绘标识
+// ============================================================
+QString StoryEngine::currentSprite() const {
+    QJsonObject node = findNode(scriptRoot_, currentNodeId_);
+    if (node.isEmpty()) return QString();
+
+    // 1. 高优先级：显式配置了 sprite 字段
+    if (node.contains("sprite")) {
+        return node.value("sprite").toString();
+    }
+
+    // 2. 兜底策略：直接提取 speaker 字段作为图片名
+    QString speakerKey = node.value("speaker").toString();
+    if (speakerKey == "narrator" || speakerKey.isEmpty() || speakerKey == "player") {
+        return QString();
+    }
+    return speakerKey;
+}
+
+// ============================================================
+// 应用数值变更
 // ============================================================
 void StoryEngine::applyEffects(const QJsonObject& obj) {
     QJsonArray effects = obj.value("effects").toArray();
@@ -193,36 +207,27 @@ void StoryEngine::applyEffects(const QJsonObject& obj) {
             player_->addDarkness(delta);
             qDebug() << "  [effect] darkness +=" << delta;
         }
+        else if (target == "choseToStay") {
+            player_->setChoseToStay(eff.value("value").toBool());
+            qDebug() << "  [effect] choseToStay =" << eff.value("value").toBool();
+        }
         else {
             qWarning() << "[StoryEngine] Unknown effect target:" << target;
         }
     }
 
-    // 发出 effects 触发信号（UI 可监听后做闪烁动画提示）
     emit effectsApplied();
+
+    if (player_->stress() >= 100 || player_->darkness() >= 100) {
+        qDebug() << "[StoryEngine] Threshold reached, triggering ending";
+        QMetaObject::invokeMethod(this, [this]() {
+            emit thresholdEndingTriggered();
+        }, Qt::QueuedConnection);
+    }
 }
 
 // ============================================================
-// 评估条件表达式
-//
-// 支持的语法（简单实现，够用）：
-//   <左变量> <运算符> <右数字>
-//   <左表达式> && <右表达式>     -- 且
-//   <左表达式> || <右表达式>     -- 或
-//
-// 变量：
-//   affinity.ProgDesign / affinity.Calculus / affinity.LinearAlgebra / affinity.AIIntro
-//   stress
-//   darkness
-//   week
-//   day
-//
-// 运算符：> >= < <= == !=
-//
-// 例：
-//   "affinity.LinearAlgebra >= 50"
-//   "stress < 80 && darkness < 50"
-//   "week >= 3 || affinity.ProgDesign > 30"
+// 条件评估系统
 // ============================================================
 int StoryEngine::readVariable(const QString& name) const {
     if (!player_) return 0;
@@ -245,15 +250,13 @@ int StoryEngine::readVariable(const QString& name) const {
 }
 
 bool StoryEngine::evaluateAtomic(const QString& expr) const {
-    // 解析形如 "affinity.X >= 50" 的单条原子表达式
-    // 用正则匹配：变量名 运算符 数字
     static const QRegularExpression re(
         R"(^\s*([a-zA-Z][\w.]*)\s*(>=|<=|==|!=|>|<)\s*(-?\d+)\s*$)"
     );
     QRegularExpressionMatch m = re.match(expr);
     if (!m.hasMatch()) {
         qWarning() << "[StoryEngine] Invalid atomic condition:" << expr;
-        return true;  // 出错时默认放行（避免剧情卡死）
+        return true;
     }
 
     QString varName = m.captured(1);
@@ -273,23 +276,20 @@ bool StoryEngine::evaluateAtomic(const QString& expr) const {
 bool StoryEngine::evaluateCondition(const QString& expression) const {
     if (expression.trimmed().isEmpty()) return true;
 
-    // 处理 || 优先级最低，先按 || 拆分
     if (expression.contains("||")) {
         QStringList parts = expression.split("||");
         for (const QString& p : parts) {
-            if (evaluateCondition(p)) return true;  // 任一为真则真
+            if (evaluateCondition(p)) return true;
         }
         return false;
     }
-    // 然后按 && 拆分
     if (expression.contains("&&")) {
         QStringList parts = expression.split("&&");
         for (const QString& p : parts) {
-            if (!evaluateCondition(p)) return false;  // 任一为假则假
+            if (!evaluateCondition(p)) return false;
         }
         return true;
     }
-    // 没有逻辑运算符 = 单条原子表达式
     return evaluateAtomic(expression);
 }
 

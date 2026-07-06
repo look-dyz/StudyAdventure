@@ -46,6 +46,9 @@ public:
     /// 处理小游戏结束（成员 C 实现奖惩计算）
     void onMiniGameFinished(MiniGameType type, int score, bool won);
 
+    EndingType currentEnding() const { return currentEnding_; }
+    void onStoryFinished();
+
 signals:
     /// 场景切换请求（MainWindow 监听）
     void sceneChangeRequested(GameScene scene);
@@ -56,8 +59,8 @@ signals:
 private:
     GameManager(QObject* parent = nullptr);
     ~GameManager() = default;
-
     Player* player_;
+    EndingType currentEnding_ = EndingType::End1_GoodGrade;
 };
 
 } // namespace SA
