@@ -49,6 +49,9 @@ signals:
     /// 好感度变化信号（由 UI 监听更新进度条）
     void affinityChanged(int newValue);
 
+    /// 请求与该学科互动（由 MainWindow 监听后触发对话场景）
+    void interactionRequested(SubjectType type);
+
 protected:
     SubjectType type_;
     int affinity_ = 0;

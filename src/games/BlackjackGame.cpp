@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <random>
 #include <algorithm>
+#include <QStackedLayout>
+#include <QMessageBox>
 
 namespace SA {
 
@@ -47,46 +49,195 @@ void Deck::shuffle() {
 }
 
 Card Deck::draw() {
+
+    if(cards_.empty()) {
+
+        qDebug() << "[Deck] Empty deck! Reshuffling.";
+
+        *this = Deck();
+    }
+
     Card c = cards_.back();
+
     cards_.pop_back();
+
     return c;
 }
 
 // ========== BlackjackGame 实现 ==========
 BlackjackGame::BlackjackGame(QWidget* parent) : MiniGame(parent) {
-    auto* layout = new QVBoxLayout(this);
+    stackedLayout_ = new QStackedLayout(this);
 
-    auto* title = new QLabel(displayName(), this);
-    title->setAlignment(Qt::AlignCenter);
-    title->setStyleSheet("font-size: 20px; font-weight: bold; color: #8B1A1A;");
+    introPage_ = new QWidget(this);
 
-    dealerLabel_ = new QLabel(this);
-    playerLabel_ = new QLabel(this);
-    statusLabel_ = new QLabel(this);
-    statusLabel_->setStyleSheet("font-size: 16px; color: #3B5BA5;");
+    {
+        auto* layout =
+            new QVBoxLayout(introPage_);
 
-    hitBtn_ = new QPushButton(tr("要牌"), this);
-    standBtn_ = new QPushButton(tr("停牌"), this);
-    connect(hitBtn_, &QPushButton::clicked, this, &BlackjackGame::onHitClicked);
-    connect(standBtn_, &QPushButton::clicked, this, &BlackjackGame::onStandClicked);
+        auto* title =
+            new QLabel(tr("21点玩法说明"));
 
-    auto* btnRow = new QHBoxLayout;
-    btnRow->addWidget(hitBtn_);
-    btnRow->addWidget(standBtn_);
+        title->setAlignment(Qt::AlignCenter);
 
-    layout->addWidget(title);
-    layout->addWidget(dealerLabel_);
-    layout->addWidget(playerLabel_);
-    layout->addWidget(statusLabel_);
-    layout->addLayout(btnRow);
-    layout->addStretch();
+        title->setStyleSheet(
+            "font-size:24px;"
+            "font-weight:bold;"
+            "color:#8B1A1A;"
+            );
+
+        auto* introText =
+            new QLabel(
+                tr(
+                    "【游戏目标】\n"
+                    "你的点数尽量接近 21，"
+                    "但不能超过 21。\n\n"
+
+                    "【规则】\n"
+                    "数字牌按原值计算。\n"
+                    "J/Q/K 都算 10 点。\n"
+                    "A 可算 1 或 11。\n\n"
+
+                    "【操作】\n"
+                    "要牌：继续抽牌。\n"
+                    "停牌：结束回合，由庄家行动。\n\n"
+
+                    "【胜负】\n"
+                    "超过 21 点直接失败。\n"
+                    "最终点数更接近 21 的获胜。"
+                    )
+                );
+
+        introText->setWordWrap(true);
+
+        introText->setStyleSheet(
+            "font-size:16px;"
+            "padding:20px;"
+            );
+
+        auto* startBtn =
+            new QPushButton(tr("开始游戏"));
+
+        startBtn->setMinimumHeight(50);
+
+        startBtn->setStyleSheet(
+            "font-size:18px;"
+            "background:#F5E6CA;"
+            "border-radius:10px;"
+            );
+
+        connect(startBtn,
+                &QPushButton::clicked,
+                this,
+                [this]() {
+
+                    stackedLayout_->setCurrentWidget(gamePage_);
+
+                    reset();
+                });
+
+        layout->addStretch();
+
+        layout->addWidget(title);
+
+        layout->addWidget(introText);
+
+        layout->addWidget(startBtn);
+
+        layout->addStretch();
+    }
+    // =====================================================
+    // 正式游戏页
+    // =====================================================
+
+    gamePage_ = new QWidget(this);
+
+    {
+        auto* layout =
+            new QVBoxLayout(gamePage_);
+
+        auto* title =
+            new QLabel(displayName(), gamePage_);
+
+        title->setAlignment(Qt::AlignCenter);
+
+        title->setStyleSheet(
+            "font-size: 20px;"
+            "font-weight: bold;"
+            "color: #8B1A1A;"
+            );
+
+        dealerLabel_ = new QLabel(gamePage_);
+
+        playerLabel_ = new QLabel(gamePage_);
+
+        statusLabel_ = new QLabel(gamePage_);
+
+        statusLabel_->setStyleSheet(
+            "font-size:16px;"
+            "color:#3B5BA5;"
+            );
+
+        hitBtn_ =
+            new QPushButton(tr("要牌"), gamePage_);
+
+        standBtn_ =
+            new QPushButton(tr("停牌"), gamePage_);
+
+        resetBtn_ =
+            new QPushButton(tr("重新开始"), gamePage_);
+
+        resetBtn_->hide();
+
+        connect(hitBtn_,
+                &QPushButton::clicked,
+                this,
+                &BlackjackGame::onHitClicked);
+
+        connect(standBtn_,
+                &QPushButton::clicked,
+                this,
+                &BlackjackGame::onStandClicked);
+
+        connect(resetBtn_,
+                &QPushButton::clicked,
+                this,
+                &BlackjackGame::reset);
+
+        auto* btnRow =
+            new QHBoxLayout;
+
+        btnRow->addWidget(hitBtn_);
+
+        btnRow->addWidget(standBtn_);
+
+        btnRow->addWidget(resetBtn_);
+
+        layout->addWidget(title);
+
+        layout->addWidget(dealerLabel_);
+
+        layout->addWidget(playerLabel_);
+
+        layout->addWidget(statusLabel_);
+
+        layout->addLayout(btnRow);
+
+        layout->addStretch();
+    }
+
+    stackedLayout_->addWidget(introPage_);
+    stackedLayout_->addWidget(gamePage_);
+
+    stackedLayout_->setCurrentWidget(introPage_);
 }
 
 void BlackjackGame::start() {
-    reset();
+
+    stackedLayout_->setCurrentWidget(introPage_);
 }
 
 void BlackjackGame::reset() {
+    resetBtn_->hide();
     deck_ = Deck();
     playerHand_.clear();
     dealerHand_.clear();
@@ -101,7 +252,9 @@ void BlackjackGame::reset() {
 
     hitBtn_->setEnabled(true);
     standBtn_->setEnabled(true);
-    statusLabel_->setText(tr("你的回合"));
+    statusLabel_->setText(
+        tr("你的回合：请选择【要牌】或【停牌】")
+        );
 
     // 检查初始 Blackjack
     if (calculateScore(playerHand_) == 21) {
@@ -157,14 +310,16 @@ void BlackjackGame::dealerTurn() {
 }
 
 void BlackjackGame::updateDisplay() {
-    QString p = tr("你（%1）: ").arg(calculateScore(playerHand_));
+    QString p =
+        tr("你的手牌（当前 %1 点）:\n")
+            .arg(calculateScore(playerHand_));
     for (const auto& c : playerHand_) p += c.display() + " ";
 
     QString d;
     if (dealerHidden_) {
-        d = tr("庄家（?）: %1  [?]").arg(dealerHand_[0].display());
+        d = tr("庄家手牌（总点数未知）: %1  [未知牌]").arg(dealerHand_[0].display());
     } else {
-        d = tr("庄家（%1）: ").arg(calculateScore(dealerHand_));
+        d = tr("庄家手牌（当前 %1 点）: ").arg(calculateScore(dealerHand_));
         for (const auto& c : dealerHand_) d += c.display() + " ";
     }
 
@@ -173,22 +328,63 @@ void BlackjackGame::updateDisplay() {
 }
 
 void BlackjackGame::endGame(bool playerWon, bool blackjack) {
+
     gameEnded_ = true;
+
     hitBtn_->setEnabled(false);
+
     standBtn_->setEnabled(false);
+
+    resetBtn_->show();
+
     updateDisplay();
 
     int score = 0;
+
+    QString message;
+
     if (blackjack) {
+
         score = 100;
-        statusLabel_->setText(tr("Blackjack！完胜！"));
-    } else if (playerWon) {
-        score = 70;
-        statusLabel_->setText(tr("你赢了！"));
-    } else {
-        score = 20;
-        statusLabel_->setText(tr("你输了……"));
+
+        message = tr("Blackjack！完美21点！\n你获得了最高奖励！");
+
+        statusLabel_->setText(
+            tr("Blackjack！完胜！")
+            );
+
     }
+    else if (playerWon) {
+
+        score = 70;
+
+        message = tr("恭喜你获胜！");
+
+        statusLabel_->setText(
+            tr("你赢了！")
+            );
+    }
+    else {
+
+        score = 20;
+
+        message = tr("很遗憾，你输了……");
+
+        statusLabel_->setText(
+            tr("你输了……")
+            );
+    }
+
+            // =========================
+            // 弹窗
+            // =========================
+
+    QMessageBox::information(
+        this,
+        tr("游戏结束"),
+        message
+        );
+
     emit finished(score, playerWon);
 }
 

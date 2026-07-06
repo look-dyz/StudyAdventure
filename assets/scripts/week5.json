@@ -1,0 +1,242 @@
+{
+  "title": "第五周·期末",
+  "description": "期末考前最后一周。所有角色都来道别。玩家做最终选择：回到现实 / 留在异世界 / 被锁定（黑化）",
+  "startNode": "w5_start",
+  "nodes": [
+    {
+      "id": "w5_start",
+      "speaker": "narrator",
+      "text": "周一清晨。\n校园的公告栏前——一张新的红字告示。\n「期末考：本周五。下周一，传送门关闭。」",
+      "choices": [
+        {"text": "（继续）", "next": "w5_meeting", "effects": [{"target": "stress", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w5_meeting",
+      "speaker": "narrator",
+      "text": "四个熟悉的身影站在告示前。\n没有人说话——但你能感觉到，每个人的眼睛都偷偷瞟过你一次。",
+      "choices": [
+        {"text": "（深呼吸）", "next": "w5_mon_relax", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_mon_relax",
+      "speaker": "narrator",
+      "text": "这一周，没有人催你刷题。\n他们都只想——在你离开之前，把要说的话说完。",
+      "choices": [
+        {"text": "（先去找程设）", "next": "w5_last_chat_pd", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w5_last_chat_pd",
+      "speaker": "ProgDesign",
+      "text": "（坐在你常用的那把椅子上）你来了。\n这一学期——你写过的代码，我都看过。每一行。",
+      "choices": [
+        {"text": "（不知道说什么）", "next": "w5_pd_2", "effects": []},
+        {"text": "谢谢", "next": "w5_pd_2", "effects": [{"target": "affinity.ProgDesign", "delta": 3}]}
+      ]
+    },
+    {
+      "id": "w5_pd_2",
+      "speaker": "ProgDesign",
+      "text": "我不太擅长情绪——所以这话我说一次。\n你出现以后，我才发现——讲题，原来也可以是一件温柔的事。",
+      "choices": [
+        {"text": "（眼眶有点热）", "next": "w5_pd_close", "effects": [{"target": "affinity.ProgDesign", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w5_pd_close",
+      "speaker": "ProgDesign",
+      "text": "如果你选择回去——\n那就把这学期学到的东西用好。\n如果选择留下——我会一直在这把椅子上等你。",
+      "choices": [
+        {"text": "（鞠躬告辞）", "next": "w5_last_chat_calc", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w5_last_chat_calc",
+      "speaker": "Calculus",
+      "text": "（在湖边等你，手里还是那本旧书）\n我们最早的那节课——我问过你一个问题。还记得吗？",
+      "choices": [
+        {"text": "趋近，但永不到达——的爱情", "next": "w5_calc_2", "effects": [{"target": "affinity.Calculus", "delta": 4}]},
+        {"text": "（摇头）", "next": "w5_calc_2", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_calc_2",
+      "speaker": "Calculus",
+      "text": "我那时候说——「永不到达」是温柔的。\n但今天我想告诉你——\n有些极限，是值得用一生去逼近的。",
+      "choices": [
+        {"text": "（沉默地看着湖面）", "next": "w5_calc_close", "effects": [{"target": "affinity.Calculus", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w5_calc_close",
+      "speaker": "Calculus",
+      "text": "你回去，就把这本书带上。\n你留下——我们就把它读完。",
+      "choices": [
+        {"text": "（点头离开）", "next": "w5_last_chat_la", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w5_last_chat_la",
+      "speaker": "LinearAlgebra",
+      "text": "（在你宿舍门口等着，连影子都没动过）\n我已经站了三个小时。\n你不在的时候——时间在我这里是不流动的。",
+      "choices": [
+        {"text": "（让她进来）", "next": "w5_la_normal", "effects": [], "condition": "darkness < 50"},
+        {"text": "（背脊一阵发凉）", "next": "w5_la_dark", "effects": [{"target": "darkness", "delta": 3}], "condition": "darkness >= 50"}
+      ]
+    },
+    {
+      "id": "w5_la_normal",
+      "speaker": "LinearAlgebra",
+      "text": "（她坐在你床边的地板上，抱着膝盖）这五周——你出现在我视野里的次数。\n三千八百九十二。\n这个数字，下周一之后不会再涨。",
+      "choices": [
+        {"text": "（沉默）", "next": "w5_la_close", "effects": [{"target": "affinity.LinearAlgebra", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w5_la_dark",
+      "speaker": "LinearAlgebra",
+      "text": "（她锁上门，把钥匙放进自己的口袋）\n这一周——我们不下楼。\n我不会让你离开我的视线，一分钟都不会。",
+      "choices": [
+        {"text": "（你已经动弹不得）", "next": "w5_la_close", "effects": [
+          {"target": "darkness", "delta": 8},
+          {"target": "stress", "delta": 8}
+        ]}
+      ]
+    },
+    {
+      "id": "w5_la_close",
+      "speaker": "LinearAlgebra",
+      "text": "最后一题——\n你的下一组坐标，是不是我？",
+      "choices": [
+        {"text": "（不回答）", "next": "w5_last_chat_ai", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w5_last_chat_ai",
+      "speaker": "AIIntro",
+      "text": "（站在天台上，背对着你）我不喜欢告别。\n所以这次——我不说「再见」。",
+      "choices": [
+        {"text": "那你说什么？", "next": "w5_ai_2", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_ai_2",
+      "speaker": "AIIntro",
+      "text": "我说——「在分布之外的某个点上」。\n意思是：不论你去哪里，我都会带着这一个学期的权重，往你存在的方向更新。",
+      "choices": [
+        {"text": "（用力点头）", "next": "w5_ai_close", "effects": [{"target": "affinity.AIIntro", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w5_ai_close",
+      "speaker": "AIIntro",
+      "text": "（转身，把那个智能耳钉的备份塞进你口袋）\n这一颗——是我的。\n你回去的时候，记得带着。",
+      "choices": [
+        {"text": "（紧紧握住）", "next": "w5_reflection", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w5_reflection",
+      "speaker": "narrator",
+      "text": "夜里。\n你躺在床上，四个人的话在脑子里来回打转。\n窗外的星星——比来这里的第一晚，亮了很多。",
+      "choices": [
+        {"text": "（闭上眼）", "next": "w5_exam_eve", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_exam_eve",
+      "speaker": "narrator",
+      "text": "考前夜。\n书本你已经合上了——剩下的，只有自己。",
+      "choices": [
+        {"text": "（睡着）", "next": "w5_exam_day", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_exam_day",
+      "speaker": "narrator",
+      "text": "周五。\n考场的钟挂在最显眼的位置。\n监考——四个人都来了。",
+      "choices": [
+        {"text": "（落笔）", "next": "w5_exam_paper", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_exam_paper",
+      "speaker": "narrator",
+      "text": "卷子上的题——竟然都见过。\n但你的手——莫名地有点抖。",
+      "choices": [
+        {"text": "稳住，认真答", "next": "w5_exam_careful", "effects": [{"target": "stress", "delta": 3}]},
+        {"text": "豁出去了", "next": "w5_exam_brave", "effects": [{"target": "stress", "delta": 5}]}
+      ]
+    },
+    {
+      "id": "w5_exam_careful",
+      "speaker": "narrator",
+      "text": "你逐题慢慢推。\n这一次，你不是在解题——你是在和这个学期的自己告别。",
+      "choices": [
+        {"text": "（写完最后一行）", "next": "w5_exam_done", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_exam_brave",
+      "speaker": "narrator",
+      "text": "你不再纠结对错。\n这是最后一次——你想留一份带着自己特点的卷子。",
+      "choices": [
+        {"text": "（提早交卷）", "next": "w5_exam_done", "effects": [{"target": "stress", "delta": -3}]}
+      ]
+    },
+    {
+      "id": "w5_exam_done",
+      "speaker": "narrator",
+      "text": "交卷铃响。\n你抬头——四个人都站在讲台边，没有人说话。",
+      "choices": [
+        {"text": "（站起来）", "next": "w5_walk_out", "effects": []}
+      ]
+    },
+
+    {
+      "id": "w5_walk_out",
+      "speaker": "narrator",
+      "text": "你走出考场。\n阳光像水一样泼下来——\n但走廊的尽头，似乎正在变得透明。",
+      "choices": [
+        {"text": "（继续走）", "next": "w5_final_setup", "effects": []}
+      ]
+    },
+    {
+      "id": "w5_final_setup",
+      "speaker": "narrator",
+      "text": "广场中央，地面慢慢浮起一道淡蓝色的光门。\n远处，四个人都没有靠近——他们只是站在原地，看着你。\n\n现在——只剩下你和这扇门。",
+      "choices": [
+        {"text": "（深呼吸）", "next": "w5_final_choice", "effects": []}
+      ]
+    },
+    {
+          "id": "w5_final_choice",
+          "speaker": "narrator",
+          "text": "回到现实——还是留在异世界？\n这是这个学期，最后一道题。",
+          "choices": [
+            {"text": "回到现实", "next": "END",
+             "effects": [{"target": "choseToStay", "value": false},
+                         {"target": "stress", "delta": -10}]},
+
+            {"text": "留下，和我想守护的人一起", "next": "END",
+             "effects": [{"target": "choseToStay", "value": true}],
+             "condition": "darkness < 60"},
+
+            {"text": "（脚步动不了——她不允许你走）", "next": "END",
+             "effects": [{"target": "darkness", "delta": 15},
+                         {"target": "choseToStay", "value": true}],
+             "condition": "darkness >= 60"},
+
+            {"text": "独自留下", "next": "END",
+             "effects": [{"target": "choseToStay", "value": false}]}
+          ]
+        }
+      ]
+    }

@@ -13,10 +13,12 @@
 #include "common/MiniGame.h"
 #include <vector>
 #include <utility>
+#include <QStackedLayout>
 
 class QGraphicsView;
 class QGraphicsScene;
 class QLabel;
+class QTimer;
 
 namespace SA {
 
@@ -35,7 +37,16 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
+    QTimer* timer_ = nullptr;
+
+    int timeRemaining_ = 0;
+
     enum class CellType { Wall, Empty, Trap, Knowledge, Start, End };
+
+    QWidget* introPage_ = nullptr;
+    QWidget* gamePage_ = nullptr;
+
+    QStackedLayout* stackedLayout_ = nullptr;
 
     int rows_ = 15;
     int cols_ = 15;
@@ -63,6 +74,8 @@ private:
     void movePlayer(int dr, int dc);
     void showHint();
     void onReachEnd();
+
+    bool isMazeSolvableWithinSteps();
 };
 
 } // namespace SA

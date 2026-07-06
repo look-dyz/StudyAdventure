@@ -10,8 +10,8 @@
  *   - speaker: 说话人（学科类型或 "narrator"）
  *   - text: 台词
  *   - choices: 选项列表（每个选项含 text、next、effects）
- *   - effects: 数值变更指令（如 "affinity.ProgDesign+=5"）
- *   - condition: 显示条件（可选）
+ *   - effects: 数值变更指令（如 {"target": "affinity.ProgDesign", "delta": 5}）
+ *   - condition: 显示条件（如 "affinity.LinearAlgebra >= 50"）
  */
 #ifndef STUDYADVENTURE_STORYENGINE_H
 #define STUDYADVENTURE_STORYENGINE_H
@@ -20,6 +20,7 @@
 #include <QString>
 #include <QJsonObject>
 #include "common/Constants.h"
+#include <QMetaObject>
 
 namespace SA {
 
@@ -30,12 +31,10 @@ class StoryEngine : public QObject {
 public:
     explicit StoryEngine(Player* player, QObject* parent = nullptr);
 
-    /// 加载剧本文件
-    /// @param scriptPath 剧本 JSON 文件路径（如 ":/scripts/week1.json"）
-    /// @return 成功返回 true
+    /// 加载剧本文件（支持 ":/scripts/xxx.json" 或文件系统路径）
     bool loadScript(const QString& scriptPath);
 
-    /// 跳转到指定节点
+    /// 跳转到指定节点（id == "END" 表示剧本结束）
     void jumpToNode(const QString& nodeId);
 
     /// 玩家选择了某个选项
@@ -45,9 +44,13 @@ public:
     QString currentSpeaker() const;
     QString currentText() const;
     QStringList currentChoices() const;
+    QString currentSprite() const; // ← 新增这一行：获取当前立绘的 key 或路径
+
 
     /// 当前节点 ID
     QString currentNodeId() const { return currentNodeId_; }
+
+    QString currentScriptPath() const { return currentScriptPath_; }
 
 signals:
     /// 节点切换信号（UI 监听后刷新对话框）
@@ -56,16 +59,27 @@ signals:
     /// 剧本结束信号
     void scriptFinished();
 
+    /// effects 已应用（UI 可监听做动画提示）
+    void effectsApplied();
+    void thresholdEndingTriggered();   // ← 新增
+
 private:
     Player* player_;            ///< 玩家对象指针（不持有，外部生命周期管理）
     QJsonObject scriptRoot_;    ///< 当前加载的剧本根对象
     QString currentNodeId_;     ///< 当前节点 ID
+    QString currentScriptPath_;
 
-    /// 应用节点的 effects（数值变更指令）
-    void applyEffects(const QJsonObject& node);
+    /// 应用节点或选项的 effects（数值变更指令）
+    void applyEffects(const QJsonObject& objWithEffects);
 
-    /// 评估条件表达式
+    /// 评估条件表达式（如 "affinity.X >= 50 && stress < 80"）
     bool evaluateCondition(const QString& expression) const;
+
+    /// 解析单条原子表达式（如 "affinity.X >= 50"）
+    bool evaluateAtomic(const QString& expression) const;
+
+    /// 读取游戏内变量的值
+    int readVariable(const QString& name) const;
 };
 
 } // namespace SA

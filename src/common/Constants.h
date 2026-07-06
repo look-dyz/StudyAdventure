@@ -29,9 +29,8 @@ enum class MiniGameType {
     Minesweeper,     ///< 扫雷（程设）
     Blackjack,       ///< 21点（程设）
     TicTacToe,       ///< 井字棋（AI引论）
-    Matrix,          ///< 矩阵运算（线代）
+    MemoryMatch,
     Maze,            ///< AI迷宫逃生（AI引论）
-    Calculus         ///< 高数答题（高数）
 };
 
 // ============================================================
