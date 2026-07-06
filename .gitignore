@@ -74,3 +74,8 @@ debug_save.json
 .fseventsd/
 .Spotlight-V100
 .Trashes
+
+# Claude Code 本地会话文件（不提交）
+.claude-summary.md
+.tasks/
+CLAUDE.md

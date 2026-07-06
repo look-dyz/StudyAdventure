@@ -1,0 +1,344 @@
+\documentclass[12pt]{article}
+
+% ===================== 基础设置 =====================
+\usepackage{fontspec}
+\setmainfont{Songti SC}
+\setsansfont{Heiti SC}
+\setmonofont{Menlo}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt minus 0.1pt
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,shadows}
+\usepackage{microtype}
+
+% ---- 更宽松的断行容忍度，避免长英文标识符导致右侧溢出 ----
+\tolerance=2000
+\emergencystretch=3em
+\hbadness=3000
+\sloppy
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black,
+  pdftitle={学海漫游：异世界的信科少女 —— 作业报告},
+  pdfauthor={代易瓒 / 闫瑾 / 沈昱萱}
+}
+
+% ---- 页眉页脚 ----
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{学海漫游：异世界的信科少女}
+\fancyhead[R]{程序设计实习大作业报告}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---- 标题格式 ----
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\section}{0pt}{1.2\baselineskip}{0.8\baselineskip}
+
+% ---- 代码块样式 ----
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{orange!70!black},
+  backgroundcolor=\color{gray!5},
+  tabsize=2,
+  language=C++
+}
+
+% ---- 常用小工具 ----
+\newcommand{\module}[1]{\texttt{#1}}
+
+\begin{document}
+
+% ===================== 封面 =====================
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge \bfseries 北京大学信息科学技术学院}\\[0.5cm]
+{\Large 程序设计实习课程大作业}\\[2.5cm]
+
+{\rule{\linewidth}{0.8pt}}\\[0.4cm]
+{\huge \bfseries 学海漫游：异世界的信科少女}\\[0.2cm]
+{\Large Study Adventure: The Informatics Girl in Another World}\\[0.4cm]
+{\rule{\linewidth}{0.8pt}}\\[2.5cm]
+
+{\Large
+\begin{tabular}{r l}
+组\qquad 号： & \underline{\makebox[6cm]{yyy}} \\[0.4cm]
+成员 A（剧情核心）： & \underline{\makebox[6cm]{代易瓒}} \\[0.4cm]
+成员 B（界面核心）： & \underline{\makebox[6cm]{闫瑾}} \\[0.4cm]
+成员 C（玩法核心）： & \underline{\makebox[6cm]{沈昱萱}} \\[0.4cm]
+提交日期： & \underline{\makebox[6cm]{2026 年 7 月 6 日}} \\
+\end{tabular}
+}
+
+\vfill
+{\large 代码仓库：\url{https://github.com/look-dyz/StudyAdventure}}
+\end{titlepage}
+
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+% =====================================================
+\section{程序功能介绍}
+% =====================================================
+
+\subsection{项目背景与总体定位}
+《学海漫游：异世界的信科少女》是一款使用 C++17 与 Qt~6（Widgets + Multimedia）开发的单机养成模拟游戏，作为北京大学信息科学技术学院程序设计实习课程的三人合作大作业。项目将“恋爱养成游戏”的叙事框架与“课程知识小游戏”相结合：玩家扮演一名信科大一新生，在一次期末复习的深夜穿越到异世界，与四门专业课程拟人化而成的角色——程序设计、高等数学、线性代数、人工智能引论——展开为期五周的校园生活，并在剧情推进过程中通过完成与学科相关的知识小游戏来提升好感度，最终走向五种不同结局之一。
+
+\subsection{核心玩法循环}
+游戏的主循环由“地图探索 $\rightarrow$ 事件触发 $\rightarrow$ 剧情对话 $\rightarrow$ 小游戏挑战 $\rightarrow$ 数值结算 $\rightarrow$ 周目推进”构成：
+
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{地图探索}：玩家在教学楼、图书馆、宿舍、未名湖等四张可点击地图场景间移动，选择当天的行动地点；
+  \item \textbf{事件触发}：进入图书馆跳转至小游戏；未名湖与宿舍用于调节压力值与推进日程；
+  \item \textbf{剧情对话}：对话框呈现角色立绘与台词，玩家在关键节点做出选择；
+  \item \textbf{小游戏挑战}：部分事件会跳转至与该学科相关的知识小游戏，玩家的表现将直接影响数值反馈；
+  \item \textbf{数值结算}：小游戏结果与剧情选择共同驱动好感度、压力值、黑化值等数值变化；
+  \item \textbf{周目推进}：五周时间线走完后，系统依据数值状态判定并展示最终结局。
+\end{enumerate}
+
+\subsection{五个知识小游戏}
+项目最具特色的部分是将课程知识点包装为可玩的小游戏，每个小游戏对应一门课程的核心算法或知识点。经小组讨论，最终版本聚焦于五个小游戏，均已实现完整可玩流程；原计划的线性代数“矩阵运算”小游戏因课程时间限制，最终版本中未纳入实现范围：
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{小游戏} & \textbf{对应学科} & \textbf{核心算法 / 知识点} \\
+\midrule
+扫雷（Minesweeper） & 程序设计 & 二维数组遍历、递归展开 \\
+21 点（Blackjack） & 高等数学 & 随机数、状态机、可完整游玩 \\
+井字棋（Tic-Tac-Toe） & 程序设计 & Minimax + $\alpha$-$\beta$ 剪枝 \\
+AI 迷宫（AI Maze） & 人工智能引论 & BFS 最短路径、递归回溯生成迷宫 \\
+记忆翻牌（Memory Match） & 线性代数 & 卡牌随机洗牌、状态匹配判定 \\
+\bottomrule
+\end{tabular}
+\caption{五个知识小游戏一览}
+\end{table}
+
+五个小游戏（扫雷、21 点、井字棋、AI 迷宫、记忆翻牌）均已实现完整可玩流程，恰好覆盖程序设计、高等数学、人工智能引论、线性代数四门学科，每门学科均对应至少一个小游戏，好感度提升渠道更加均衡。
+
+\subsection{多维数值系统}
+玩家的成长状态由 \module{Player} 类统一维护，包括：
+
+\begin{itemize}[itemsep=2pt]
+  \item 四门学科的\textbf{好感度}（程设 / 高数 / 线代 / AI 引论各一项）；
+  \item 全局\textbf{压力值}，随剧情推进与小游戏表现波动，影响事件走向；
+  \item 线性代数专属的\textbf{黑化值}，用于解锁“阴郁占有”角色线的特殊结局分支；
+  \item 当前\textbf{游戏日期}（第几周 / 第几天），驱动时间线与剧本调度。
+\end{itemize}
+
+数值变化通过 Qt 信号槽机制实时反映在界面顶部的状态栏（\module{StatusBar}）中，好感度以进度条形式动态刷新，为玩家提供即时反馈。
+
+\subsection{五条结局路线}
+依据四条学科好感线与黑化值的综合判定，游戏设置了五种结局，由 \module{EndingJudge} 按照预设的优先级链进行判定，保证多个结局条件同时满足时也能得到确定性结果。五周完整剧情与全部五条结局剧本均已编写完成，玩家可从开局一路游玩至任一结局，形成完整闭环体验。
+
+\subsection{精美的主界面与人物立绘}
+项目在美术呈现上投入了较多打磨：设计了风格统一、视觉美观的游戏主界面（主菜单、地图场景、对话界面），并为四个学科拟人化角色分别绘制了专属人物立绘，在对话与好感度提升等关键节点展示，增强了角色辨识度与代入感，使整体呈现效果超越了课程作业的一般水准。
+
+\subsection{跨平台支持}
+项目基于 CMake（$\geq 3.16$）与 Qt~6 构建，通过 GitHub Actions 持续集成在 Windows、macOS、Linux 三平台上自动验证编译，实现“一份代码，三端运行”。
+
+% =====================================================
+\section{项目各模块与类设计细节}
+% =====================================================
+
+\subsection{总体架构}
+项目采用分层、职责分离的模块化架构，源代码位于 \module{src/} 目录下，共划分为五大功能域：
+
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={rectangle, rounded corners, draw=black!60, thick, minimum width=3.1cm, minimum height=1cm, align=center, fill=blue!8, drop shadow},
+  core/.style={rectangle, rounded corners, draw=black!60, thick, minimum width=3.1cm, minimum height=1cm, align=center, fill=orange!15, drop shadow},
+  arrow/.style={-{Stealth[length=2.5mm]}, thick}
+]
+  \node[core] (main) {main.cpp\\程序入口};
+  \node[box, below=1.1cm of main] (core) {core\\Player / GameManager\\SaveManager};
+  \node[box, left=1.3cm of core] (story) {story\\StoryEngine / DialogWindow\\EndingJudge / Subjects};
+  \node[box, right=1.3cm of core] (ui) {ui\\MainWindow / MainMenu\\StatusBar};
+  \node[box, below=1.1cm of ui] (map) {map\\MapScene / LocationItem};
+  \node[box, below=1.1cm of core] (games) {games\\5 个 MiniGame 子类};
+  \node[box, below=1.1cm of story, fill=green!10] (common) {common\\MiniGame / Subject\\Constants（公共基类）};
+
+  \draw[arrow] (main) -- (core);
+  \draw[arrow] (core) -- (story);
+  \draw[arrow] (core) -- (ui);
+  \draw[arrow] (ui) -- (map);
+  \draw[arrow] (core) -- (games);
+  \draw[arrow] (story) -- (common);
+  \draw[arrow] (games) -- (common);
+\end{tikzpicture}%
+}
+\end{center}
+
+\module{GameManager} 作为全局唯一的调度中枢，持有 \module{Player} 实例并负责场景切换与小游戏结果的统一奖惩处理；\allowbreak\module{common} 目录下的 \module{Subject} 与 \allowbreak\module{MiniGame} 是全项目复用的抽象基类，由三名成员共同遵守其接口约定进行并行开发。
+
+\subsection{公共基类模块（common）}
+\begin{itemize}[itemsep=3pt]
+  \item \textbf{\module{Subject}}：学科抽象基类，定义学科名称、好感度访问接口与 \texttt{createGame()} 工厂方法，由 \module{ProgDesignSubject}、\allowbreak\module{CalculusSubject}、\allowbreak\module{LinearAlgebraSubject}、\allowbreak\module{AIIntroSubject} 四个派生类实现，体现\textbf{工厂模式}——通过基类指针即可创建对应学科的小游戏实例。
+  \item \textbf{\module{MiniGame}}：所有小游戏的抽象基类，统一定义 \texttt{start()} 启动接口与 \texttt{finished} 信号，使 \module{GameManager} 可以用统一的方式管理五个风格迥异的小游戏。
+  \item \textbf{\module{Constants}}：存放好感度阈值、压力值上下限等游戏平衡性相关的全局常量，避免魔数散落在各模块中。
+\end{itemize}
+
+\subsection{核心系统模块（core，成员 C 负责）}
+\begin{itemize}[itemsep=3pt]
+  \item \textbf{\module{Player}}：数值系统核心，封装四项学科好感度、压力值、线代黑化值与当前日期，并通过 \texttt{affinityChanged} 等 Qt 信号在数值变化时通知界面层，体现\textbf{封装}与\textbf{信号槽解耦}。
+  \item \textbf{\module{GameManager}}：以\textbf{单例模式}实现（\texttt{GameManager::instance()}），是连接剧情、界面、小游戏三大模块的调度中心，负责场景切换逻辑，并统一处理各小游戏 \texttt{finished} 信号所带来的数值奖惩。
+  \item \textbf{\module{SaveManager}}：负责存档/读档，将 \module{Player} 与 \module{StoryEngine} 的状态序列化到本地文件，保证游戏进度可持久化。
+\end{itemize}
+
+\subsection{剧情系统模块（story，成员 A 负责）}
+\begin{itemize}[itemsep=3pt]
+  \item \textbf{\module{StoryEngine}}：剧情驱动核心，负责加载 JSON 剧本、解析分支跳转条件与 \texttt{effects}（数值影响）字段，并将执行结果应用到 \module{Player}；
+  \item \textbf{\module{DialogWindow}}：对话框组件，负责呈现角色立绘与台词，支持逐字显现效果与玩家分支选择；
+  \item \textbf{\module{EndingJudge}}：结局判定器，按预设优先级链依次检查五种结局的达成条件，保证判定结果的\textbf{确定性}与\textbf{可扩展性}；
+  \item \textbf{\module{Subjects}}：四个学科角色的具体人设数据与专属剧情钩子。
+\end{itemize}
+
+\textbf{数据驱动设计}是本模块的核心亮点：剧情内容全部存储在 \module{assets/scripts/} 目录下的 JSON 文件（如 \texttt{week1.json}、\texttt{route\_progdesign.json}）中，与 C++ 代码完全解耦，编剧无需掌握 C++ 即可编写/修改剧情，也无需重新编译程序。最终版本中，五周完整剧情与全部五条结局剧本均已编写完成并接入 \module{StoryEngine}。
+
+\subsection{界面与地图模块（ui / map，成员 B 负责）}
+\begin{itemize}[itemsep=3pt]
+  \item \textbf{\module{MainWindow}}：主窗口框架，管理五个场景页面之间的切换（\texttt{QStackedWidget} 风格）；
+  \item \textbf{\module{MainMenu}}：主菜单组件，提供开始游戏、读取存档、退出等入口；
+  \item \textbf{\module{StatusBar}}：顶部状态栏，通过连接 \texttt{Player::affinityChanged} 信号自动刷新好感度进度条，无需手动轮询；
+  \item \textbf{\module{MapScene} / \module{LocationItem}}：基于 \texttt{QGraphicsScene} 的可交互地图，玩家可点击教学楼、图书馆、宿舍、未名湖四个地点触发对应事件。
+\end{itemize}
+
+在美术呈现方面，成员 B 设计并完成了风格统一、视觉美观的游戏主界面，并为四个学科拟人化角色分别绘制了专属人物立绘，在对话框与好感度变化等关键节点展示，显著提升了游戏的观感与代入感。
+
+\subsection{小游戏模块（games，成员 C 负责）}
+五个小游戏均继承自 \module{MiniGame} 基类，各自封装独立的算法逻辑，均已实现完整可玩流程，并按下表与四门学科一一对应：
+
+\begin{itemize}[itemsep=3pt]
+  \item \textbf{\module{MinesweeperGame}}（程序设计）：二维网格数据结构 + 递归展开空白区域，含完整的插旗、计数与胜负判定逻辑；
+  \item \textbf{\module{TicTacToeGame}}（程序设计）：内置 \textbf{Minimax + $\alpha$-$\beta$ 剪枝}算法实现 AI 对手，已实现完整可玩流程；
+  \item \textbf{\module{BlackjackGame}}（高等数学）：牌堆随机洗牌、点数结算状态机，已实现完整可玩流程；
+  \item \textbf{\module{AIMazeGame}}（人工智能引论）：\textbf{递归回溯法}生成随机迷宫，\textbf{BFS} 求解最短路径用于寻路提示，已实现完整可玩流程；
+  \item \textbf{\module{MemoryMatchGame}}（线性代数）：线代概念与性质配对的记忆翻牌游戏，卡牌内容由 JSON 术语库驱动，核心逻辑为洗牌算法、翻牌状态机与配对判定，已实现完整可玩流程。
+\end{itemize}
+
+原计划的“矩阵运算（Matrix Game）”因课程时间限制，最终版本中决定不予实现；线性代数学科线的好感度反馈由\module{MemoryMatchGame}（记忆翻牌）与剧情选择共同驱动。
+
+\subsection{关键设计模式与工程实践}
+\begin{lstlisting}[caption={工厂模式：由学科对象创建对应的小游戏实例}]
+Subject* progdesign = new ProgDesignSubject;
+MiniGame* game = progdesign->createGame();   // 返回扫雷
+game->start();
+\end{lstlisting}
+
+\begin{lstlisting}[caption={单例模式与信号槽解耦}]
+auto& mgr = GameManager::instance();          // 全局唯一实例
+mgr.player()->addAffinity(SubjectType::Calculus, +5);
+
+// Player 数值变化 -> StatusBar 自动刷新
+connect(player, &Player::affinityChanged,
+        statusBar, &StatusBar::onAffinityChanged);
+
+// 小游戏结束 -> GameManager 统一奖惩处理
+connect(game, &MiniGame::finished,
+        &GameManager::instance(), &GameManager::onMiniGameFinished);
+\end{lstlisting}
+
+除面向对象设计外，项目在工程规范上也做了较为完整的建设：使用 \texttt{CMakeLists.txt} 统一管理跨平台构建（启用 \texttt{AUTOMOC/AUTORCC/AUTOUIC}）；通过 GitHub Actions 在三平台上持续集成验证编译；配合 \texttt{.clang-format}、\texttt{.editorconfig} 统一代码风格；并以 \texttt{CODEOWNERS} 机制自动分配 Pull Request 的代码评审人，保障三人协作的代码质量。
+
+% =====================================================
+\section{小组成员分工情况}
+% =====================================================
+
+\subsection{分工原则}
+项目按照“剧情 / 界面 / 玩法”三大功能域，将开发任务拆分给三名成员并行推进，并在开发初期约定统一的类接口（详见仓库 \texttt{docs/接口约定.md}），以降低模块间联调时的耦合成本。
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}p{2cm}p{2.6cm}p{9.5cm}@{}}
+\toprule
+\textbf{成员} & \textbf{负责模块} & \textbf{主要工作内容} \\
+\midrule
+成员 A & 剧情核心 &
+\module{StoryEngine} 剧情引擎（分支跳转、条件判断、effects 应用）、
+\module{DialogWindow} 对话框组件、
+\module{EndingJudge} 结局判定链、
+五周完整 JSON 剧本内容编写与四条学科线、五条结局的设计 \\
+\addlinespace
+成员 B & 界面核心 &
+\module{MainWindow} 主框架与五个场景页面管理、
+\module{MainMenu} 主菜单、
+\module{StatusBar} 状态栏（信号槽驱动）、
+\module{MapScene} / \module{LocationItem} 可交互地图、
+美观主界面视觉设计与四位角色专属人物立绘绘制 \\
+\addlinespace
+成员 C & 玩法核心 &
+五个小游戏（扫雷、21 点、井字棋、AI 迷宫、记忆翻牌）的完整算法实现、
+\module{Player} 数值系统、
+\module{GameManager} 场景与奖惩调度、
+\module{SaveManager} 存档系统 \\
+\bottomrule
+\end{tabular}
+\caption{三人分工一览}
+\end{table}
+
+\subsection{协作流程}
+项目按照六个阶段推进：设计与接口约定（5/13–5/15）、搭骨架并于 5/17 跑通最小可运行示例、正式并行开发（5/18–5/28）、联调与测试（5/28–5/31）、撰写作业报告（5/31–6/02）、录屏与最终交付（6/02–6/06）。三人通过统一的 \texttt{CODEOWNERS} 规则进行代码评审，并使用 Issue / Pull Request 模板规范协作沟通，日常协作细节记录于 \texttt{docs/协作流程.md}。
+
+% =====================================================
+\section{项目总结与反思}
+% =====================================================
+
+\subsection{已完成的工作}
+\begin{itemize}[itemsep=2pt]
+  \item 完成了五大模块（剧情 / 界面 / 地图 / 玩法 / 数值）的完整开发与联调；
+  \item 五个知识小游戏（扫雷、井字棋含 Minimax、21 点、AI 迷宫含 BFS 与递归回溯、记忆翻牌）均已实现完整可玩流程，一一对应程序设计、高等数学、人工智能引论、线性代数四门学科；
+  \item 五周完整剧情与全部五条结局剧本均已编写完成，玩家可从开局完整游玩至任一结局；
+  \item 设计并完成了风格统一、美观精致的游戏主界面，并为四个学科角色绘制了专属人物立绘；
+  \item 建立了数据驱动的 JSON 剧本体系，实现了策划与工程的解耦；
+  \item 搭建了较为完善的工程化基础设施：跨平台 CMake 构建、三平台 CI、代码风格统一、PR/Issue 模板与自动化代码评审分配。
+\end{itemize}
+
+\subsection{存在的不足}
+\begin{itemize}[itemsep=2pt]
+  \item 经小组讨论，最终版本未实现原计划的“矩阵运算”小游戏，线性代数学科线目前仅由记忆翻牌与剧情选择共同驱动，运算类的实操玩法维度略显单薄；
+  \item 音效与背景音乐资源尚未完整接入 \texttt{Multimedia} 模块；
+  \item 存档系统的异常处理（如文件损坏、版本不兼容）覆盖尚不全面；
+  \item 由于开发周期集中于剧情与美术打磨，小游戏与结局的整体数值平衡性测试还不够充分，个别数值阈值可能需要后续微调。
+\end{itemize}
+
+\subsection{收获与反思}
+通过本次大作业，小组成员在以下几方面获得了实际锻炼：
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{面向对象设计能力}：在 \module{Subject}/\module{MiniGame} 等公共基类的设计过程中，切身体会到抽象接口先行、实现细节后置的好处——正是有了清晰的基类约定，三人才能够在几乎不冲突的情况下并行开发六个风格迥异的小游戏与四个学科分支；
+  \item \textbf{设计模式的实践价值}：单例模式解决了全局状态（\module{GameManager}）的一致性问题，工厂模式让“学科 $\rightarrow$ 小游戏”的映射关系一目了然，信号槽机制则从根本上避免了界面层对数值层的轮询式查询，让代码更加松耦合、易维护；
+  \item \textbf{数据驱动思想}：将剧情内容从代码中剥离为 JSON 文件，是本项目在工程实践上最大的收获之一，它不仅降低了非程序成员参与内容创作的门槛，也让后期修改剧情不再需要重新编译整个项目；
+  \item \textbf{团队协作与工程规范}：通过提前约定接口、使用 CI 持续验证编译、统一代码风格，小组在“先设计后编码”上体会到了明显优于“边做边改”的协作效率，也认识到接口一旦约定不清晰将给后期联调带来较大的返工成本；
+  \item \textbf{取舍与时间管理}：受限于课程时间，小组在开发中期主动对功能范围做了取舍——放弃了优先级相对较低的“矩阵运算”小游戏，将更多精力投入到五周完整剧情、五条结局以及主界面与人物立绘的美术打磨上。事后来看，这一取舍使项目最终呈现出的完整度与观感明显优于面面俱到但处处半成品的方案，也让我们体会到在有限时间内明确核心优先级、敢于砍掉次要功能的重要性。
+\end{itemize}
+
+后续如有时间，小组计划补充“矩阵运算”小游戏以进一步丰富线性代数学科线的玩法多样性，并进一步接入完整的音效与背景音乐、加强存档系统的健壮性与整体数值平衡性测试。
+
+\end{document}

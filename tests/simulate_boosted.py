@@ -117,14 +117,15 @@ def test_w5_final_choice(darkness, expect_eternal_visible):
     doc = json.load(open(f))
     node = next(n for n in doc['nodes'] if n['id'] == 'w5_final_choice')
     from simulate_routes import eval_cond
-    seen = []
+    seen_texts = []
     for c in node['choices']:
         cond = c.get('condition', '')
         if not cond or eval_cond(cond, p):
-            seen.append(c['next'])
-    eternal_visible = 'w5_ending_la_eternal' in seen
+            seen_texts.append(c['text'])
+    # 黑化结局特征：选项文本包含"脚步动不了"或"不允许你走"
+    eternal_visible = any('脚步动不了' in t or '不允许你走' in t for t in seen_texts)
     pass_ = eternal_visible == expect_eternal_visible
-    print(f"  darkness={darkness:>3} | 可选: {seen} | "
+    print(f"  darkness={darkness:>3} | 可选文本: {seen_texts} | "
           f"黑化结局{'解锁' if eternal_visible else '锁住'} | {'PASS' if pass_ else 'FAIL'}")
     return pass_
 

@@ -30,10 +30,16 @@ class Player:
         self.darkness = 0
         self.week = 1
         self.day = 1
+        self.chose_to_stay = False
 
     def apply_effects(self, effects):
         for eff in effects or []:
             target = eff['target']
+            # 兼容新增的 boolean/set-value 效果（如 choseToStay）
+            if 'delta' not in eff:
+                if target == 'choseToStay':
+                    self.chose_to_stay = eff.get('value', False)
+                continue
             delta = eff['delta']
             if target.startswith('affinity.'):
                 k = target[len('affinity.'):]
