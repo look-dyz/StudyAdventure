@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>scripts/week1.json</file>
-        <file>data/calculus_questions.json</file>
         <file>scripts/week2.json</file>
         <file>scripts/week3.json</file>
         <file>scripts/week4.json</file>
