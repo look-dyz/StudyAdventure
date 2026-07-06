@@ -112,9 +112,9 @@
 游戏的主循环由“地图探索 $\rightarrow$ 事件触发 $\rightarrow$ 剧情对话 $\rightarrow$ 小游戏挑战 $\rightarrow$ 数值结算 $\rightarrow$ 周目推进”构成：
 
 \begin{enumerate}[itemsep=2pt]
-  \item \textbf{地图探索}：玩家在教学楼、图书馆、宿舍、操场等四张可点击地图场景间移动，选择当天的行动地点；
-  \item \textbf{事件触发}：到达特定地点后，由数据驱动的 JSON 剧本触发对应的剧情分支；
-  \item \textbf{剧情对话}：对话框以打字机效果呈现角色台词与立绘，玩家在关键节点做出选择；
+  \item \textbf{地图探索}：玩家在教学楼、图书馆、宿舍、未名湖等四张可点击地图场景间移动，选择当天的行动地点；
+  \item \textbf{事件触发}：进入教学楼时由数据驱动的 JSON 剧本触发主线剧情分支；进入图书馆则跳转至小游戏；未名湖与宿舍用于调节压力值与推进日程；
+  \item \textbf{剧情对话}：对话框呈现角色立绘与台词，玩家在关键节点做出选择；
   \item \textbf{小游戏挑战}：部分事件会跳转至与该学科相关的知识小游戏，玩家的表现将直接影响数值反馈；
   \item \textbf{数值结算}：小游戏结果与剧情选择共同驱动好感度、压力值、黑化值等数值变化；
   \item \textbf{周目推进}：五周时间线走完后，系统依据数值状态判定并展示最终结局。
@@ -227,7 +227,7 @@ AI 迷宫（AI Maze） & 人工智能引论 & BFS 最短路径、递归回溯生
   \item \textbf{\module{MainWindow}}：主窗口框架，管理五个场景页面之间的切换（\texttt{QStackedWidget} 风格）；
   \item \textbf{\module{MainMenu}}：主菜单组件，提供开始游戏、读取存档、退出等入口；
   \item \textbf{\module{StatusBar}}：顶部状态栏，通过连接 \texttt{Player::affinityChanged} 信号自动刷新好感度进度条，无需手动轮询；
-  \item \textbf{\module{MapScene} / \module{LocationItem}}：基于 \texttt{QGraphicsScene} 的可交互地图，玩家可点击教学楼、图书馆、宿舍、操场四个地点触发对应事件。
+  \item \textbf{\module{MapScene} / \module{LocationItem}}：基于 \texttt{QGraphicsScene} 的可交互地图，玩家可点击教学楼、图书馆、宿舍、未名湖四个地点触发对应事件。
 \end{itemize}
 
 在美术呈现方面，成员 B 设计并完成了风格统一、视觉美观的游戏主界面，并为四个学科拟人化角色分别绘制了专属人物立绘，在对话框与好感度变化等关键节点展示，显著提升了游戏的观感与代入感。
