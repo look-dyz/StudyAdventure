@@ -13,6 +13,12 @@ ui_*.h
 qrc_*.cpp
 Makefile
 *.qmake.stash
+.qtcreator/
+CMakeLists.txt.user*
+
+# ===== Python 缓存 =====
+__pycache__/
+*.pyc
 
 # ===== 编译产物 =====
 *.o
